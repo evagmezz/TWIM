@@ -1,0 +1,49 @@
+services:
+  postgres-db:
+    container_name: db_postgres
+    image: postgres:12-alpine
+    restart: always
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    ports:
+      - 5432:5432
+    volumes:
+      - storage-dir-postgres:/var/lib/postgresql/data
+    networks:
+      - twim-network
+  mongo-db:
+    container_name: db_mongo
+    image: mongo:5.0
+    restart: always
+    env_file: .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+    ports:
+      - 27017:27017
+    volumes:
+      - ./database/twim.js:/docker-entrypoint-initdb.d/twim.js:ro
+      - storage-dir-mongo:/data/db
+    networks:
+      - twim-network
+  postgis-db:
+     container_name: db_postgis
+     image: postgis/postgis:13-3.4-alpine
+     restart: always
+     environment:
+        POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+     volumes:
+       - storage-dir-postgis:/var/lib/postgresql/data
+     ports:
+       - 5433:5432
+volumes:
+  storage-dir-postgres:
+  storage-dir-mongo:
+  storage-dir-postgis:
+networks:
+  twim-network:
+    driver: bridge
