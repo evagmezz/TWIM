@@ -5,9 +5,14 @@ import * as mongoosePaginate from 'mongoose-paginate-v2'
 import { PostMapper } from './mapper/post-mapper'
 import { MongooseModule, SchemaFactory } from '@nestjs/mongoose'
 import { Post } from './entities/post.entity'
+import { User } from '../user/entities/user.entity'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { MulterModule } from '@nestjs/platform-express'
+import { CommentModule } from '../comment/comment.module'
 
 @Module({
   imports: [
+    CommentModule,
     MongooseModule.forFeatureAsync([
       {
         name: Post.name,
@@ -18,6 +23,10 @@ import { Post } from './entities/post.entity'
         },
       },
     ]),
+    TypeOrmModule.forFeature([User]),
+    MulterModule.register({
+      dest: './uploads',
+    }),
   ],
   controllers: [PostController],
   providers: [PostService, PostMapper],

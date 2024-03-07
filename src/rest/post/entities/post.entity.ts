@@ -4,6 +4,7 @@ import * as mongoosePaginate from 'mongoose-paginate-v2'
 import { Type } from 'class-transformer'
 import { IsArray, IsUUID, ValidateNested } from 'class-validator'
 import { Comment } from '../../comment/entities/comment.entity'
+
 export type PostDocument = Post & Document
 
 @Schema({
@@ -40,9 +41,6 @@ export class Post {
 
   @Prop({ type: 'array', default: [] })
   photos: string[]
-
-  @Prop({ type: 'string' })
-  location: string
 
   @Prop({
     type: Date,

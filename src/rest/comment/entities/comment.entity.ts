@@ -28,7 +28,6 @@ export class Comment {
   _id: string
 
   @Prop({ type: String, default: () => uuidv4() })
-  @IsUUID()
   postId: string
 
   @Prop({ type: String, default: () => uuidv4() })

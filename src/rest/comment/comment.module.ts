@@ -19,6 +19,7 @@ import * as mongoosePaginate from 'mongoose-paginate-v2'
       },
     ]),
   ],
+  exports: [MongooseModule],
   controllers: [CommentController],
   providers: [CommentService, CommentMapper],
 })

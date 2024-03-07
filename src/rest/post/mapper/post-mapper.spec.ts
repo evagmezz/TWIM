@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { PostMapper } from './post-mapper';
+import { Test, TestingModule } from '@nestjs/testing'
+import { PostMapper } from './post-mapper'
 
 describe('PostMapper', () => {
-  let provider: PostMapper;
+  let provider: PostMapper
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [PostMapper],
-    }).compile();
+    }).compile()
 
-    provider = module.get<PostMapper>(PostMapper);
-  });
+    provider = module.get<PostMapper>(PostMapper)
+  })
 
   it('should be defined', () => {
-    expect(provider).toBeDefined();
-  });
-});
+    expect(provider).toBeDefined()
+  })
+})

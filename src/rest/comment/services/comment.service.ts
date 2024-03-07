@@ -37,6 +37,11 @@ export class CommentService {
     return comment
   }
 
+  async findByPostId(postId: string) {
+    this.logger.log(`Buscando comentario con postId ${postId}`)
+    return await this.commentRepository.find({ postId }).exec()
+  }
+
   async create(createCommentDto: CreateCommentDto) {
     this.logger.log('Creando comentario')
     const comment = this.commentMapper.toEntity(createCommentDto)

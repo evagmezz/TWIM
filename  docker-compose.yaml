@@ -30,20 +30,9 @@ services:
       - storage-dir-mongo:/data/db
     networks:
       - twim-network
-  postgis-db:
-     container_name: db_postgis
-     image: postgis/postgis:13-3.4-alpine
-     restart: always
-     environment:
-        POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-     volumes:
-       - storage-dir-postgis:/var/lib/postgresql/data
-     ports:
-       - 5433:5432
 volumes:
   storage-dir-postgres:
   storage-dir-mongo:
-  storage-dir-postgis:
 networks:
   twim-network:
     driver: bridge
