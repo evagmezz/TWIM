@@ -1,4 +1,4 @@
-import { IsString, IsUUID, Length } from 'class-validator'
+import { IsUUID, Length } from 'class-validator'
 import { Transform } from 'class-transformer'
 
 export class CreatePostDto {

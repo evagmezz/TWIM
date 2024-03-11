@@ -23,6 +23,18 @@ export class User {
 
   @Column({
     type: 'varchar',
+    nullable: false,
+  })
+  name: string
+
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  lastname: string
+
+  @Column({
+    type: 'varchar',
     unique: true,
   })
   username: string

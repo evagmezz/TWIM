@@ -3,6 +3,18 @@ import { Transform } from 'class-transformer'
 
 export class CreateUserDto {
   @Length(2, 20, {
+    message: 'El nombre debe tener entre 2 y 20 caracteres',
+  })
+  @Transform(({ value }) => value.trim())
+  name: string
+
+  @Length(2, 20, {
+    message: 'El apellido debe tener entre 2 y 20 caracteres',
+  })
+  @Transform(({ value }) => value.trim())
+  lastname: string
+
+  @Length(2, 20, {
     message: 'El nombre de usuario debe tener entre 2 y 20 caracteres',
   })
   @Matches(/^[a-zA-Z0-9_]*$/, {
