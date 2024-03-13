@@ -22,10 +22,10 @@ import { AuthMapper } from './mapper/ auth-mapper'
     }),
 
     PassportModule.register({ defaultStrategy: 'jwt' }),
-
     UserModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, AuthMapper, JwtAuthStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

@@ -11,5 +11,6 @@ import { CacheModule } from '@nestjs/cache-manager'
   imports: [TypeOrmModule.forFeature([User]), CacheModule.register()],
   controllers: [UserController],
   providers: [UserService, UserMapper, BcryptService],
+  exports: [UserService, UserMapper],
 })
 export class UserModule {}

@@ -1,0 +1,15 @@
+<div class="container">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="card flex flex-column align-items-center justify-content-center">
+    <span class="p-float-label mb-3">
+        <input type="text" pInputText id="username" formControlName="username"/>
+        <label for="username">Usuario</label>
+    </span>
+    <span class="p-float-label mb-3">
+        <input type="password" pInputText id="password" formControlName="password"/>
+        <label for="password">Contraseña</label>
+    </span>
+    <button pButton type="submit" label="Iniciar Sesion" class="p-button-rounded p-button-raised p-button-primary"></button>
+  </div>
+</form>
+</div>
