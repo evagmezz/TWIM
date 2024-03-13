@@ -8,29 +8,43 @@ import {
 import { OnModuleInit } from '@nestjs/common'
 import { ChatService } from './chat.service'
 import { Server, Socket } from 'socket.io'
+import { AuthService } from '../../rest/auth/services/ auth.service'
+import { UserMapper } from '../../rest/user/mapper/user-mapper'
 
 @WebSocketGateway()
 export class ChatGateway implements OnModuleInit {
   @WebSocketServer()
   public server: Server
 
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private readonly authService: AuthService,
+    private readonly userMapper: UserMapper,
+  ) {}
 
   onModuleInit() {
-    this.server.on('connect', (socket: Socket) => {
-      const { name, token } = socket.handshake.auth
-      if (!name || !token) {
+    this.server.on('connect', async (socket: Socket) => {
+      const { username, token } = socket.handshake.auth
+      if (!username || !token) {
         socket.disconnect()
         return
       }
 
-      this.server.emit('on-client-changed', this.chatService.getClients())
+      const responseUserDto = await this.authService.validateUser(token)
+      if (!responseUserDto || responseUserDto.username !== username) {
+        socket.disconnect()
+        return
+      }
 
-      this.chatService.onClientConnect({ id: socket.id, name: name })
+      const user = this.userMapper.toUser(responseUserDto)
+
+      this.server.emit('on-client-changed', this.chatService.getUsers())
+
+      this.chatService.onUserConnect(user)
       socket.on('disconnect', () => {
-        this.server.emit('on-client-changed', this.chatService.getClients())
-        this.chatService.onClientDisconnect(socket.id)
-        console.log('Cliente desconectado: ', socket)
+        this.server.emit('on-client-changed', this.chatService.getUsers())
+        this.chatService.onUserDisconnect(socket.id)
+        console.log('Usuario desconectado: ', socket)
       })
     })
   }
@@ -40,7 +54,7 @@ export class ChatGateway implements OnModuleInit {
     @MessageBody() message: string,
     @ConnectedSocket() client: Socket,
   ) {
-    const name = client.handshake.auth
+    const username = client.handshake.auth
 
     if (!message) {
       return
@@ -48,7 +62,7 @@ export class ChatGateway implements OnModuleInit {
     this.server.emit('on-message', {
       userId: client.id,
       message: message,
-      name: name,
+      username: username,
     })
   }
 }

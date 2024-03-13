@@ -5,9 +5,10 @@ import { UserMapper } from './mapper/user-mapper'
 import { BcryptService } from './services/bcrypt.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { User } from './entities/user.entity'
+import { CacheModule } from '@nestjs/cache-manager'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User]), CacheModule.register()],
   controllers: [UserController],
   providers: [UserService, UserMapper, BcryptService],
 })

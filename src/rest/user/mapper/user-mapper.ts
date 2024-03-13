@@ -18,4 +18,9 @@ export class UserMapper {
     const user = new User()
     return { ...userDto, ...user }
   }
+
+  toUser(responseUserDto: ResponseUserDto): User {
+    const user = new User()
+    return { ...responseUserDto, ...user }
+  }
 }

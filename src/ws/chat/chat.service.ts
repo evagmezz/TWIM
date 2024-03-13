@@ -1,22 +1,19 @@
 import { Injectable } from '@nestjs/common'
-interface Client {
-  id: string
-  name: string
-}
+import { User } from '../../rest/user/entities/user.entity'
 
 @Injectable()
 export class ChatService {
-  private clients: Record<string, Client> = {}
+  private users: Record<string, User> = {}
 
-  onClientConnect(client: Client) {
-    this.clients[client.id] = client
+  onUserConnect(user: User) {
+    this.users[user.id] = user
   }
 
-  onClientDisconnect(clientId: string) {
-    delete this.clients[clientId]
+  onUserDisconnect(userId: string) {
+    delete this.users[userId]
   }
 
-  getClients() {
-    return Object.values(this.clients)
+  getUsers() {
+    return Object.values(this.users)
   }
 }

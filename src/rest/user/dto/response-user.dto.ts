@@ -22,6 +22,8 @@ export class ResponseUserDto {
     message: 'El email no es válido',
   })
   email: string
+
+  password: string
   role: string
   createdAt: Date
   updatedAt: Date

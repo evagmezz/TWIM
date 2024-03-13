@@ -1,8 +1,7 @@
-import { ArrayNotEmpty, IsArray, Length, Matches } from 'class-validator'
+import { Length, Matches } from 'class-validator'
 import { Transform } from 'class-transformer'
-import { Role } from '../entities/user.entity'
 
-export class CreateUserDto {
+export class UserSignUpDto {
   @Length(2, 20, {
     message: 'El nombre debe tener entre 2 y 20 caracteres',
   })
@@ -36,8 +35,4 @@ export class CreateUserDto {
   })
   @Transform(({ value }) => value.trim())
   email: string
-
-  @IsArray()
-  @ArrayNotEmpty()
-  role: string[]
 }

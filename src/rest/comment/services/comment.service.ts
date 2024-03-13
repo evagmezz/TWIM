@@ -1,6 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { CreateCommentDto } from '../dto/create-comment.dto'
-import { UpdateCommentDto } from '../dto/update-comment.dto'
 import { InjectModel } from '@nestjs/mongoose'
 import { PaginateModel } from 'mongoose'
 import { CommentMapper } from '../mapper/comment-mapper'
@@ -38,7 +37,7 @@ export class CommentService {
   }
 
   async findByPostId(postId: string) {
-    this.logger.log(`Buscando comentario con postId ${postId}`)
+    this.logger.log(`Buscando comentario en publicación con id ${postId}`)
     return await this.commentRepository.find({ postId }).exec()
   }
 
@@ -46,20 +45,6 @@ export class CommentService {
     this.logger.log('Creando comentario')
     const comment = this.commentMapper.toEntity(createCommentDto)
     return await this.commentRepository.create(comment)
-  }
-
-  async update(id: string, updateCommentDto: UpdateCommentDto) {
-    this.logger.log(`Actualizando comentario con id ${id}`)
-    const comment = this.commentRepository.findById(id).exec()
-    if (!comment) {
-      throw new NotFoundException(`El comentario con el id ${id} no existe`)
-    }
-    const commentUpdated = this.commentMapper.toEntity(updateCommentDto)
-    return await this.commentRepository
-      .findByIdAndUpdate(id, commentUpdated, {
-        new: true,
-      })
-      .exec()
   }
 
   async remove(id: string) {

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   Logger,
+  Inject,
   NotFoundException,
 } from '@nestjs/common'
 import { CreateUserDto } from '../dto/create-user.dto'
@@ -11,6 +12,11 @@ import { Repository } from 'typeorm'
 import { User } from '../entities/user.entity'
 import { UserMapper } from '../mapper/user-mapper'
 import { BcryptService } from './bcrypt.service'
+import { Cache } from 'cache-manager'
+import { CACHE_MANAGER } from '@nestjs/cache-manager'
+import { ResponseUserDto } from '../dto/response-user.dto'
+import { PaginateQuery, paginate } from 'nestjs-paginate'
+import { hash } from 'typeorm/util/StringUtils'
 
 @Injectable()
 export class UserService {
@@ -21,18 +27,39 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     private readonly userMapper: UserMapper,
     private readonly bcryptService: BcryptService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async findAll() {
+  async findAll(query: PaginateQuery) {
     this.logger.log('Buscando todos los usuarios')
-    return (await this.userRepository.find()).map((users) =>
-      this.userMapper.toDto(users),
+    const cache: ResponseUserDto[] = await this.cacheManager.get(
+      `all_users_page_${hash(JSON.stringify(query))}`,
     )
+    if (cache) {
+      this.logger.log('Encontrado en cache')
+      return cache
+    }
+    const page = await paginate(query, this.userRepository, {
+      sortableColumns: ['id', 'username', 'email'],
+      searchableColumns: ['username', 'email'],
+    })
+    await this.cacheManager.set(
+      `all_users_page_${hash(JSON.stringify(query))}`,
+      page,
+      60,
+    )
+    return page
   }
 
   async findOne(id: string) {
     this.logger.log(`Buscando usuario con id ${id}`)
+    const cache: ResponseUserDto = await this.cacheManager.get(`user_${id}`)
+    if (cache) {
+      this.logger.log('Encontrado en cache')
+      return cache
+    }
     const user = await this.findInternal(id)
+    await this.cacheManager.set(`user_${id}`, user, 60)
     return this.userMapper.toDto(user)
   }
 
@@ -54,6 +81,7 @@ export class UserService {
     const newUser = this.userMapper.toEntity(createUserDto)
     newUser.password = hashPassword
     const userCreated = await this.userRepository.save(newUser)
+    await this.invalidateCacheKey('all_users')
     return this.userMapper.toDto(userCreated)
   }
 
@@ -84,6 +112,8 @@ export class UserService {
       ...user,
       ...updatedUser,
     })
+    await this.invalidateCacheKey(`user_${id}`)
+    await this.invalidateCacheKey('all_users')
     return this.userMapper.toDto(userUpdated)
   }
 
@@ -105,6 +135,8 @@ export class UserService {
     userToFollow.followers.push(user)
 
     await this.userRepository.save(userToFollow)
+    await this.cacheManager.del(`user_${userToFollowId}`)
+    await this.cacheManager.del(`followers_${userToFollowId}`)
     return this.userMapper.toDto(user)
   }
 
@@ -127,21 +159,38 @@ export class UserService {
       (u) => u.id !== user.id,
     )
     await this.userRepository.save(userToUnfollow)
+    await this.cacheManager.del(`user_${userToUnfollowId}`)
+    await this.cacheManager.del(`followers_${userToUnfollowId}`)
     return this.userMapper.toDto(user)
   }
 
   async getFollowers(userId: string) {
     this.logger.log(`Obteniendo seguidores del usuario con id ${userId}`)
+    const cache: ResponseUserDto[] = await this.cacheManager.get(
+      `followers_${userId}`,
+    )
+    if (cache) {
+      this.logger.log('Encontrado en cache')
+      return cache
+    }
     const user = await this.findInternal(userId)
     if (!user) {
       throw new NotFoundException(`Usuario con id ${userId} no encontrado`)
     }
-
-    return user.followers.map((u) => this.userMapper.toDto(u))
+    const followers = user.followers.map((u) => this.userMapper.toDto(u))
+    await this.cacheManager.set(`followers_${userId}`, followers, 60)
+    return followers
   }
 
   async getFollowing(userId: string) {
     this.logger.log(`Obteniendo seguidos del usuario con id ${userId}`)
+    const cache: ResponseUserDto[] = await this.cacheManager.get(
+      `following_${userId}`,
+    )
+    if (cache) {
+      this.logger.log('Encontrado en cache')
+      return cache
+    }
     const user = await this.findInternal(userId)
     if (!user) {
       throw new NotFoundException(`Usuario con id ${userId} no encontrado`)
@@ -151,7 +200,9 @@ export class UserService {
       .leftJoinAndSelect('user.followers', 'followers')
       .where('followers.id = :id', { id: userId })
       .getMany()
-    return following.map((u) => this.userMapper.toDto(u))
+    const followingDto = following.map((u) => this.userMapper.toDto(u))
+    await this.cacheManager.set(`following_${userId}`, followingDto, 60)
+    return followingDto
   }
 
   async remove(id: string) {
@@ -160,22 +211,48 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`Usuario con id ${id} no encontrado`)
     } else {
+      await this.invalidateCacheKey(`user_${id}`)
+      await this.invalidateCacheKey('all_users')
       return await this.userRepository.delete(id)
     }
   }
 
-  private async findByUsername(username: string) {
+  async findByUsername(username: string) {
     this.logger.log(`Buscando usuario con username ${username}`)
-    return await this.userRepository.findOne({ where: { username } })
+    const cache: User = await this.cacheManager.get(`user_username_${username}`)
+    if (cache) {
+      this.logger.log('Encontrado en cache')
+      return cache
+    }
+    const user = await this.userRepository.findOne({ where: { username } })
+    await this.cacheManager.set(`user_username_${username}`, user, 60)
+    return user
   }
 
-  private async findByEmail(email: string) {
+  async findByEmail(email: string) {
     this.logger.log(`Buscando usuario con email ${email}`)
-    return await this.userRepository.findOne({ where: { email } })
+    const cache: User = await this.cacheManager.get(`user_email_${email}`)
+    if (cache) {
+      this.logger.log('Encontrado en cache')
+      return cache
+    }
+    const user = await this.userRepository.findOne({ where: { email } })
+    await this.cacheManager.set(`user_email_${email}`, user, 60)
+    return user
+  }
+
+  async validatePassword(password: string, hashPassword: string) {
+    this.logger.log(`Validando contraseña`)
+    return await this.bcryptService.isMatch(password, hashPassword)
   }
 
   private async findInternal(id: string) {
     this.logger.log(`Buscando usuario con id ${id}`)
+    const cache: User = await this.cacheManager.get(`user_${id}`)
+    if (cache) {
+      this.logger.log('Encontrado en cache')
+      return cache
+    }
     const user = await this.userRepository.findOne({
       where: { id },
       relations: ['followers'],
@@ -183,6 +260,14 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`Usuario con id ${id} no encontrado`)
     }
+    await this.cacheManager.set(`user_${id}`, user, 60)
     return user
+  }
+
+  async invalidateCacheKey(keyPattern: string): Promise<void> {
+    const cacheKeys = await this.cacheManager.store.keys()
+    const keysToDelete = cacheKeys.filter((key) => key.startsWith(keyPattern))
+    const promises = keysToDelete.map((key) => this.cacheManager.del(key))
+    await Promise.all(promises)
   }
 }
