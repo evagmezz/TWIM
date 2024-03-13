@@ -1,0 +1,33 @@
+<div class="container">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="card flex flex-column align-items-center justify-content-center">
+      <span class="p-float-label mb-3">
+        <input type="text" pInputText id="name" formControlName="name"/>
+        <label for="name">Nombre</label>
+    </span>
+      <span class="p-float-label mb-3">
+        <input type="text" pInputText id="lastname" formControlName="lastname"/>
+        <label for="lastname">Apellidos</label>
+    </span>
+      <span class="p-float-label mb-3">
+        <input type="text" pInputText id="email" formControlName="email"/>
+        <label for="email">Email</label>
+    </span>
+    <span class="p-float-label mb-3">
+        <input type="text" pInputText id="username" formControlName="username"/>
+        <label for="username">Usuario</label>
+    </span>
+      <span class="p-float-label mb-3">
+        <p-password id="password" formControlName="password" [toggleMask]="true"/>
+        <label for="password">Contraseña</label>
+    </span>
+      <span class="p-float-label mb-3">
+        <p-password id="repeatPwd" formControlName="repeatPwd" [toggleMask]="true"/>
+        <label for="repeatPwd">Confirmar Contraseña</label>
+    </span>
+      <button pButton type="submit" label="Crear Cuenta" class="p-button-rounded p-button-raised p-button-primary"></button>
+      <button pButton [routerLink]="['/login']" type="button" label="Iniciar Sesión" class="p-button-rounded p-button-raised p-button-secondary"></button>
+    </div>
+  </form>
+</div>
+
