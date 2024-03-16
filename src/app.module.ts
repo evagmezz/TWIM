@@ -6,6 +6,7 @@ import { CommentModule } from './rest/comment/comment.module'
 import { DatabaseModule } from './config/database/ database.module'
 import { ChatModule } from './ws/chat/chat.module'
 import { AuthModule } from './rest/auth/auth.module'
+import { CacheModule } from '@nestjs/cache-manager'
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AuthModule } from './rest/auth/auth.module'
     CommentModule,
     ChatModule,
     AuthModule,
+    CacheModule.register(),
   ],
   providers: [],
 })

@@ -9,6 +9,7 @@ import { User } from '../user/entities/user.entity'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { MulterModule } from '@nestjs/platform-express'
 import { CommentModule } from '../comment/comment.module'
+import { CacheModule } from '@nestjs/cache-manager'
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CommentModule } from '../comment/comment.module'
     MulterModule.register({
       dest: './uploads',
     }),
+    CacheModule.register(),
   ],
   controllers: [PostController],
   providers: [PostService, PostMapper],

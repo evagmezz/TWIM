@@ -4,12 +4,19 @@ import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { LoginComponent } from './login/login.component'
 import { RouterOutlet } from '@angular/router'
 import { RegisterComponent } from './register/register.component'
+import { IndexComponent } from './index/index.component'
 
 @Component({
   selector: 'app-root',
   standalone: true,
   providers: [AuthService, HttpClient],
-  imports: [HttpClientModule, LoginComponent, RouterOutlet, RegisterComponent],
+  imports: [
+    HttpClientModule,
+    LoginComponent,
+    RouterOutlet,
+    RegisterComponent,
+    IndexComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

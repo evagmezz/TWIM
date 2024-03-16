@@ -5,6 +5,7 @@ import { CommentMapper } from './mapper/comment-mapper'
 import { MongooseModule, SchemaFactory } from '@nestjs/mongoose'
 import { Comment } from './entities/comment.entity'
 import * as mongoosePaginate from 'mongoose-paginate-v2'
+import { CacheModule } from '@nestjs/cache-manager'
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import * as mongoosePaginate from 'mongoose-paginate-v2'
         },
       },
     ]),
+    CacheModule.register(),
   ],
   exports: [MongooseModule],
   controllers: [CommentController],

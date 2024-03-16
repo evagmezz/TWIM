@@ -1,8 +1,8 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   Logger,
-  Inject,
   NotFoundException,
 } from '@nestjs/common'
 import { CreateUserDto } from '../dto/create-user.dto'
@@ -15,7 +15,7 @@ import { BcryptService } from './bcrypt.service'
 import { Cache } from 'cache-manager'
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { ResponseUserDto } from '../dto/response-user.dto'
-import { PaginateQuery, paginate } from 'nestjs-paginate'
+import { paginate, PaginateQuery } from 'nestjs-paginate'
 import { hash } from 'typeorm/util/StringUtils'
 
 @Injectable()
@@ -246,6 +246,13 @@ export class UserService {
     return await this.bcryptService.isMatch(password, hashPassword)
   }
 
+  async invalidateCacheKey(keyPattern: string): Promise<void> {
+    const cacheKeys = await this.cacheManager.store.keys()
+    const keysToDelete = cacheKeys.filter((key) => key.startsWith(keyPattern))
+    const promises = keysToDelete.map((key) => this.cacheManager.del(key))
+    await Promise.all(promises)
+  }
+
   private async findInternal(id: string) {
     this.logger.log(`Buscando usuario con id ${id}`)
     const cache: User = await this.cacheManager.get(`user_${id}`)
@@ -262,12 +269,5 @@ export class UserService {
     }
     await this.cacheManager.set(`user_${id}`, user, 60)
     return user
-  }
-
-  async invalidateCacheKey(keyPattern: string): Promise<void> {
-    const cacheKeys = await this.cacheManager.store.keys()
-    const keysToDelete = cacheKeys.filter((key) => key.startsWith(keyPattern))
-    const promises = keysToDelete.map((key) => this.cacheManager.del(key))
-    await Promise.all(promises)
   }
 }

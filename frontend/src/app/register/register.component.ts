@@ -8,29 +8,28 @@ import {
 } from '@angular/forms'
 import { InputTextModule } from 'primeng/inputtext'
 import { PasswordModule } from 'primeng/password'
-import { animate, state, style, transition, trigger } from '@angular/animations'
+import { transition } from '@angular/animations'
 import { HttpClientModule } from '@angular/common/http'
 import { AuthService } from '../services/auth.service'
 import { RouterLink } from '@angular/router'
+import { CommonModule, NgIf } from '@angular/common'
+import { DividerModule } from 'primeng/divider'
 
 @Component({
   selector: 'app-register',
   standalone: true,
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
-  animations: [
-    trigger('fadeIn', [
-      state('void', style({ opacity: 0 })),
-      transition('void => *', [animate('0.5s')]),
-    ]),
-  ],
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     FormsModule,
     InputTextModule,
     ButtonModule,
     PasswordModule,
     RouterLink,
+    NgIf,
+    DividerModule,
   ],
   providers: [HttpClientModule],
 })
@@ -53,23 +52,39 @@ export class RegisterComponent implements OnInit {
         Validators.pattern(/^[a-zA-Z0-9_]*$/),
       ],
     ],
-    password: [
-      '',
-      [Validators.minLength(8), Validators.maxLength(20), Validators.required],
-    ],
+    password: ['', [Validators.required]],
     email: ['', [Validators.email, Validators.required]],
+    repeatPwd: ['', [Validators.required]],
   })
-  repeatPwd = [
-    '',
-    [Validators.minLength(8), Validators.maxLength(20), Validators.required],
-  ]
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.registerForm.controls.password.valueChanges.subscribe(() => {
+      this.checkPassword()
+    })
+
+    this.registerForm.controls.repeatPwd.valueChanges.subscribe(() => {
+      this.checkPassword()
+    })
+  }
+
+  checkPassword() {
+    const form = this.registerForm
+    const password = form.get('password')
+    const repeatPwd = form.get('repeatPwd')
+
+    if (password && repeatPwd) {
+      if (password.value !== repeatPwd.value) {
+        repeatPwd.setErrors({ notEquivalent: true })
+      } else {
+        repeatPwd.setErrors(null)
+      }
+    }
+  }
 
   onSubmit(): void {
     if (this.registerForm.valid) {
@@ -78,9 +93,9 @@ export class RegisterComponent implements OnInit {
       const username = this.registerForm.controls.username.value || ''
       const password = this.registerForm.controls.password.value || ''
       const email = this.registerForm.controls.email.value || ''
-      const repeatPwd = this.repeatPwd[0] || ''
+      const repeatPwd = this.registerForm.controls.repeatPwd.value || ''
       this.authService
-        .register({ name, lastname, username, password, email })
+        .register({ name, lastname, username, password, email, repeatPwd })
         .subscribe(
           (res) => {
             console.log(res)
@@ -91,4 +106,6 @@ export class RegisterComponent implements OnInit {
         )
     }
   }
+
+  protected readonly transition = transition
 }

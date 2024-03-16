@@ -12,6 +12,8 @@ import { ButtonModule } from 'primeng/button'
 import { PasswordModule } from 'primeng/password'
 import { animate, state, style, transition, trigger } from '@angular/animations'
 import { RouterLink } from '@angular/router'
+import { NgClass, NgForOf, NgIf } from '@angular/common'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-login',
@@ -32,24 +34,22 @@ import { RouterLink } from '@angular/router'
     ButtonModule,
     PasswordModule,
     RouterLink,
+    NgIf,
+    NgForOf,
+    NgClass,
   ],
   providers: [HttpClientModule],
 })
 export class LoginComponent implements OnInit {
   loginForm = this.fb.group({
-    username: [
-      '',
-      [Validators.pattern(/^[a-zA-Z0-9_]*$/), Validators.required],
-    ],
-    password: [
-      '',
-      [Validators.minLength(8), Validators.maxLength(20), Validators.required],
-    ],
+    username: ['', [Validators.required]],
+    password: ['', [Validators.required]],
   })
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {}
@@ -61,6 +61,7 @@ export class LoginComponent implements OnInit {
       this.authService.login({ username, password }).subscribe(
         (res) => {
           console.log(res)
+          window.location.href = 'http://localhost:3000/post'
         },
         (err) => {
           console.log(err)

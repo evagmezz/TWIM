@@ -1,6 +1,5 @@
 import { ArrayNotEmpty, IsArray, Length, Matches } from 'class-validator'
 import { Transform } from 'class-transformer'
-import { Role } from '../entities/user.entity'
 
 export class CreateUserDto {
   @Length(2, 20, {
