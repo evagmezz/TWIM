@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { MulterModule } from '@nestjs/platform-express'
 import { CommentModule } from '../comment/comment.module'
 import { CacheModule } from '@nestjs/cache-manager'
+import { StorageModule } from '../storage/ storage.module'
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { CacheModule } from '@nestjs/cache-manager'
       dest: './uploads',
     }),
     CacheModule.register(),
+    StorageModule,
   ],
   controllers: [PostController],
   providers: [PostService, PostMapper],

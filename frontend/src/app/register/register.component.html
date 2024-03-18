@@ -7,8 +7,6 @@
       <div *ngIf="registerForm.controls['name'].invalid && registerForm.controls['name'].touched"
            class="container-error">
            <small class="error-message" *ngIf="registerForm.controls['name'].errors?.['required']">El nombre es obligatorio</small>
-            <small class="error-message" *ngIf="registerForm.controls['name'].errors?.['minlength']">El nombre debe tener al menos 2 caracteres</small>
-            <small class="error-message" *ngIf="registerForm.controls['name'].errors?.['maxlength']">El nombre debe tener como máximo 20 caracteres</small>
       </div>
     </span>
        <span class="input-field mb-3">
@@ -17,8 +15,6 @@
       <div *ngIf="registerForm.controls['lastname'].invalid && registerForm.controls['lastname'].touched"
            class="container-error">
            <small class="error-message" *ngIf="registerForm.controls['lastname'].errors?.['required']">Los apellidos son obligatorios</small>
-            <small class="error-message" *ngIf="registerForm.controls['lastname'].errors?.['minlength']">Los apellidos deben tener al menos 2 caracteres</small>
-            <small class="error-message" *ngIf="registerForm.controls['lastname'].errors?.['maxlength']">Los apellidos deben tener como máximo 20 caracteres</small>
          </div>
     </span>
        <span class="input-field mb-3">
@@ -36,8 +32,8 @@
       <div *ngIf="registerForm.controls['username'].invalid && registerForm.controls['username'].touched"
            class="container-error">
            <small class="error-message" *ngIf="registerForm.controls['username'].errors?.['required']">El nombre de usuario es obligatorio</small>
-            <small class="error-message" *ngIf="registerForm.controls['username'].errors?.['minlength']">El nombre de usuario debe tener al menos 2 caracteres</small>
-            <small class="error-message" *ngIf="registerForm.controls['username'].errors?.['maxlength']">El nombre de usuario debe tener como máximo 20 caracteres</small>
+            <small class="error-message" *ngIf="registerForm.controls['username'].errors?.['minlength']">Demasiado corto</small>
+            <small class="error-message" *ngIf="registerForm.controls['username'].errors?.['maxlength']">Demasiado largo</small>
             <small class="error-message" *ngIf="registerForm.controls['username'].errors?.['pattern']">El formato no es válido</small>
          </div>
     </span>
@@ -54,7 +50,7 @@
         <label for="repeatPwd"></label>
       <div *ngIf="registerForm.controls['repeatPwd'].invalid && registerForm.controls['repeatPwd'].touched"
            class="container-error">
-           <small class="error-message" *ngIf="registerForm.controls['repeatPwd'].errors?.['required']">La confirmación de la contraseña es obligatoria</small>
+           <small class="error-message" *ngIf="registerForm.controls['repeatPwd'].errors?.['required']">Debe confirmar la contraseña</small>
             <small class="error-message" *ngIf="registerForm.controls['repeatPwd'].errors?.['notEquivalent']">Las contraseñas no coinciden</small>
          </div>
     </span>

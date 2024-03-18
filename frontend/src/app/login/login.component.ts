@@ -11,9 +11,12 @@ import { InputTextModule } from 'primeng/inputtext'
 import { ButtonModule } from 'primeng/button'
 import { PasswordModule } from 'primeng/password'
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { NgClass, NgForOf, NgIf } from '@angular/common'
-import { Router } from '@angular/router'
+
+export class Token {
+  access_token: string
+}
 
 @Component({
   selector: 'app-login',
@@ -58,15 +61,12 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       const username = this.loginForm.controls.username.value || ''
       const password = this.loginForm.controls.password.value || ''
-      this.authService.login({ username, password }).subscribe(
-        (res) => {
-          console.log(res)
-          window.location.href = 'http://localhost:3000/post'
-        },
-        (err) => {
-          console.log(err)
-        },
-      )
+      this.authService
+        .login({ username, password })
+        .subscribe((data: Token) => {
+          localStorage.setItem('access_token', data.access_token)
+          this.router.navigate(['index'])
+        })
     }
   }
 }

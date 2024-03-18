@@ -1,1 +1,7 @@
-<p>index works!</p>
+<router-outlet></router-outlet>
+```
+<div class="post-grid">
+  <div *ngFor="let post of posts" class="post-card">
+    <img [src]="post.photos[0]" alt="Post image">
+  </div>
+</div>

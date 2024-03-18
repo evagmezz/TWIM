@@ -35,14 +35,8 @@ import { DividerModule } from 'primeng/divider'
 })
 export class RegisterComponent implements OnInit {
   registerForm = this.fb.group({
-    name: [
-      '',
-      [Validators.minLength(2), Validators.maxLength(20), Validators.required],
-    ],
-    lastname: [
-      '',
-      [Validators.minLength(2), Validators.maxLength(20), Validators.required],
-    ],
+    name: ['', [Validators.required]],
+    lastname: ['', [Validators.required]],
     username: [
       '',
       [

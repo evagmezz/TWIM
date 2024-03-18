@@ -15,6 +15,15 @@
   margin: auto;
 }
 
+.card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  /*fondo del formulario*/
+/*  background-image: url("");*/
+}
+
 .input-field {
   width: 100%;
   position: relative;

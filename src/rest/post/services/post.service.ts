@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common'
 import { CreatePostDto } from '../dto/create-post.dto'
 import { UpdatePostDto } from '../dto/update-post.dto'
 import { InjectModel } from '@nestjs/mongoose'
@@ -9,6 +14,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { User } from '../../user/entities/user.entity'
 import { Repository } from 'typeorm'
 import { Comment, CommentDocument } from '../../comment/entities/comment.entity'
+import { StorageService } from '../../storage/services/ storage.service'
 
 @Injectable()
 export class PostService {
@@ -18,6 +24,7 @@ export class PostService {
     @InjectModel(Post.name)
     private postRepository: PaginateModel<PostDocument>,
     private readonly postMapper: PostMapper,
+    private readonly storageService: StorageService,
     @InjectModel(Comment.name)
     private commentRepository: PaginateModel<CommentDocument>,
     @InjectRepository(User)
@@ -38,7 +45,7 @@ export class PostService {
 
   async findOne(id: string) {
     this.logger.log(`Buscando post con id ${id}`)
-    const post = this.postRepository.findById(id).exec()
+    const post = await this.postRepository.findById(id).exec()
     if (!post) {
       throw new NotFoundException(`El post con el id ${id} no existe`)
     }
@@ -64,7 +71,11 @@ export class PostService {
 
   async create(createPostDto: CreatePostDto, files: Express.Multer.File[]) {
     this.logger.log('Creando post')
-    createPostDto.photos = files.map((file) => file.path)
+
+    if (!files || files.length === 0) {
+      throw new BadRequestException('Debe subir al menos una imagen')
+    }
+    createPostDto.photos = files.map((file) => file.filename)
     const post = this.postMapper.toEntity(createPostDto)
     return await this.postRepository.create(post)
   }
@@ -85,10 +96,11 @@ export class PostService {
 
   async remove(id: string) {
     this.logger.log(`Eliminando post con id ${id}`)
-    const post = this.postRepository.findById(id).exec()
+    const post = await this.findOne(id)
     if (!post) {
       throw new NotFoundException(`El post con el id ${id} no existe`)
     }
+    this.storageService.removeFiles(post.photos)
     return await this.postRepository.findByIdAndDelete(id).exec()
   }
 

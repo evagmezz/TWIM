@@ -1,6 +1,20 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { Observable } from 'rxjs'
+import { map, Observable } from 'rxjs'
+import { Post } from '../index/index.component'
+
+export class Paginate<T> {
+  docs: T[]
+  totalDocs: number
+  limit: number
+  totalPages: number
+  page: number
+  pagingCounter: number
+  hasPrevPage: boolean
+  hasNextPage: boolean
+  prevPage: number
+  nextPage: number
+}
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +23,6 @@ export class AuthService {
   private loginUrl = 'http://localhost:3000/auth/signin'
   private registerUrl = 'http://localhost:3000/auth/signup'
   private indexUrl = 'http://localhost:3000/post'
-  private tokenKey = 'token'
 
   constructor(private http: HttpClient) {}
 
@@ -28,7 +41,20 @@ export class AuthService {
     return this.http.post(this.registerUrl, credentials)
   }
 
-  index(): Observable<any> {
-    return this.http.get(this.indexUrl)
+  index(): Observable<Paginate<Post>> {
+    return this.http.get<Paginate<Post>>(this.indexUrl).pipe(
+      map((res) => ({
+        docs: res.docs,
+        totalDocs: res.totalDocs,
+        limit: res.limit,
+        totalPages: res.totalPages,
+        page: res.page,
+        pagingCounter: res.pagingCounter,
+        hasPrevPage: res.hasPrevPage,
+        hasNextPage: res.hasNextPage,
+        prevPage: res.prevPage,
+        nextPage: res.nextPage,
+      })),
+    )
   }
 }
