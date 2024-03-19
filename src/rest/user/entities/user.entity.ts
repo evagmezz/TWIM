@@ -56,7 +56,7 @@ export class User {
     type: 'varchar',
     nullable: true,
   })
-  photo: string
+  image: string
 
   @Column({
     type: 'enum',

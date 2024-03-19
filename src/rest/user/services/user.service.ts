@@ -85,7 +85,7 @@ export class UserService {
       throw new BadRequestException(`El email ${createUserDto.email} ya existe`)
     }
 
-    createUserDto.photo = `${req.protocol}://${req.get('host')}/photos/${file.filename}`
+    createUserDto.image = `${req.protocol}://${req.get('host')}/photos/${file.filename}`
     const hashPassword = await this.bcryptService.hash(createUserDto.password)
     const newUser = this.userMapper.toEntity(createUserDto)
     newUser.password = hashPassword
@@ -222,7 +222,7 @@ export class UserService {
     } else {
       await this.invalidateCacheKey(`user_${id}`)
       await this.invalidateCacheKey('all_users')
-      this.storageService.removeFile(user.photo)
+      this.storageService.removeFile(user.image)
       return await this.userRepository.delete(id)
     }
   }

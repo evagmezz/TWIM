@@ -30,16 +30,8 @@ export class AuthService {
     return this.http.post(this.loginUrl, credentials)
   }
 
-  register(credentials: {
-    name: string
-    lastname: string
-    username: string
-    password: string
-    email: string
-    repeatPwd: string
-    photo: string
-  }): Observable<any> {
-    return this.http.post(this.registerUrl, credentials)
+  register(formData: FormData): Observable<any> {
+    return this.http.post(this.registerUrl, formData)
   }
 
   index(): Observable<Paginate<Post>> {

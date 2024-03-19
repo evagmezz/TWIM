@@ -68,7 +68,7 @@ export class UserController {
   @HttpCode(201)
   @Roles('ADMIN')
   @UseInterceptors(
-    FileInterceptor('photo', {
+    FileInterceptor('image', {
       storage: diskStorage({
         destination: process.env.UPLOADS_FOLDER || './photos',
         filename: (req, file, cb) => {

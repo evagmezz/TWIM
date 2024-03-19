@@ -8,7 +8,6 @@ import {
 } from '@angular/forms'
 import { InputTextModule } from 'primeng/inputtext'
 import { PasswordModule } from 'primeng/password'
-import { transition } from '@angular/animations'
 import { HttpClientModule } from '@angular/common/http'
 import { AuthService } from '../services/auth.service'
 import { RouterLink } from '@angular/router'
@@ -16,6 +15,7 @@ import { CommonModule, NgIf } from '@angular/common'
 import { DividerModule } from 'primeng/divider'
 import { MessagesModule } from 'primeng/messages'
 import { Message } from 'primeng/api'
+import { FileUploadModule } from 'primeng/fileupload'
 
 @Component({
   selector: 'app-register',
@@ -33,11 +33,13 @@ import { Message } from 'primeng/api'
     NgIf,
     DividerModule,
     MessagesModule,
+    FileUploadModule,
   ],
   providers: [HttpClientModule],
 })
 export class RegisterComponent implements OnInit {
   messages: Message[]
+  selectedFile: File
   registerForm = this.fb.group({
     name: ['', [Validators.required]],
     lastname: ['', [Validators.required]],
@@ -53,13 +55,19 @@ export class RegisterComponent implements OnInit {
     password: ['', [Validators.required]],
     email: ['', [Validators.email, Validators.required]],
     repeatPwd: ['', [Validators.required]],
-    photo: ['', [Validators.required]],
   })
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
   ) {}
+
+  onFileChange(event: Event) {
+    const target = event.target as HTMLInputElement
+    if (target.files && target.files.length > 0) {
+      this.selectedFile = target.files[0]
+    }
+  }
 
   ngOnInit(): void {
     this.registerForm.controls.password.valueChanges.subscribe(() => {
@@ -86,32 +94,31 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.registerForm.valid) {
+    if (this.registerForm.valid && this.selectedFile) {
       const name = this.registerForm.controls.name.value || ''
       const lastname = this.registerForm.controls.lastname.value || ''
       const username = this.registerForm.controls.username.value || ''
       const password = this.registerForm.controls.password.value || ''
       const email = this.registerForm.controls.email.value || ''
       const repeatPwd = this.registerForm.controls.repeatPwd.value || ''
-      const photo = this.registerForm.controls.photo.value || ''
-      this.authService
-        .register({
-          name,
-          lastname,
-          username,
-          password,
-          email,
-          repeatPwd,
-          photo,
-        })
-        .subscribe(
-          (res) => {
-            console.log(res)
-          },
-          (err) => {
-            console.log(err)
-          },
-        )
+
+      const formData = new FormData()
+      formData.append('name', name)
+      formData.append('lastname', lastname)
+      formData.append('username', username)
+      formData.append('password', password)
+      formData.append('email', email)
+      formData.append('repeatPwd', repeatPwd)
+      formData.append('image', this.selectedFile)
+
+      this.authService.register(formData).subscribe(
+        (res) => {
+          console.log(res)
+        },
+        (err) => {
+          console.log(err)
+        },
+      )
     } else {
       this.messages = [
         {

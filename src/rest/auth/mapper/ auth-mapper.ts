@@ -12,7 +12,7 @@ export class AuthMapper {
     userCreateDto.username = userSignUpDto.username
     userCreateDto.password = userSignUpDto.password
     userCreateDto.email = userSignUpDto.email
-    userCreateDto.photo = userSignUpDto.photo
+    userCreateDto.image = userSignUpDto.image
     userCreateDto.role = [Role.USER]
     return userCreateDto
   }

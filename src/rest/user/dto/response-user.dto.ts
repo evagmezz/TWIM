@@ -24,7 +24,7 @@ export class ResponseUserDto {
   email: string
 
   @IsString()
-  photo: string
+  image: string
 
   password: string
   role: string

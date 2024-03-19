@@ -44,7 +44,7 @@ export class CreateUserDto {
   email: string
 
   @Transform(({ value }) => value.trim())
-  photo: string
+  image: string
 
   @IsEnum(['user', 'admin'], {
     message: 'El rol debe ser user o admin',

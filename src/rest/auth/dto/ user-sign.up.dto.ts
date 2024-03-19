@@ -30,6 +30,5 @@ export class UserSignUpDto {
   @Transform(({ value }) => value.trim())
   email: string
 
-  @Transform(({ value }) => value.trim())
-  photo: string
+  image: string
 }
