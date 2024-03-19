@@ -55,4 +55,19 @@ export class StorageService {
       }
     })
   }
+
+  removeFile(fileUrl: string): void {
+    const filename = fileUrl.split('/').pop()
+    this.logger.log(`Eliminando imagen ${filename}`)
+    const file = join(
+      process.cwd(),
+      process.env.UPLOADS_FOLDER || './photos',
+      filename,
+    )
+    if (fs.existsSync(file)) {
+      fs.unlinkSync(file)
+    } else {
+      throw new NotFoundException(`Imagen ${filename} no encontrada`)
+    }
+  }
 }

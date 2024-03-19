@@ -37,6 +37,7 @@ export class AuthService {
     password: string
     email: string
     repeatPwd: string
+    photo: string
   }): Observable<any> {
     return this.http.post(this.registerUrl, credentials)
   }

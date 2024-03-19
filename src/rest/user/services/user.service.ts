@@ -17,6 +17,8 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { ResponseUserDto } from '../dto/response-user.dto'
 import { paginate, PaginateQuery } from 'nestjs-paginate'
 import { hash } from 'typeorm/util/StringUtils'
+import { Request } from 'express'
+import { StorageService } from '../../storage/services/ storage.service'
 
 @Injectable()
 export class UserService {
@@ -26,6 +28,7 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly userMapper: UserMapper,
+    private readonly storageService: StorageService,
     private readonly bcryptService: BcryptService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
@@ -63,7 +66,11 @@ export class UserService {
     return this.userMapper.toDto(user)
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(
+    createUserDto: CreateUserDto,
+    file: Express.Multer.File,
+    req: Request,
+  ) {
     this.logger.log('Creando usuario')
     const user = await Promise.all([
       this.findByUsername(createUserDto.username),
@@ -77,6 +84,8 @@ export class UserService {
     if (user[1]) {
       throw new BadRequestException(`El email ${createUserDto.email} ya existe`)
     }
+
+    createUserDto.photo = `${req.protocol}://${req.get('host')}/photos/${file.filename}`
     const hashPassword = await this.bcryptService.hash(createUserDto.password)
     const newUser = this.userMapper.toEntity(createUserDto)
     newUser.password = hashPassword
@@ -213,6 +222,7 @@ export class UserService {
     } else {
       await this.invalidateCacheKey(`user_${id}`)
       await this.invalidateCacheKey('all_users')
+      this.storageService.removeFile(user.photo)
       return await this.userRepository.delete(id)
     }
   }

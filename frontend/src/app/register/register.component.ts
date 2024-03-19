@@ -53,6 +53,7 @@ export class RegisterComponent implements OnInit {
     password: ['', [Validators.required]],
     email: ['', [Validators.email, Validators.required]],
     repeatPwd: ['', [Validators.required]],
+    photo: ['', [Validators.required]],
   })
 
   constructor(
@@ -92,8 +93,17 @@ export class RegisterComponent implements OnInit {
       const password = this.registerForm.controls.password.value || ''
       const email = this.registerForm.controls.email.value || ''
       const repeatPwd = this.registerForm.controls.repeatPwd.value || ''
+      const photo = this.registerForm.controls.photo.value || ''
       this.authService
-        .register({ name, lastname, username, password, email, repeatPwd })
+        .register({
+          name,
+          lastname,
+          username,
+          password,
+          email,
+          repeatPwd,
+          photo,
+        })
         .subscribe(
           (res) => {
             console.log(res)
@@ -112,6 +122,4 @@ export class RegisterComponent implements OnInit {
       ]
     }
   }
-
-  protected readonly transition = transition
 }

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,6 +9,8 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Req,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
@@ -18,6 +21,10 @@ import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
 import { Paginate, PaginateQuery } from 'nestjs-paginate'
 import { JwtAuthGuard } from '../../auth/ guards/ jwt-auth.guard'
 import { Roles, RolesAuthGuard } from '../../auth/ guards/roles-auth.guard'
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express'
+import { extname, parse } from 'path'
+import { diskStorage } from 'multer'
+import { Request } from 'express'
 
 @UseInterceptors(CacheInterceptor)
 @UseGuards(JwtAuthGuard, RolesAuthGuard)
@@ -60,8 +67,46 @@ export class UserController {
   @Post()
   @HttpCode(201)
   @Roles('ADMIN')
-  async create(@Body() createUserDto: CreateUserDto) {
-    return await this.userService.create(createUserDto)
+  @UseInterceptors(
+    FileInterceptor('photo', {
+      storage: diskStorage({
+        destination: process.env.UPLOADS_FOLDER || './photos',
+        filename: (req, file, cb) => {
+          const { name } = parse(file.originalname)
+          const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`
+          const fileExt = extname(file.originalname)
+          cb(null, `${fileName}${fileExt}`)
+        },
+      }),
+      fileFilter: (req, file, cb) => {
+        const allowedMimes = ['image/jpeg', 'image/png']
+        const maxFileSize = 1024 * 1024
+        if (!allowedMimes.includes(file.mimetype)) {
+          cb(
+            new BadRequestException(
+              'Imagen no valida, solo se permiten archivos .jpg y .png',
+            ),
+            false,
+          )
+        } else if (file.size > maxFileSize) {
+          cb(
+            new BadRequestException(
+              'Imagen no valida, el tamaño máximo es 1MB',
+            ),
+            false,
+          )
+        } else {
+          cb(null, true)
+        }
+      },
+    }),
+  )
+  async create(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: Request,
+  ) {
+    return await this.userService.create(createUserDto, file, req)
   }
 
   @Put(':id')

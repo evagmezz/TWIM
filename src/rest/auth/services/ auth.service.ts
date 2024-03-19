@@ -10,6 +10,7 @@ import { UserSignInDto } from '../dto/user-sign.in.dto'
 import { UserService } from '../../user/services/user.service'
 import { AuthMapper } from '../mapper/ auth-mapper'
 import { UserSignUpDto } from '../dto/ user-sign.up.dto'
+import { Request } from 'express'
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(userSignUpDto: UserSignUpDto) {
+  async signUp(
+    userSignUpDto: UserSignUpDto,
+    file: Express.Multer.File,
+    req: Request,
+  ) {
     this.logger.log(`Sign up ${userSignUpDto.username}`)
 
     const existingUserByEmail = await this.userService.findByEmail(
@@ -40,6 +45,8 @@ export class AuthService {
 
     const user = await this.userService.create(
       this.authMapper.toCreateDto(userSignUpDto),
+      file,
+      req,
     )
     return this.getAccessToken(user.id)
   }

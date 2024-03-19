@@ -55,6 +55,14 @@
           <small class="error-message" *ngIf="registerForm.controls['repeatPwd'].errors?.['notEquivalent']">Las contraseñas no coinciden</small>
         </div>
       </span>
+      <span class="input-field mb-3">
+        <label for="photo"></label>
+        <input type="file" pFileUpload mode="basic" name="photo" formControlName="photo" />
+        <div *ngIf="registerForm.controls['photo'].invalid && registerForm.controls['photo'].touched"
+             class="container-error">
+          <small class="error-message" *ngIf="registerForm.controls['photo'].errors?.['required']">La foto es obligatoria</small>
+        </div>
+      </span>
       <button pButton type="submit" label="Registrarse"
               class="p-button-rounded p-button-raised p-button-primary"></button>
       <p>¿Ya tienes cuenta?</p>

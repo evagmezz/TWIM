@@ -53,6 +53,12 @@ export class User {
   email: string
 
   @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  photo: string
+
+  @Column({
     type: 'enum',
     enum: Role,
     default: Role.USER,

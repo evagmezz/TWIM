@@ -1,4 +1,4 @@
-import { Length, Matches } from 'class-validator'
+import { IsString, Length, Matches } from 'class-validator'
 
 export class ResponseUserDto {
   id: string
@@ -22,6 +22,9 @@ export class ResponseUserDto {
     message: 'El email no es válido',
   })
   email: string
+
+  @IsString()
+  photo: string
 
   password: string
   role: string

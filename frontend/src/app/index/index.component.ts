@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { Router, RouterOutlet } from '@angular/router'
 import { AuthService } from '../services/auth.service'
 import { NgForOf } from '@angular/common'
+import { CardModule } from 'primeng/card'
 
 export class Post {
   userId: string
@@ -17,7 +18,7 @@ export class Post {
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [RouterOutlet, NgForOf],
+  imports: [RouterOutlet, NgForOf, CardModule],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css',
 })

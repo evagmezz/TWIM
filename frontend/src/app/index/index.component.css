@@ -1,10 +1,33 @@
-.post-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.post-card {
-  flex: 0 0 calc(50% - 10px); /* Asume un espacio de 10px entre los posts */
-  margin-bottom: 20px; /* Espacio debajo de cada post */
+.masonry {
+  column-count: 2;
+  column-gap: 1em;
+}
+
+@media (min-width: 768px) {
+  .masonry {
+    column-count: 3;
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonry {
+    column-count: 4;
+  }
+}
+
+.item {
+  display: inline-block;
+  margin: 0 0 1em;
+  width: 100%;
+}
+
+.img-fluid {
+  width: 100%;
+  height: auto;
 }

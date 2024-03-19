@@ -1,5 +1,12 @@
-import { ArrayNotEmpty, IsArray, Length, Matches } from 'class-validator'
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsEnum,
+  Length,
+  Matches,
+} from 'class-validator'
 import { Transform } from 'class-transformer'
+import { Role } from '../entities/user.entity'
 
 export class CreateUserDto {
   @Length(2, 20, {
@@ -36,7 +43,11 @@ export class CreateUserDto {
   @Transform(({ value }) => value.trim())
   email: string
 
-  @IsArray()
-  @ArrayNotEmpty()
-  role: string[]
+  @Transform(({ value }) => value.trim())
+  photo: string
+
+  @IsEnum(['user', 'admin'], {
+    message: 'El rol debe ser user o admin',
+  })
+  role: Role[]
 }
