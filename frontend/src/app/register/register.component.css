@@ -52,3 +52,18 @@
 .card button:not(:last-child) {
   margin-right: 10px;
 }
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.alert-message {
+  z-index: 1;
+}

@@ -6,36 +6,18 @@ import {
   NotFoundException,
   Param,
   Req,
-  Res,
   UploadedFiles,
   UseInterceptors,
+  Res,
 } from '@nestjs/common'
 
 import { diskStorage } from 'multer'
 import { FilesInterceptor } from '@nestjs/platform-express'
-import { Request, Response } from 'express'
-import { v4 as uuidv4 } from 'uuid'
-import { extname, join, parse } from 'path'
+import { Request } from 'express'
+import { extname, parse } from 'path'
 import { StorageService } from '../services/ storage.service'
 import * as fs from 'fs'
-
-function getFileExtension(filename: string) {
-  return extname(filename).slice(1)
-}
-
-function isValidFile(file: {
-  fieldname: string
-  originalname: string
-  encoding: string
-  mimetype: string
-  size: number
-  destination: string
-  filename: string
-  path: string
-  buffer: Buffer
-}) {
-  return false
-}
+import { Response } from 'express'
 
 @Controller('photos')
 export class StorageController {
@@ -44,21 +26,21 @@ export class StorageController {
   constructor(private readonly storageService: StorageService) {}
 
   @UseInterceptors(
-    FilesInterceptor('image', 20, {
+    FilesInterceptor('image', 7, {
       storage: diskStorage({
         destination: process.env.UPLOADS_FOLDER || './photos',
         filename: (req, file, cb) => {
           const { name } = parse(file.originalname)
-          const fileName = `${uuidv4()}_${name.replace(/\s/g, '')}`
-          const fileExt = getFileExtension(file.originalname)
+          const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`
+          const fileExt = extname(file.originalname)
           cb(null, `${fileName}.${fileExt}`)
         },
       }),
       fileFilter: (req, file, cb) => {
-        if (isValidFile(file)) {
-          cb(null, true)
+        if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+          cb(new BadRequestException('Archivo no soportado.'), false)
         } else {
-          cb(new BadRequestException('Tipo de archivo no permitido'), false)
+          cb(null, true)
         }
       },
     }),
@@ -70,23 +52,22 @@ export class StorageController {
     this.logger.log(`Almacenando imágenes`)
 
     if (!files) {
-      throw new BadRequestException('Imagen no encontrada')
+      throw new BadRequestException('Imagen no soprtada')
     }
 
-    const url = `${req.protocol}://${req.get('host')}/photos/${files[0].filename}`
-    console.log(files[0].filename)
-    return { url }
+    const urls = files.map((file) => {
+      return `${req.protocol}://${req.get('host')}/photos/${file.filename}`
+    })
+
+    return {
+      urls: urls,
+    }
   }
 
   @Get(':filename')
   getFile(@Param('filename') filename: string, @Res() res: Response) {
     this.logger.log(`Buscando imagen ${filename}`)
-    const file = join(
-      process.cwd(),
-      process.env.UPLOADS_FOLDER || './photos',
-      filename,
-    )
-
+    const file = this.storageService.findFile(filename)
     if (fs.existsSync(file)) {
       this.logger.log(`Imagen encontrada ${file}`)
       res.sendFile(file)

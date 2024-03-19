@@ -24,25 +24,25 @@ export class StorageService {
     }
   }
 
-  findFiles(filenames: string[]) {
-    return filenames.map((filename) => {
-      const file = join(
-        process.cwd(),
-        process.env.UPLOADS_FOLDER || './photos',
-        filename,
-      )
-      if (fs.existsSync(file)) {
-        this.logger.log(`Imagen ${filename} encontrada`)
-        return file
-      } else {
-        throw new NotFoundException(`Imagen ${filename} no encontrada`)
-      }
-    })
+  findFile(filename: string) {
+    this.logger.log(`Buscando imagen ${filename}`)
+    const file = join(
+      process.cwd(),
+      process.env.UPLOADS_FOLDER || './photos',
+      filename,
+    )
+    if (fs.existsSync(file)) {
+      this.logger.log(`Imagen ${filename} encontrada`)
+      return file
+    } else {
+      throw new NotFoundException(`Imagen ${filename} no encontrada`)
+    }
   }
 
-  removeFiles(filenames: string[]): void {
-    filenames.forEach((filename) => {
-      this.logger.log(`Eliminando imágenes ${filename}`)
+  removeFiles(fileUrls: string[]): void {
+    fileUrls.forEach((fileUrl) => {
+      const filename = fileUrl.split('/').pop()
+      this.logger.log(`Eliminando imagen ${filename}`)
       const file = join(
         process.cwd(),
         process.env.UPLOADS_FOLDER || './photos',

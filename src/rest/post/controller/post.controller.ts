@@ -11,6 +11,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -18,12 +19,12 @@ import {
 import { PostService } from '../services/post.service'
 import { CreatePostDto } from '../dto/create-post.dto'
 import { UpdatePostDto } from '../dto/update-post.dto'
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express'
+import { FilesInterceptor } from '@nestjs/platform-express'
 import { Roles, RolesAuthGuard } from '../../auth/ guards/roles-auth.guard'
 import { JwtAuthGuard } from '../../auth/ guards/ jwt-auth.guard'
 import { diskStorage } from 'multer'
-import { v4 as uuidv4 } from 'uuid'
 import { extname, parse } from 'path'
+import { Request } from 'express'
 
 @Controller('post')
 @UseGuards(JwtAuthGuard, RolesAuthGuard)
@@ -64,12 +65,12 @@ export class PostController {
   @Post()
   @HttpCode(201)
   @UseInterceptors(
-    FilesInterceptor('image', 20, {
+    FilesInterceptor('image', 7, {
       storage: diskStorage({
         destination: process.env.UPLOADS_FOLDER || './photos',
         filename: (req, file, cb) => {
           const { name } = parse(file.originalname)
-          const fileName = `${uuidv4()}_${name.replace(/\s/g, '')}`
+          const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`
           const fileExt = extname(file.originalname)
           cb(null, `${fileName}${fileExt}`)
         },
@@ -87,12 +88,13 @@ export class PostController {
   create(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Body() createPostDto: CreatePostDto,
+    @Req() req: Request,
   ) {
     if (!files || files.length === 0) {
       throw new BadRequestException('No hay imágenes')
     }
     createPostDto.photos = files.map((file) => file.path)
-    return this.postService.create(createPostDto, files)
+    return this.postService.create(createPostDto, files, req)
   }
 
   @Put(':id')

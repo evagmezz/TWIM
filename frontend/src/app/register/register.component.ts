@@ -14,6 +14,8 @@ import { AuthService } from '../services/auth.service'
 import { RouterLink } from '@angular/router'
 import { CommonModule, NgIf } from '@angular/common'
 import { DividerModule } from 'primeng/divider'
+import { MessagesModule } from 'primeng/messages'
+import { Message } from 'primeng/api'
 
 @Component({
   selector: 'app-register',
@@ -30,10 +32,12 @@ import { DividerModule } from 'primeng/divider'
     RouterLink,
     NgIf,
     DividerModule,
+    MessagesModule,
   ],
   providers: [HttpClientModule],
 })
 export class RegisterComponent implements OnInit {
+  messages: Message[]
   registerForm = this.fb.group({
     name: ['', [Validators.required]],
     lastname: ['', [Validators.required]],
@@ -98,6 +102,14 @@ export class RegisterComponent implements OnInit {
             console.log(err)
           },
         )
+    } else {
+      this.messages = [
+        {
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Formulario inválido, rellene todos los campos correctamente',
+        },
+      ]
     }
   }
 

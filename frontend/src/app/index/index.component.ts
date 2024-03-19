@@ -23,6 +23,7 @@ export class Post {
 })
 export class IndexComponent implements OnInit {
   posts: Post[] = []
+
   constructor(
     private router: Router,
     private authService: AuthService,

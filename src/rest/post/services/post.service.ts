@@ -15,6 +15,7 @@ import { User } from '../../user/entities/user.entity'
 import { Repository } from 'typeorm'
 import { Comment, CommentDocument } from '../../comment/entities/comment.entity'
 import { StorageService } from '../../storage/services/ storage.service'
+import { Request } from 'express'
 
 @Injectable()
 export class PostService {
@@ -69,13 +70,20 @@ export class PostService {
     return comments
   }
 
-  async create(createPostDto: CreatePostDto, files: Express.Multer.File[]) {
+  async create(
+    createPostDto: CreatePostDto,
+    files: Express.Multer.File[],
+    req: Request,
+  ) {
     this.logger.log('Creando post')
 
     if (!files || files.length === 0) {
       throw new BadRequestException('Debe subir al menos una imagen')
     }
-    createPostDto.photos = files.map((file) => file.filename)
+
+    createPostDto.photos = files.map(
+      (file) => `${req.protocol}://${req.get('host')}/photos/${file.filename}`,
+    )
     const post = this.postMapper.toEntity(createPostDto)
     return await this.postRepository.create(post)
   }
