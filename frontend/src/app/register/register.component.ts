@@ -94,7 +94,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.registerForm.valid && this.selectedFile) {
+    if (this.registerForm.valid) {
       const name = this.registerForm.controls.name.value || ''
       const lastname = this.registerForm.controls.lastname.value || ''
       const username = this.registerForm.controls.username.value || ''
@@ -109,7 +109,9 @@ export class RegisterComponent implements OnInit {
       formData.append('password', password)
       formData.append('email', email)
       formData.append('repeatPwd', repeatPwd)
-      formData.append('image', this.selectedFile)
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile)
+      }
 
       this.authService.register(formData).subscribe(
         (res) => {

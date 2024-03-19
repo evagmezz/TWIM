@@ -37,7 +37,7 @@ export class StorageController {
         },
       }),
       fileFilter: (req, file, cb) => {
-        if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+        if (!file.mimetype.match(/\/(jpg|jpeg|png|heic)$/)) {
           cb(new BadRequestException('Archivo no soportado.'), false)
         } else {
           cb(null, true)
@@ -54,7 +54,6 @@ export class StorageController {
     if (!files) {
       throw new BadRequestException('Imagen no soprtada')
     }
-
     const urls = files.map((file) => {
       return `${req.protocol}://${req.get('host')}/photos/${file.filename}`
     })

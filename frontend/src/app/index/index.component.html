@@ -2,7 +2,12 @@
 <div class="container">
   <div class="masonry">
     <div *ngFor="let post of posts" class="item">
-      <img [src]="post.photos[0]" alt="post image" class="img-fluid rounded-3">
+      <img [src]="post.photos[0]" alt="post image" class="img-fluid" (click)="postDetails(post.id)">
+      <div class="user-info" *ngIf="getUserByUserId(post.userId) as user">
+        <img [src]="user.image" alt="user image" class="user-image">
+        <p>{{ user.username }}</p>
+      </div>
     </div>
   </div>
 </div>
+

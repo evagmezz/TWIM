@@ -1,4 +1,4 @@
-import { Length, Matches } from 'class-validator'
+import { IsOptional, Length, Matches } from 'class-validator'
 import { Transform } from 'class-transformer'
 
 export class UserSignUpDto {
@@ -30,5 +30,7 @@ export class UserSignUpDto {
   @Transform(({ value }) => value.trim())
   email: string
 
-  image: string
+  @IsOptional()
+  @Transform(({ value }) => value.trim())
+  image?: string
 }

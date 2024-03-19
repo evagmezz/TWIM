@@ -2,7 +2,7 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-}
+  margin-bottom: 70px; }
 
 .masonry {
   column-count: 2;
@@ -30,4 +30,20 @@
 .img-fluid {
   width: 100%;
   height: auto;
+  border-radius: 10px;
 }
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-image {
+  border-radius: 50%;
+  height: 5vh;
+  width: 5vh;
+  object-fit: cover;
+  margin-right: 0.5em;
+}
+
+

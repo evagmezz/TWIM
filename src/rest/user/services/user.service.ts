@@ -85,7 +85,11 @@ export class UserService {
       throw new BadRequestException(`El email ${createUserDto.email} ya existe`)
     }
 
-    createUserDto.image = `${req.protocol}://${req.get('host')}/photos/${file.filename}`
+    if (file) {
+      createUserDto.image = `${req.protocol}://${req.get('host')}/photos/${file.filename}`
+    } else {
+      createUserDto.image = User.IMAGE_DEFAULT
+    }
     const hashPassword = await this.bcryptService.hash(createUserDto.password)
     const newUser = this.userMapper.toEntity(createUserDto)
     newUser.password = hashPassword

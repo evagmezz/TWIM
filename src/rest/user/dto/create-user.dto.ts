@@ -2,6 +2,7 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsEnum,
+  IsOptional,
   Length,
   Matches,
 } from 'class-validator'
@@ -43,8 +44,9 @@ export class CreateUserDto {
   @Transform(({ value }) => value.trim())
   email: string
 
+  @IsOptional()
   @Transform(({ value }) => value.trim())
-  image: string
+  image?: string
 
   @IsEnum(['user', 'admin'], {
     message: 'El rol debe ser user o admin',

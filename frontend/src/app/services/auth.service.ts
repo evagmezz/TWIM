@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { map, Observable } from 'rxjs'
-import { Post } from '../index/index.component'
+import { Post, User } from '../index/index.component'
 
 export class Paginate<T> {
   docs: T[]
@@ -23,6 +23,7 @@ export class AuthService {
   private loginUrl = 'http://localhost:3000/auth/signin'
   private registerUrl = 'http://localhost:3000/auth/signup'
   private indexUrl = 'http://localhost:3000/post'
+  private detailUrl = 'http://localhost:3000/post/:id'
 
   constructor(private http: HttpClient) {}
 
@@ -49,5 +50,13 @@ export class AuthService {
         nextPage: res.nextPage,
       })),
     )
+  }
+
+  getUserById(id: string): Observable<User> {
+    return this.http.get<User>(`http://localhost:3000/users/${id}`)
+  }
+
+  details(id: string): Observable<Post> {
+    return this.http.get<Post>(`http://localhost:3000/post/${id}`)
   }
 }

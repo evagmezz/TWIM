@@ -76,10 +76,18 @@ export class PostController {
         },
       }),
       fileFilter: (req, file, cb) => {
-        if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+        if (file.mimetype.match(/\/(jpg|jpeg|png|heic)$/)) {
           cb(null, true)
         } else {
           cb(new BadRequestException('Formato de archivo no soportado'), false)
+        }
+        if (req.files.length > 7) {
+          cb(
+            new BadRequestException('No puedes subir mas de 7 archivos'),
+            false,
+          )
+        } else {
+          cb(null, true)
         }
       },
     }),

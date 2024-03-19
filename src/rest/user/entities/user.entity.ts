@@ -17,6 +17,8 @@ export enum Role {
 
 @Entity('users')
 export class User {
+  public static IMAGE_DEFAULT =
+    'https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_640.png'
   @PrimaryColumn({ type: 'uuid' })
   @IsUUID('4', { message: 'El id debe ser un UUID' })
   id: string = uuidv4()
@@ -55,8 +57,9 @@ export class User {
   @Column({
     type: 'varchar',
     nullable: true,
+    default: User.IMAGE_DEFAULT,
   })
-  image: string
+  image: string = User.IMAGE_DEFAULT
 
   @Column({
     type: 'enum',

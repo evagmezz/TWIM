@@ -1,5 +1,6 @@
-<body>
-<div class="container">
-  <router-outlet></router-outlet>
-</div>
-</body>
+<router-outlet></router-outlet>
+<footer *ngIf="shouldShowFooter()">
+  <button class="footer-button"><i class="pi pi-search" style="font-size: 1rem; color: #708090"></i></button>
+  <button class="footer-button"><i class="pi pi-plus" style="font-size: 1rem; color: #708090"></i></button>
+  <button class="footer-button"><i class="pi pi-user" style="font-size: 1rem; color: #708090"></i></button>
+</footer>
