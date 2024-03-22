@@ -1,11 +1,4 @@
-import {
-  ArrayNotEmpty,
-  IsArray,
-  IsEnum,
-  IsOptional,
-  Length,
-  Matches,
-} from 'class-validator'
+import { IsEnum, IsOptional, Length, Matches } from 'class-validator'
 import { Transform } from 'class-transformer'
 import { Role } from '../entities/user.entity'
 

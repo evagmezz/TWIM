@@ -36,9 +36,6 @@ export class Post {
   @Prop({ type: 'string' })
   title: string
 
-  @Prop({ type: 'string' })
-  text: string
-
   @Prop({ type: 'array', default: [] })
   photos: string[]
 

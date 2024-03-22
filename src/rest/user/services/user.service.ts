@@ -84,7 +84,6 @@ export class UserService {
     if (user[1]) {
       throw new BadRequestException(`El email ${createUserDto.email} ya existe`)
     }
-
     if (file) {
       createUserDto.image = `${req.protocol}://${req.get('host')}/photos/${file.filename}`
     } else {

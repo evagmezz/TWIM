@@ -6,8 +6,4 @@ export class UpdatePostDto extends PartialType(CreatePostDto) {
   @IsOptional()
   @IsString()
   title: string
-
-  @IsOptional()
-  @IsString()
-  content: string
 }

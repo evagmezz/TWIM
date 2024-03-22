@@ -49,3 +49,18 @@
 .p-inputtext.ng-invalid.ng-touched {
   border-color: #f88c79;
 }
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.info-message {
+  z-index: 1;
+}

@@ -59,14 +59,14 @@ export class User {
     nullable: true,
     default: User.IMAGE_DEFAULT,
   })
-  image: string = User.IMAGE_DEFAULT
+  image: string
 
   @Column({
     type: 'enum',
     enum: Role,
     default: Role.USER,
   })
-  role: Role
+  role: Role[]
 
   @CreateDateColumn({
     name: 'created_at',

@@ -48,6 +48,28 @@ export class UserController {
     return await this.userService.findOne(id)
   }
 
+  @Get('me/porfile')
+  @Roles('USER')
+  async getPorfile(@Req() request: any) {
+    return request.user
+  }
+
+  @Delete('me/porfile')
+  @HttpCode(204)
+  @Roles('USER')
+  async deletePorfile(@Req() request: any) {
+    return await this.userService.remove(request.user.id)
+  }
+
+  @Put('me/porfile')
+  @Roles('USER')
+  async updatePorfile(
+    @Req() request: any,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return await this.userService.update(request.user.id, updateUserDto)
+  }
+
   @Get(':id/followers')
   @CacheKey('followers')
   @CacheTTL(60)

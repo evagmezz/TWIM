@@ -1,4 +1,5 @@
-<div class="container">
+<div class="container  position-relative">
+  <p-messages [(value)]="message" [enableService]="false" [closable]="true" class="position-absolute info-message"></p-messages>
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <div class="card flex flex-column align-items-center justify-content-center">
      <span class="input-field mb-3">

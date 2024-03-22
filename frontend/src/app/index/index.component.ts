@@ -4,14 +4,21 @@ import { AuthService } from '../services/auth.service'
 import { NgForOf, NgIf } from '@angular/common'
 import { CardModule } from 'primeng/card'
 
+export class Comment {
+  id: string
+  postId: string
+  userId: string
+  content: string
+  createdAt: string
+}
+
 export class Post {
   userId: string
   title: string
-  text: string
   photos: string[]
   createdAt: string
   updatedAt: string
-  comments: string[]
+  comments: Comment[]
   id: string
 }
 

@@ -13,6 +13,9 @@ import { PasswordModule } from 'primeng/password'
 import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Router, RouterLink } from '@angular/router'
 import { NgClass, NgForOf, NgIf } from '@angular/common'
+import { MessagesModule } from 'primeng/messages'
+import { MessageSharingService } from '../services/message-sharing-service.service'
+import { Message } from 'primeng/api'
 
 export class Token {
   access_token: string
@@ -40,10 +43,12 @@ export class Token {
     NgIf,
     NgForOf,
     NgClass,
+    MessagesModule,
   ],
   providers: [HttpClientModule],
 })
 export class LoginComponent implements OnInit {
+  message: Message[]
   loginForm = this.fb.group({
     username: ['', [Validators.required]],
     password: ['', [Validators.required]],
@@ -53,9 +58,14 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
+    private messageService: MessageSharingService,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    this.messageService.currentMessage.subscribe(
+      (message) => (this.message = message),
+    )
+  }
 
   onSubmit(): void {
     if (this.loginForm.valid) {

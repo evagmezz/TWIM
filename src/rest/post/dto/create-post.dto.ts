@@ -11,12 +11,6 @@ export class CreatePostDto {
   @Transform(({ value }) => value.trim())
   title: string
 
-  @Length(1, 1000, {
-    message: 'El texto debe tener entre 1 y 1000 caracteres',
-  })
-  @Transform(({ value }) => value.trim())
-  text: string
-
   @Transform(({ value }) => value.trim())
   photos: string[] = []
 }

@@ -10,12 +10,13 @@ import { InputTextModule } from 'primeng/inputtext'
 import { PasswordModule } from 'primeng/password'
 import { HttpClientModule } from '@angular/common/http'
 import { AuthService } from '../services/auth.service'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { CommonModule, NgIf } from '@angular/common'
 import { DividerModule } from 'primeng/divider'
 import { MessagesModule } from 'primeng/messages'
 import { Message } from 'primeng/api'
 import { FileUploadModule } from 'primeng/fileupload'
+import { MessageSharingService } from '../services/message-sharing-service.service'
 
 @Component({
   selector: 'app-register',
@@ -60,6 +61,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private router: Router,
+    private messageService: MessageSharingService,
   ) {}
 
   onFileChange(event: Event) {
@@ -115,6 +118,14 @@ export class RegisterComponent implements OnInit {
 
       this.authService.register(formData).subscribe(
         (res) => {
+          this.messageService.changeMessage([
+            {
+              severity: 'success',
+              summary: 'Registro exitoso',
+              detail: 'Usuario registrado correctamente',
+            },
+          ])
+          this.router.navigate(['/login'])
           console.log(res)
         },
         (err) => {
