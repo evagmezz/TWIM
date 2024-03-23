@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { PaginateModel } from 'mongoose'
 import { CommentMapper } from '../mapper/comment-mapper'
 import { Comment, CommentDocument } from '../entities/comment.entity'
+import { UserService } from '../../user/services/user.service'
 
 @Injectable()
 export class CommentService {
@@ -13,6 +14,7 @@ export class CommentService {
     @InjectModel(Comment.name)
     private commentRepository: PaginateModel<CommentDocument>,
     private readonly commentMapper: CommentMapper,
+    private readonly userService: UserService,
   ) {}
 
   async findAll(page: number, limit: number, orderBy: string, order: string) {

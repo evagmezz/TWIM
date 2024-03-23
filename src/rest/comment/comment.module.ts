@@ -6,6 +6,7 @@ import { MongooseModule, SchemaFactory } from '@nestjs/mongoose'
 import { Comment } from './entities/comment.entity'
 import * as mongoosePaginate from 'mongoose-paginate-v2'
 import { CacheModule } from '@nestjs/cache-manager'
+import { UserModule } from '../user/user.module'
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CacheModule } from '@nestjs/cache-manager'
       },
     ]),
     CacheModule.register(),
+    UserModule,
   ],
   exports: [MongooseModule],
   controllers: [CommentController],

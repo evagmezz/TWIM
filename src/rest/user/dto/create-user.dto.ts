@@ -44,5 +44,5 @@ export class CreateUserDto {
   @IsEnum(['user', 'admin'], {
     message: 'El rol debe ser user o admin',
   })
-  role: Role[]
+  role: Role
 }

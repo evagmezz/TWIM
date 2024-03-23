@@ -12,8 +12,9 @@
       <div class="comments">
         <div class="comment" *ngFor="let comment of comments">
           <div class="user-info">
-            <img class="user-image" [src]="currentUser.image" alt="User image">
-            <strong class="card-title">{{currentUser.username}}: </strong>{{comment.content}}
+            <img class="user-image" [src]="comment.user.image" alt="User image">
+            <strong class="card-title">{{comment.user.username}}: </strong>{{comment.content}}
+            <i class="pi pi-trash" (click)="deleteComment(comment.id)"></i>
           </div>
           <div class="comment-date small-text">{{getTimeComment(comment)}}</div>
         </div>

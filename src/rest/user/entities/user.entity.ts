@@ -66,7 +66,7 @@ export class User {
     enum: Role,
     default: Role.USER,
   })
-  role: Role[]
+  role: Role
 
   @CreateDateColumn({
     name: 'created_at',

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { map, Observable } from 'rxjs'
-import { Post, User, Comment } from '../index/index.component'
+import { Comment, Post, User } from '../index/index.component'
 
 export class Paginate<T> {
   docs: T[]
@@ -74,5 +74,9 @@ export class AuthService {
 
   getCurrentUser(): Observable<User> {
     return this.http.get<User>(this.porfileUrl)
+  }
+
+  deleteComment(commentId: string): Observable<any> {
+    return this.http.delete(`http://localhost:3000/comment/${commentId}`)
   }
 }

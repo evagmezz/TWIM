@@ -6,7 +6,6 @@ import {
   SetMetadata,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { Role } from '../../user/entities/user.entity'
 
 @Injectable()
 export class RolesAuthGuard implements CanActivate {
@@ -24,12 +23,14 @@ export class RolesAuthGuard implements CanActivate {
     const user = request.user
     this.logger.log(`Roles de usuario: ${user.role}`)
 
-    if (user.role === Role.ADMIN) {
-      return true
+    const hasRole = () => {
+      if (user.role.toLowerCase() === 'admin') {
+        return true
+      }
+      return roles
+        .map((role) => role.toLowerCase())
+        .includes(user.role.toLowerCase())
     }
-
-    const hasRole = () =>
-      user.roles ? user.roles.some((role) => roles.includes(role)) : false
     return user && user.role && hasRole()
   }
 }

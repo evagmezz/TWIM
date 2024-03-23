@@ -13,7 +13,7 @@ export class AuthMapper {
     userCreateDto.password = userSignUpDto.password
     userCreateDto.email = userSignUpDto.email
     userCreateDto.image = userSignUpDto.image
-    userCreateDto.role = [Role.USER]
+    userCreateDto.role = Role.USER
     return userCreateDto
   }
 }

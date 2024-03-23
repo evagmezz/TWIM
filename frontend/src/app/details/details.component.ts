@@ -3,7 +3,7 @@ import { ActivatedRoute, RouterOutlet } from '@angular/router'
 import { AuthService } from '../services/auth.service'
 import { FormsModule } from '@angular/forms'
 import { NgForOf, NgIf } from '@angular/common'
-import { Post, User, Comment } from '../index/index.component'
+import { Comment, Post, User } from '../index/index.component'
 import { InputTextModule } from 'primeng/inputtext'
 import { CarouselModule } from 'primeng/carousel'
 
@@ -36,10 +36,10 @@ export class DetailsComponent implements OnInit {
   ngOnInit(): void {
     const postId = this.activatedRoute.snapshot.paramMap.get('id')
     if (postId) {
-      this.authService.details(postId).subscribe((res) => {
-        this.post = res
-        this.authService.getUserById(this.post.userId).subscribe((res) => {
-          this.user = res
+      this.authService.details(postId).subscribe((post) => {
+        this.post = post
+        this.authService.getUserById(this.post.userId).subscribe((user) => {
+          this.user = user
         })
         this.getComments(postId)
         this.getCurrentUser()
@@ -64,15 +64,31 @@ export class DetailsComponent implements OnInit {
   }
 
   getComments(postId: string) {
-    this.authService.getComments(postId).subscribe((res) => {
-      this.comments = res
+    this.authService.getComments(postId).subscribe((comment) => {
+      this.comments = comment.map((comment) => {
+        this.authService.getUserById(comment.userId).subscribe((user) => {
+          comment.user = user
+        })
+        return comment
+      })
     })
   }
 
   getCurrentUser() {
-    this.authService.getCurrentUser().subscribe((res) => {
-      this.currentUser = res
+    this.authService.getCurrentUser().subscribe((user) => {
+      this.currentUser = user
     })
+  }
+
+  deleteComment(commentId: string) {
+    this.authService.deleteComment(commentId).subscribe(
+      () => {
+        this.getComments(this.post.id)
+      },
+      (error) => {
+        console.error(error)
+      },
+    )
   }
 
   getTimeComment(comment: Comment) {

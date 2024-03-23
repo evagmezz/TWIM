@@ -10,6 +10,7 @@ export class Comment {
   userId: string
   content: string
   createdAt: string
+  user: User
 }
 
 export class Post {

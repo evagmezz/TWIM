@@ -38,6 +38,8 @@
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  position: relative;
+  width: 100%;
 }
 
 .card-title {
@@ -80,6 +82,7 @@
 .comments {
   flex-grow: 1;
   overflow-y: auto;
+  width: 100%;
 }
 
 .comments::-webkit-scrollbar {
@@ -93,6 +96,7 @@
 
 .comment {
   margin-bottom: 20px;
+  word-wrap: break-word;
 }
 
 .add-comment {
@@ -105,4 +109,10 @@
   margin-bottom: 30px;
   margin-top: 20px;
   font-size: 1em;
+}
+
+.pi-trash {
+  color: gray;
+  cursor: pointer;
+  margin-left: auto;
 }
