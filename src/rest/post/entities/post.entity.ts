@@ -56,6 +56,9 @@ export class Post {
   @ValidateNested({ each: true })
   @Type(() => Comment)
   comments: Comment[]
+
+  @Prop({ type: 'array', default: [] })
+  likes: string[]
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post)

@@ -23,7 +23,12 @@ export class AuthService {
   private loginUrl = 'http://localhost:3000/auth/signin'
   private registerUrl = 'http://localhost:3000/auth/signup'
   private indexUrl = 'http://localhost:3000/post'
-  private porfileUrl = 'http://localhost:3000/users/me/porfile'
+  private commentUrl = 'http://localhost:3000/comment'
+  private porfileUrl = 'http://localhost:3000/users/me/profile'
+  private likeUrl = 'http://localhost:3000/users/like'
+  private unlikeUrl = 'http://localhost:3000/users/unlike'
+  private usersUrl = 'http://localhost:3000/users'
+  private userPostsUrl = 'http://localhost:3000/post/user'
 
   constructor(private http: HttpClient) {}
 
@@ -53,7 +58,7 @@ export class AuthService {
   }
 
   getUserById(id: string): Observable<User> {
-    return this.http.get<User>(`http://localhost:3000/users/${id}`)
+    return this.http.get<User>(`${this.usersUrl}/${id}`)
   }
 
   details(id: string): Observable<Post> {
@@ -61,7 +66,7 @@ export class AuthService {
   }
 
   addComment(userId: string, postId: string, content: string): Observable<any> {
-    return this.http.post('http://localhost:3000/comment', {
+    return this.http.post(this.commentUrl, {
       userId,
       postId,
       content,
@@ -77,6 +82,22 @@ export class AuthService {
   }
 
   deleteComment(commentId: string): Observable<any> {
-    return this.http.delete(`http://localhost:3000/comment/${commentId}`)
+    return this.http.delete(`${this.commentUrl}/${commentId}`)
+  }
+
+  like(postId: string, userId: string): Observable<any> {
+    return this.http.post(this.likeUrl, { postId, userId })
+  }
+
+  unlike(postId: string, userId: string): Observable<any> {
+    return this.http.post(this.unlikeUrl, { postId, userId })
+  }
+
+  getFollowing(userId: string): Observable<User[]> {
+    return this.http.get<User[]>(`${this.usersUrl}/${userId}/following`)
+  }
+
+  getUserPosts(userId: string): Observable<Post[]> {
+    return this.http.get<Post[]>(`${this.userPostsUrl}/${userId}`)
   }
 }

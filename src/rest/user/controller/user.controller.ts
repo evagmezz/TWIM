@@ -28,7 +28,7 @@ import { Request } from 'express'
 
 @UseInterceptors(CacheInterceptor)
 @UseGuards(JwtAuthGuard, RolesAuthGuard)
-@Controller('/users')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -48,22 +48,28 @@ export class UserController {
     return await this.userService.findOne(id)
   }
 
-  @Get('me/porfile')
+  @Get(':id/profile')
   @Roles('USER')
-  async getPorfile(@Req() request: any) {
+  async getProfile(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.userService.findOne(id)
+  }
+
+  @Get('me/profile')
+  @Roles('USER')
+  async getCurrentUserProfile(@Req() request: any) {
     return request.user
   }
 
-  @Delete('me/porfile')
+  @Delete('me/profile')
   @HttpCode(204)
   @Roles('USER')
-  async deletePorfile(@Req() request: any) {
+  async deleteProfile(@Req() request: any) {
     return await this.userService.remove(request.user.id)
   }
 
-  @Put('me/porfile')
+  @Put('me/profile')
   @Roles('USER')
-  async updatePorfile(
+  async updateProfile(
     @Req() request: any,
     @Body() updateUserDto: UpdateUserDto,
   ) {
@@ -140,7 +146,7 @@ export class UserController {
     return await this.userService.update(id, updateUserDto)
   }
 
-  @Post('/follow')
+  @Post('follow')
   @HttpCode(201)
   @Roles('USER')
   async followUser(
@@ -158,6 +164,26 @@ export class UserController {
     @Body('userToUnfollowId') userToUnfollowId: string,
   ) {
     return this.userService.unfollowUser(userId, userToUnfollowId)
+  }
+
+  @Post('like')
+  @HttpCode(201)
+  @Roles('USER')
+  async likePost(
+    @Body('userId') userId: string,
+    @Body('postId') postId: string,
+  ) {
+    return this.userService.likePost(userId, postId)
+  }
+
+  @Post('unlike')
+  @HttpCode(201)
+  @Roles('USER')
+  async unlikePost(
+    @Body('userId') userId: string,
+    @Body('postId') postId: string,
+  ) {
+    return this.userService.unlikePost(userId, postId)
   }
 
   @Delete(':id')

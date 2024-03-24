@@ -7,10 +7,23 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { User } from './entities/user.entity'
 import { CacheModule } from '@nestjs/cache-manager'
 import { StorageModule } from '../storage/ storage.module'
+import { MongooseModule, SchemaFactory } from '@nestjs/mongoose'
+import { Post } from '../post/entities/post.entity'
+import * as mongoosePaginate from 'mongoose-paginate-v2'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
+    MongooseModule.forFeatureAsync([
+      {
+        name: Post.name,
+        useFactory: () => {
+          const schema = SchemaFactory.createForClass(Post)
+          schema.plugin(mongoosePaginate)
+          return schema
+        },
+      },
+    ]),
     CacheModule.register(),
     StorageModule,
   ],

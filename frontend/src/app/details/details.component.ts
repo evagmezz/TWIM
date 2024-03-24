@@ -80,15 +80,19 @@ export class DetailsComponent implements OnInit {
     })
   }
 
-  deleteComment(commentId: string) {
-    this.authService.deleteComment(commentId).subscribe(
-      () => {
-        this.getComments(this.post.id)
-      },
-      (error) => {
-        console.error(error)
-      },
-    )
+  deleteComment(comment: Comment) {
+    if (this.currentUser.id === comment.user.id) {
+      this.authService.deleteComment(comment.id).subscribe(
+        () => {
+          this.getComments(this.post.id)
+        },
+        (error) => {
+          console.error(error)
+        },
+      )
+    } else {
+      console.error('You can only delete your own comments')
+    }
   }
 
   getTimeComment(comment: Comment) {
@@ -123,5 +127,37 @@ export class DetailsComponent implements OnInit {
 
     const diffYears = Math.floor(diffMonths / 12)
     return `${diffYears} años`
+  }
+
+  isLiked(): boolean {
+    return this.post.likes.includes(this.currentUser.id)
+  }
+
+  likePost(): void {
+    if (this.isLiked()) {
+      const index = this.post.likes.indexOf(this.currentUser.id)
+      if (index > -1) {
+        this.post.likes.splice(index, 1)
+      }
+      this.authService.unlike(this.post.id, this.currentUser.id).subscribe(
+        () => {
+          console.log('Like removed successfully')
+        },
+        (error) => {
+          console.error('Error removing like', error)
+        },
+      )
+    } else {
+      this.post.likes.push(this.currentUser.id)
+
+      this.authService.like(this.post.id, this.currentUser.id).subscribe(
+        () => {
+          console.log('Like saved successfully')
+        },
+        (error) => {
+          console.error('Error saving like', error)
+        },
+      )
+    }
   }
 }

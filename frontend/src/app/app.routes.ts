@@ -3,6 +3,7 @@ import { LoginComponent } from './login/login.component'
 import { RegisterComponent } from './register/register.component'
 import { IndexComponent } from './index/index.component'
 import { DetailsComponent } from './details/details.component'
+import { ProfileComponent } from './profile/profile.component'
 
 export const routes: Routes = [
   {
@@ -25,5 +26,9 @@ export const routes: Routes = [
   {
     path: 'details/:id',
     component: DetailsComponent,
+  },
+  {
+    path: ':id/profile',
+    component: ProfileComponent,
   },
 ]

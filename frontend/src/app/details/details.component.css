@@ -116,3 +116,13 @@
   cursor: pointer;
   margin-left: auto;
 }
+
+.pi-heart {
+  color: gray;
+  margin-left: 20px;
+}
+
+.pi-heart-fill {
+  color: red;
+  margin-left: 20px;
+}

@@ -1,0 +1,10 @@
+<div *ngIf="user">
+  <img [src]="user.image" alt="Profile Picture" class="profile-picture">
+  <span class="username">{{user.username}}</span>
+  <p>Seguidores: {{countFollowers()}}</p>
+  <p>Siguiendo: {{countFollowing()}}</p>
+
+  <div *ngFor="let post of posts">
+    <img [src]="post.photos[0]" alt="post image" class="img-fluid" (click)="postDetails(post.id)">
+  </div>
+</div>

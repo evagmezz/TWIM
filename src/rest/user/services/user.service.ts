@@ -19,6 +19,9 @@ import { paginate, PaginateQuery } from 'nestjs-paginate'
 import { hash } from 'typeorm/util/StringUtils'
 import { Request } from 'express'
 import { StorageService } from '../../storage/services/ storage.service'
+import { Post, PostDocument } from '../../post/entities/post.entity'
+import { InjectModel } from '@nestjs/mongoose'
+import { PaginateModel } from 'mongoose'
 
 @Injectable()
 export class UserService {
@@ -30,6 +33,8 @@ export class UserService {
     private readonly userMapper: UserMapper,
     private readonly storageService: StorageService,
     private readonly bcryptService: BcryptService,
+    @InjectModel(Post.name)
+    private postRepository: PaginateModel<PostDocument>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
@@ -215,6 +220,30 @@ export class UserService {
     const followingDto = following.map((u) => this.userMapper.toDto(u))
     await this.cacheManager.set(`following_${userId}`, followingDto, 60)
     return followingDto
+  }
+
+  async likePost(userId: string, postId: string) {
+    this.logger.log(`Dando like al post con id ${postId}`)
+    const user = await this.findInternal(userId)
+    const post: Post = await this.postRepository.findOne({ _id: postId })
+    if (post.likes.includes(user.id)) {
+      throw new BadRequestException('Ya le diste like a este post')
+    }
+    post.likes.push(user.id)
+    await this.postRepository.updateOne({ _id: postId }, post)
+    return post
+  }
+
+  async unlikePost(userId: string, postId: string) {
+    this.logger.log(`Quitando like al post con id ${postId}`)
+    const user = await this.findInternal(userId)
+    const post: Post = await this.postRepository.findOne({ _id: postId })
+    if (!post.likes.includes(user.id)) {
+      throw new BadRequestException('No le diste like a este post')
+    }
+    post.likes = post.likes.filter((id) => id !== user.id)
+    await this.postRepository.updateOne({ _id: postId }, post)
+    return post
   }
 
   async remove(id: string) {

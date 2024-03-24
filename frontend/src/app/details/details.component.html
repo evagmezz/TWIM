@@ -14,14 +14,14 @@
           <div class="user-info">
             <img class="user-image" [src]="comment.user.image" alt="User image">
             <strong class="card-title">{{comment.user.username}}: </strong>{{comment.content}}
-            <i class="pi pi-trash" (click)="deleteComment(comment.id)"></i>
+            <i class="pi pi-trash" *ngIf="currentUser.id === comment.user.id" (click)="deleteComment(comment)"></i>
           </div>
           <div class="comment-date small-text">{{getTimeComment(comment)}}</div>
         </div>
       </div>
       <div class="add-comment">
         <input type="text" pInputText placeholder="Añade un comentario..." [(ngModel)]="newComment" (keyup.enter)="addComment()">
-      </div>
+        <i class="pi" [ngClass]="{'pi-heart': !isLiked(), 'pi-heart-fill': isLiked()}" (click)="likePost()"></i>      </div>
     </div>
   </div>
 </div>

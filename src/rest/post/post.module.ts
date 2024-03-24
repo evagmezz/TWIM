@@ -27,7 +27,7 @@ import { StorageModule } from '../storage/ storage.module'
     ]),
     TypeOrmModule.forFeature([User]),
     MulterModule.register({
-      dest: './uploads',
+      dest: './photos',
     }),
     CacheModule.register(),
     StorageModule,

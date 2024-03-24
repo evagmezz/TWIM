@@ -21,6 +21,7 @@ export class Post {
   updatedAt: string
   comments: Comment[]
   id: string
+  likes: string[]
 }
 
 export class User {
