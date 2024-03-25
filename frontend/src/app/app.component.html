@@ -2,5 +2,6 @@
 <footer *ngIf="shouldShowFooter()">
   <button class="footer-button"><i class="pi pi-search" style="font-size: 1rem; color: #708090"></i></button>
   <button class="footer-button"><i class="pi pi-plus" style="font-size: 1rem; color: #708090"></i></button>
-  <button class="footer-button" (click)="goToProfile()"><i class="pi pi-user" style="font-size: 1rem; color: #708090"></i></button>
+  <button (click)="goToProfile()" class="footer-button"><i class="pi pi-user"
+                                                           style="font-size: 1rem; color: #708090"></i></button>
 </footer>

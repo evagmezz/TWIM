@@ -49,6 +49,7 @@
 .p-inputtext.ng-invalid.ng-touched {
   border-color: #f88c79;
 }
+
 .card button:not(:last-child) {
   margin-right: 10px;
 }

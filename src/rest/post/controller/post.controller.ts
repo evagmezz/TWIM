@@ -56,6 +56,12 @@ export class PostController {
     return await this.postService.findByUserId(userId)
   }
 
+  @Get('username/:username')
+  @Roles('USER')
+  async findByUsername(@Param('username') username: string) {
+    return await this.postService.getUserByUsername(username)
+  }
+
   @Get(':id/comments')
   @Roles('USER')
   async getAllComments(@Param('id', ParseUUIDPipe) id: string) {

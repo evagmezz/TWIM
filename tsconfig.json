@@ -17,5 +17,10 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
+  },
+  "angularCompilerOptions": {
+    "warnings": {
+      "NG0913": false
+    }
   }
 }

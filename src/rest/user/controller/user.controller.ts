@@ -48,16 +48,16 @@ export class UserController {
     return await this.userService.findOne(id)
   }
 
+  @Get('me/profile')
+  @Roles('USER')
+  async getPorfile(@Req() request: any) {
+    return request.user
+  }
+
   @Get(':id/profile')
   @Roles('USER')
   async getProfile(@Param('id', ParseUUIDPipe) id: string) {
     return await this.userService.findOne(id)
-  }
-
-  @Get('me/profile')
-  @Roles('USER')
-  async getCurrentUserProfile(@Req() request: any) {
-    return request.user
   }
 
   @Delete('me/profile')

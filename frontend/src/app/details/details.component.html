@@ -1,27 +1,31 @@
-<div class="split-screen">
+<div class="split-screen" *ngIf="post">
   <div class="card">
     <div class="post-section d-flex align-items-center justify-content-center text-center">
-      <p-carousel [value]="post.photos" [numVisible]="1" [numScroll]="1" [circular]="false" [indicatorStyle]="{ 'background-color': 'light-gray', 'border-radius': '50%', 'width' : '5px', 'height': '5px'}">
-        <ng-template pTemplate="item" let-photo>
-          <img class="card-img-top" [src]="photo" alt="Post image">
+      <p-carousel [circular]="false"
+                  [indicatorStyle]="{ 'background-color': 'light-gray', 'border-radius': '50%', 'width' : '5px', 'height': '5px'}"
+                  [numScroll]="1" [numVisible]="1"
+                  [value]="post.photos">
+        <ng-template let-photo pTemplate="item">
+          <img [src]="photo" alt="Post image" class="card-img-top">
         </ng-template>
       </p-carousel>
     </div>
     <div class="comments-section">
-      <div class="post-title">{{post.title}}</div>
+      <div class="post-title">{{ post.title }}</div>
       <div class="comments">
-        <div class="comment" *ngFor="let comment of comments">
-          <div class="user-info">
-            <img class="user-image" [src]="comment.user.image" alt="User image">
-            <strong class="card-title">{{comment.user.username}}: </strong>{{comment.content}}
-            <i class="pi pi-trash" *ngIf="currentUser.id === comment.user.id" (click)="deleteComment(comment)"></i>
+        <div *ngFor="let comment of comments" class="comment">
+          <div class="user-info" *ngIf="comment.user">
+            <img [src]="comment.user.image" alt="User image" class="user-image">
+            <strong class="card-title">{{ comment.user.username }}: </strong>{{ comment.content }}
+            <i (click)="deleteComment(comment)" *ngIf="currentUser.id === comment.user.id" class="pi pi-trash"></i>
           </div>
-          <div class="comment-date small-text">{{getTimeComment(comment)}}</div>
+          <div class="comment-date small-text">{{ getTimeComment(comment) }}</div>
         </div>
       </div>
       <div class="add-comment">
-        <input type="text" pInputText placeholder="Añade un comentario..." [(ngModel)]="newComment" (keyup.enter)="addComment()">
-        <i class="pi" [ngClass]="{'pi-heart': !isLiked(), 'pi-heart-fill': isLiked()}" (click)="likePost()"></i>      </div>
+        <input (keyup.enter)="addComment()" [(ngModel)]="newComment" pInputText placeholder="Añade un comentario..."
+               type="text">
+        <i (click)="likePost()" [ngClass]="{'pi-heart': !isLiked(), 'pi-heart-fill': isLiked()}" class="pi"></i></div>
     </div>
   </div>
 </div>

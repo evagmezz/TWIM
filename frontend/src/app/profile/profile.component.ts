@@ -15,6 +15,8 @@ export class ProfileComponent implements OnInit {
   user: User
   posts: Post[]
 
+  followingCount: number = 0
+
   constructor(
     private authService: AuthService,
     private activatedRoute: ActivatedRoute,
@@ -22,42 +24,23 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userId = this.activatedRoute.snapshot.paramMap.get('id')
-    if (userId) {
-      this.authService.getUserById(userId).subscribe(
-        (user) => {
-          this.user = user
-        },
-        (error) => {
-          console.error(error)
-        },
-      )
-      this.authService.getUserPosts(userId).subscribe(
-        (posts) => {
-          this.posts = posts
-        },
-        (error) => {
-          console.error(error)
-        },
-      )
-    }
+    const userId = this.activatedRoute.snapshot.paramMap.get('id') as string
+    this.authService.getUserById(userId).subscribe((user) => {
+      this.user = user
+    })
+    this.authService.getUserPosts(userId).subscribe((posts) => {
+      this.posts = posts
+    })
+    this.authService.getFollowing(userId).subscribe((following) => {
+      this.followingCount = following.length
+    })
   }
+
   countFollowers(): number {
     return this.user.followers.length
   }
 
-  countFollowing(): number {
-    let followingCount = 0
-    this.authService.getFollowing(this.user.id).subscribe(
-      (following) => {
-        followingCount = following.length
-      },
-      (error) => {
-        console.error(error)
-      },
-    )
-    return followingCount
-  }
+  countFollowing() {}
 
   postDetails(postId: string): void {
     this.router.navigate(['details', postId])

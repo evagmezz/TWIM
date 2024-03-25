@@ -8,3 +8,9 @@
 .username {
   margin-left: 10px;
 }
+
+.img-fluid {
+  width: 25%;
+  height: auto;
+  border-radius: 10px;
+}

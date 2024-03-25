@@ -6,6 +6,7 @@ import { NgForOf, NgIf } from '@angular/common'
 import { Comment, Post, User } from '../index/index.component'
 import { InputTextModule } from 'primeng/inputtext'
 import { CarouselModule } from 'primeng/carousel'
+import { forkJoin, map, switchMap } from 'rxjs'
 
 @Component({
   selector: 'app-details',
@@ -33,16 +34,37 @@ export class DetailsComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
   ) {}
 
+  getComments(postId: string) {
+    return this.authService.getComments(postId).pipe(
+      switchMap((comments) => {
+        const userRequests = comments.map((comment) =>
+          this.authService.getUserById(comment.userId).pipe(
+            map((user) => {
+              comment.user = user
+              return comment
+            }),
+          ),
+        )
+
+        return forkJoin(userRequests)
+      }),
+    )
+  }
+
   ngOnInit(): void {
     const postId = this.activatedRoute.snapshot.paramMap.get('id')
     if (postId) {
+      this.authService.getCurrentUser().subscribe((user) => {
+        this.currentUser = user
+      })
       this.authService.details(postId).subscribe((post) => {
         this.post = post
-        this.authService.getUserById(this.post.userId).subscribe((user) => {
+        this.authService.getUserById(this.post.user.id).subscribe((user) => {
           this.user = user
         })
-        this.getComments(postId)
-        this.getCurrentUser()
+        this.getComments(postId).subscribe((comments) => {
+          this.comments = comments
+        })
       })
     }
   }
@@ -63,25 +85,8 @@ export class DetailsComponent implements OnInit {
     }
   }
 
-  getComments(postId: string) {
-    this.authService.getComments(postId).subscribe((comment) => {
-      this.comments = comment.map((comment) => {
-        this.authService.getUserById(comment.userId).subscribe((user) => {
-          comment.user = user
-        })
-        return comment
-      })
-    })
-  }
-
-  getCurrentUser() {
-    this.authService.getCurrentUser().subscribe((user) => {
-      this.currentUser = user
-    })
-  }
-
   deleteComment(comment: Comment) {
-    if (this.currentUser.id === comment.user.id) {
+    if (this.currentUser.id === comment.userId) {
       this.authService.deleteComment(comment.id).subscribe(
         () => {
           this.getComments(this.post.id)
@@ -91,7 +96,7 @@ export class DetailsComponent implements OnInit {
         },
       )
     } else {
-      console.error('You can only delete your own comments')
+      console.error('Solo puedes eliminar tus comentarios')
     }
   }
 
@@ -130,7 +135,10 @@ export class DetailsComponent implements OnInit {
   }
 
   isLiked(): boolean {
-    return this.post.likes.includes(this.currentUser.id)
+    if (this.currentUser) {
+      return this.post.likes.includes(this.currentUser.id)
+    }
+    return false
   }
 
   likePost(): void {

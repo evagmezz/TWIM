@@ -1,8 +1,13 @@
-import { Component, OnInit } from '@angular/core'
-import { Router, RouterOutlet } from '@angular/router'
-import { AuthService } from '../services/auth.service'
-import { NgForOf, NgIf } from '@angular/common'
-import { CardModule } from 'primeng/card'
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
+import { CardModule } from 'primeng/card';
+import { RatingModule } from 'primeng/rating';
+import { TagModule } from 'primeng/tag';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { DataViewLazyLoadEvent, DataViewModule } from 'primeng/dataview';
 
 export class Comment {
   id: string
@@ -14,7 +19,7 @@ export class Comment {
 }
 
 export class Post {
-  userId: string
+  user: User
   title: string
   photos: string[]
   createdAt: string
@@ -41,13 +46,13 @@ export class User {
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [RouterOutlet, NgForOf, CardModule, NgIf],
+  imports: [RouterOutlet, NgForOf, CardModule, NgIf, AsyncPipe, DataViewModule, RatingModule, TagModule, ButtonModule, NgClass, FormsModule, DataViewModule],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css',
 })
 export class IndexComponent implements OnInit {
-  posts: Post[] = []
-  users: User[] = []
+  posts!: Post[]
+  users!: User[]
 
   constructor(
     private router: Router,
@@ -55,25 +60,24 @@ export class IndexComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.index().subscribe((res) => {
-      this.posts = res.docs
-      this.posts.forEach((post) => {
-        this.authService.getUserById(post.userId).subscribe((user) => {
-          this.users.push(user)
-        })
-      })
+    this.lazyLoad();
+  }
+
+  postDetails(id: string): void {
+    this.router.navigate(['details', id])
+  }
+
+  rows: number = 5;
+  totalRecords: number = 0;
+
+  lazyLoad() {
+    this.authService.getUsers().subscribe((data) => {
+      this.users = data;
     })
-  }
 
-  getUserByUserId(userId: string) {
-    return this.users.find((user) => user.id === userId)
-  }
-
-  postDetails(postId: string): void {
-    this.router.navigate(['details', postId])
-  }
-
-  onSubmit(): void {
-    // ...
+    this.authService.index().subscribe((data) => {
+      this.posts = data.docs;
+      this.totalRecords = data.totalDocs;
+    });
   }
 }

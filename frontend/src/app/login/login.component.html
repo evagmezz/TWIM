@@ -1,25 +1,27 @@
 <div class="container  position-relative">
-  <p-messages [(value)]="message" [enableService]="false" [closable]="true" class="position-absolute info-message"></p-messages>
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <p-messages [(value)]="message" [closable]="true" [enableService]="false"
+              class="position-absolute info-message"></p-messages>
+  <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
     <div class="card flex flex-column align-items-center justify-content-center">
      <span class="input-field mb-3">
       <label for="username"></label>
-      <input type="text" pInputText id="username" placeholder="Usuario" formControlName="username" />
+      <input formControlName="username" id="username" pInputText placeholder="Usuario" type="text" />
       <div *ngIf="loginForm.controls['username'].invalid && loginForm.controls['username'].touched"
            class="container-error">
-         <small class="error-message" *ngIf="loginForm.controls['username'].errors?.['required']">El nombre de usuario es obligatorio</small>
+         <small *ngIf="loginForm.controls['username'].errors?.['required']" class="error-message">El nombre de usuario es obligatorio</small>
       </div>
      </span>
       <span class="input-field mb-3">
         <label for="password"></label>
-        <p-password id="password" formControlName="password" placeholder="Contraseña" [toggleMask]="true" [feedback]="false" />
+        <p-password [feedback]="false" [toggleMask]="true" formControlName="password" id="password"
+                    placeholder="Contraseña" />
         <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched"
              class="container-error">
-          <small class="error-message" *ngIf="loginForm.controls['password'].errors?.['required']">La contraseña es obligatoria</small>
+          <small *ngIf="loginForm.controls['password'].errors?.['required']" class="error-message">La contraseña es obligatoria</small>
         </div>
      </span>
-      <button pButton type="submit" label="Iniciar Sesion"
-              class="p-button-rounded p-button-raised p-button-primary"></button>
+      <button class="p-button-rounded p-button-raised p-button-primary" label="Iniciar Sesion" pButton
+              type="submit"></button>
       <p>¿No tienes cuenta?</p>
       <a [routerLink]="['/register']">Registrate</a>
     </div>

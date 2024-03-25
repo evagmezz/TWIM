@@ -24,11 +24,12 @@ export class AuthService {
   private registerUrl = 'http://localhost:3000/auth/signup'
   private indexUrl = 'http://localhost:3000/post'
   private commentUrl = 'http://localhost:3000/comment'
-  private porfileUrl = 'http://localhost:3000/users/me/profile'
+  private profileUrl = 'http://localhost:3000/users/me/profile'
   private likeUrl = 'http://localhost:3000/users/like'
   private unlikeUrl = 'http://localhost:3000/users/unlike'
   private usersUrl = 'http://localhost:3000/users'
   private userPostsUrl = 'http://localhost:3000/post/user'
+  private usernameUrl = 'http://localhost:3000/post/username'
 
   constructor(private http: HttpClient) {}
 
@@ -61,6 +62,10 @@ export class AuthService {
     return this.http.get<User>(`${this.usersUrl}/${id}`)
   }
 
+  getUserByUsername(username: string): Observable<User> {
+    return this.http.get<User>(`${this.usernameUrl}/${username}`)
+  }
+
   details(id: string): Observable<Post> {
     return this.http.get<Post>(`${this.indexUrl}/${id}`)
   }
@@ -78,7 +83,7 @@ export class AuthService {
   }
 
   getCurrentUser(): Observable<User> {
-    return this.http.get<User>(this.porfileUrl)
+    return this.http.get<User>(this.profileUrl)
   }
 
   deleteComment(commentId: string): Observable<any> {
@@ -99,5 +104,8 @@ export class AuthService {
 
   getUserPosts(userId: string): Observable<Post[]> {
     return this.http.get<Post[]>(`${this.userPostsUrl}/${userId}`)
+  }
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.usersUrl)
   }
 }
