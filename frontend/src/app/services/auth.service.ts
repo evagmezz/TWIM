@@ -29,7 +29,8 @@ export class AuthService {
   private unlikeUrl = 'http://localhost:3000/users/unlike'
   private usersUrl = 'http://localhost:3000/users'
   private userPostsUrl = 'http://localhost:3000/post/user'
-  private usernameUrl = 'http://localhost:3000/post/username'
+  private followUrl = 'http://localhost:3000/users/follow'
+  private unfollowUrl = 'http://localhost:3000/users/unfollow'
 
   constructor(private http: HttpClient) {}
 
@@ -62,10 +63,6 @@ export class AuthService {
     return this.http.get<User>(`${this.usersUrl}/${id}`)
   }
 
-  getUserByUsername(username: string): Observable<User> {
-    return this.http.get<User>(`${this.usernameUrl}/${username}`)
-  }
-
   details(id: string): Observable<Post> {
     return this.http.get<Post>(`${this.indexUrl}/${id}`)
   }
@@ -76,6 +73,14 @@ export class AuthService {
       postId,
       content,
     })
+  }
+
+  follow(userId: string, userToFollowId: string): Observable<any> {
+    return this.http.post(this.followUrl, { userId, userToFollowId })
+  }
+
+  unfollow(userId: string, userToUnfollowId: string): Observable<any> {
+    return this.http.post(this.unfollowUrl, { userId, userToUnfollowId })
   }
 
   getComments(postId: string): Observable<Comment[]> {

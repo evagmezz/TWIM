@@ -25,8 +25,6 @@ export class ResponseUserDto {
 
   @IsString()
   image: string
-
-  password: string
   role: string
   createdAt: Date
   updatedAt: Date

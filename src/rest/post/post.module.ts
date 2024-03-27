@@ -11,10 +11,11 @@ import { MulterModule } from '@nestjs/platform-express'
 import { CommentModule } from '../comment/comment.module'
 import { CacheModule } from '@nestjs/cache-manager'
 import { StorageModule } from '../storage/ storage.module'
+import { UserModule } from '../user/user.module';
+import { CommentMapper } from '../comment/mapper/comment-mapper';
 
 @Module({
   imports: [
-    CommentModule,
     MongooseModule.forFeatureAsync([
       {
         name: Post.name,
@@ -26,13 +27,15 @@ import { StorageModule } from '../storage/ storage.module'
       },
     ]),
     TypeOrmModule.forFeature([User]),
+    UserModule,
     MulterModule.register({
       dest: './photos',
     }),
     CacheModule.register(),
     StorageModule,
+    CommentModule,
   ],
   controllers: [PostController],
-  providers: [PostService, PostMapper],
+  providers: [PostService, PostMapper, CommentMapper],
 })
 export class PostModule {}

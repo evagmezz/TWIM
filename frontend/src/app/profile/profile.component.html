@@ -1,10 +1,32 @@
 <div *ngIf="user">
   <img [src]="user.image" alt="Profile Picture" class="profile-picture">
   <span class="username">{{ user.username }}</span>
-  <p>Seguidores: {{ countFollowers() }}</p>
-  <p>Siguiendo: {{ followingCount }}</p>
+  <p><a  (click)="showFollowers()">Seguidores: {{ countFollowers() }}</a></p>
+  <p><a  (click)="showFollowing()">Siguiendo: {{ followingCount }}</a></p>
+  <p-button *ngIf="isFollowing && user.id !== currentUser.id" (click)="unFollow()" icon="pi pi-user-minus" [rounded]="true"
+            severity="info"></p-button>
+  <p-button *ngIf="!isFollowing && user.id !== currentUser.id" (click)="follow()" icon="pi pi-user-plus" [rounded]="true" [text]="true" [raised]="true"
+            severity="info"></p-button>
 
-  <div *ngFor="let post of posts">
-    <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid">
+  <div class="container">
+    <div class="masonry">
+      <div *ngFor="let post of posts">
+        <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid">
+      </div>
+    </div>
   </div>
 </div>
+
+<p-dialog header="Seguidores" [(visible)]="visibleFollowers" [style]="{ width: '25vw', height: '300px' }">
+  <div *ngFor="let follower of followers">
+    <img [src]="follower.image" alt="Profile Picture" class="profile-picture">
+    <span class="username">{{ follower.username }}</span>
+  </div>
+</p-dialog>
+
+<p-dialog header="Seguidos" [(visible)]="visibleFollowing" [style]="{ width: '25vw', height: '300px' }">
+  <div *ngFor="let following of followings">
+    <img [src]="following.image" alt="Profile Picture" class="profile-picture">
+    <span class="username">{{ following.username }}</span>
+  </div>
+</p-dialog>

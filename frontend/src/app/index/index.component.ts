@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
-import { CardModule } from 'primeng/card';
-import { RatingModule } from 'primeng/rating';
-import { TagModule } from 'primeng/tag';
-import { ButtonModule } from 'primeng/button';
-import { FormsModule } from '@angular/forms';
-import { DataViewLazyLoadEvent, DataViewModule } from 'primeng/dataview';
+import { Component, OnInit } from '@angular/core'
+import { Router, RouterOutlet } from '@angular/router'
+import { AuthService } from '../services/auth.service'
+import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common'
+import { CardModule } from 'primeng/card'
+import { RatingModule } from 'primeng/rating'
+import { TagModule } from 'primeng/tag'
+import { ButtonModule } from 'primeng/button'
+import { FormsModule } from '@angular/forms'
+import { DataViewLazyLoadEvent, DataViewModule } from 'primeng/dataview'
 
 export class Comment {
   id: string
@@ -51,8 +51,8 @@ export class User {
   styleUrl: './index.component.css',
 })
 export class IndexComponent implements OnInit {
-  posts!: Post[]
-  users!: User[]
+  posts: Post[]
+  users: User[]
 
   constructor(
     private router: Router,
@@ -60,24 +60,27 @@ export class IndexComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.lazyLoad();
+    this.lazyLoad()
   }
 
   postDetails(id: string): void {
     this.router.navigate(['details', id])
   }
 
-  rows: number = 5;
-  totalRecords: number = 0;
+  totalRecords: number = 0
 
   lazyLoad() {
     this.authService.getUsers().subscribe((data) => {
-      this.users = data;
+      this.users = data
     })
 
     this.authService.index().subscribe((data) => {
-      this.posts = data.docs;
-      this.totalRecords = data.totalDocs;
-    });
+      this.posts = data.docs
+      this.totalRecords = data.totalDocs
+    })
+  }
+
+  goToProfile(id: string): void {
+    this.router.navigate([id, 'profile'])
   }
 }

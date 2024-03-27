@@ -11,6 +11,8 @@ import { Comment, CommentDocument } from '../../comment/entities/comment.entity'
 import { StorageService } from '../../storage/services/ storage.service';
 import { Request } from 'express';
 import { User } from '../../user/entities/user.entity';
+import { UserMapper } from '../../user/mapper/user-mapper';
+import { CommentMapper } from '../../comment/mapper/comment-mapper';
 
 @Injectable()
 export class PostService {
@@ -25,6 +27,8 @@ export class PostService {
     private commentRepository: PaginateModel<CommentDocument>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly userMapper: UserMapper,
+    private readonly commentMapper: CommentMapper,
   ) {
   }
 
@@ -37,8 +41,6 @@ export class PostService {
         [orderBy]: order,
       },
     };
-
-    /*map to dto*/
     const result = await this.postRepository.paginate({}, options);
     const docs = await Promise.all(result.docs.map(async (post) => {
       const user = await this.getUserByUserId(post.userId);
@@ -53,7 +55,8 @@ export class PostService {
 
   async getUserByUserId(userId: string) {
     this.logger.log(`Buscando usuario con userId ${userId}`);
-    return await this.userRepository.findOneBy({ id: userId });
+    const user = await this.userRepository.findOneBy({ id: userId });
+    return this.userMapper.toDto(user);
   }
 
   async findOne(id: string) {
@@ -73,13 +76,15 @@ export class PostService {
   async getAllComments(id: string) {
     this.logger.log(`Buscando comentarios del post con id ${id}`);
     const post = await this.findOne(id);
-    const comments = await this.commentRepository
-      .find({ postId: post.id })
-      .exec();
     if (!post) {
       throw new NotFoundException(`El post con el id ${id} no existe`);
     }
-    return comments;
+    const comments = await this.commentRepository.find({ postId: id }).exec();
+    const dtos = await Promise.all(comments.map(async (comment) => {
+      const user = await this.getUserByUserId(comment.userId);
+      return this.commentMapper.toDto(comment, user);
+    }));
+    return dtos;
   }
 
   async create(

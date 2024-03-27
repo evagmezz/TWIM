@@ -51,12 +51,19 @@ export class UserService {
       sortableColumns: ['id', 'username', 'email'],
       searchableColumns: ['username', 'email'],
     })
+    const res = {
+      data: (page.data ?? []).map((user) =>
+        this.userMapper.toDto(user),
+      ),
+      meta: page.meta,
+      links: page.links,
+    }
     await this.cacheManager.set(
       `all_users_page_${hash(JSON.stringify(query))}`,
-      page,
+      res,
       60,
     )
-    return page
+    return res
   }
 
   async findOne(id: string) {

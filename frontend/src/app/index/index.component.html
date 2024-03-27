@@ -4,7 +4,7 @@
     <div *ngFor="let post of posts" class="item">
       <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid">
 
-      <div class="user-info">
+      <div class="user-info" (click)="goToProfile(post.user.id)">
         <img [src]="post.user.image" alt="user image" class="user-image">
         <p>{{ post.user.username }}</p>
       </div>

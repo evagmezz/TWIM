@@ -4,11 +4,10 @@ import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { LoginComponent } from './login/login.component'
 import { Router, RouterOutlet } from '@angular/router'
 import { RegisterComponent } from './register/register.component'
-import { IndexComponent } from './index/index.component'
+import { IndexComponent, User } from './index/index.component';
 import { NgIf } from '@angular/common'
 import { DetailsComponent } from './details/details.component'
 import { ProfileComponent } from './profile/profile.component'
-import { DataViewModule } from 'primeng/dataview';
 
 @Component({
   selector: 'app-root',
@@ -22,8 +21,7 @@ import { DataViewModule } from 'primeng/dataview';
     IndexComponent,
     NgIf,
     DetailsComponent,
-    ProfileComponent,
-    DataViewModule
+    ProfileComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -41,7 +39,7 @@ export class AppComponent {
     return url !== '/login' && url !== '/register'
   }
 
-  goToProfile() {
+  goToMyProfile(): void {
     this.authService.getCurrentUser().subscribe((user) => {
       this.router.navigate([`${user.id}/profile`])
     })

@@ -14,9 +14,9 @@
       <div class="post-title">{{ post.title }}</div>
       <div class="comments">
         <div *ngFor="let comment of comments" class="comment">
-          <div class="user-info" *ngIf="comment.user">
-            <img [src]="comment.user.image" alt="User image" class="user-image">
-            <strong class="card-title">{{ comment.user.username }}: </strong>{{ comment.content }}
+          <div class="user-info">
+            <img [src]="comment.user.image" alt="User image" class="user-image"  (click)="goToProfile(comment.user.id)">
+            <strong class="card-title"  (click)="goToProfile(comment.user.id)">{{ comment.user.username }}: </strong>{{ comment.content }}
             <i (click)="deleteComment(comment)" *ngIf="currentUser.id === comment.user.id" class="pi pi-trash"></i>
           </div>
           <div class="comment-date small-text">{{ getTimeComment(comment) }}</div>

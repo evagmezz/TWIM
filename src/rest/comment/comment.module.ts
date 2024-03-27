@@ -7,6 +7,8 @@ import { Comment } from './entities/comment.entity'
 import * as mongoosePaginate from 'mongoose-paginate-v2'
 import { CacheModule } from '@nestjs/cache-manager'
 import { UserModule } from '../user/user.module'
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../user/entities/user.entity';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { UserModule } from '../user/user.module'
       },
     ]),
     CacheModule.register(),
+    TypeOrmModule.forFeature([User]),
     UserModule,
   ],
   exports: [MongooseModule],

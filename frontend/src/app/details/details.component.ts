@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core'
-import { ActivatedRoute, RouterOutlet } from '@angular/router'
-import { AuthService } from '../services/auth.service'
-import { FormsModule } from '@angular/forms'
-import { NgForOf, NgIf } from '@angular/common'
-import { Comment, Post, User } from '../index/index.component'
-import { InputTextModule } from 'primeng/inputtext'
-import { CarouselModule } from 'primeng/carousel'
-import { forkJoin, map, switchMap } from 'rxjs'
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { FormsModule } from '@angular/forms';
+import { NgForOf, NgIf } from '@angular/common';
+import { Comment, Post, User } from '../index/index.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { CarouselModule } from 'primeng/carousel';
 
 @Component({
   selector: 'app-details',
@@ -23,51 +22,44 @@ import { forkJoin, map, switchMap } from 'rxjs'
   ],
 })
 export class DetailsComponent implements OnInit {
-  newComment: string
+  newComment: string;
   post: Post
-  user: User
-  comments: Comment[] = []
+  users: User[]
+  comments: Comment[]
   currentUser: User
 
   constructor(
     private authService: AuthService,
-    private activatedRoute: ActivatedRoute,
-  ) {}
-
-  getComments(postId: string) {
-    return this.authService.getComments(postId).pipe(
-      switchMap((comments) => {
-        const userRequests = comments.map((comment) =>
-          this.authService.getUserById(comment.userId).pipe(
-            map((user) => {
-              comment.user = user
-              return comment
-            }),
-          ),
-        )
-
-        return forkJoin(userRequests)
-      }),
-    )
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {
   }
 
   ngOnInit(): void {
-    const postId = this.activatedRoute.snapshot.paramMap.get('id')
-    if (postId) {
-      this.authService.getCurrentUser().subscribe((user) => {
-        this.currentUser = user
-      })
-      this.authService.details(postId).subscribe((post) => {
-        this.post = post
-        this.authService.getUserById(this.post.user.id).subscribe((user) => {
-          this.user = user
-        })
-        this.getComments(postId).subscribe((comments) => {
-          this.comments = comments
-        })
-      })
-    }
+    this.route.paramMap.subscribe(params => {
+      const postId = params.get('id') as string;
+      this.lazyLoad(postId);
+    });
   }
+
+
+  lazyLoad(postId: string) {
+    this.authService.getCurrentUser().subscribe((user) => {
+      this.currentUser = user;
+    });
+    this.authService.getUsers().subscribe((data) => {
+      this.users = data;
+    });
+
+    this.authService.details(postId).subscribe((data) => {
+      this.post = data;
+
+      this.authService.getComments(postId).subscribe((data) => {
+        this.comments = data;
+      });
+    });
+  }
+
 
   addComment() {
     if (this.newComment) {
@@ -75,13 +67,10 @@ export class DetailsComponent implements OnInit {
         .addComment(this.currentUser.id, this.post.id, this.newComment)
         .subscribe(
           () => {
-            this.newComment = ''
-            this.getComments(this.post.id)
+            this.newComment = '';
+            this.lazyLoad(this.post.id)
           },
-          (error) => {
-            console.error(error)
-          },
-        )
+        );
     }
   }
 
@@ -89,83 +78,74 @@ export class DetailsComponent implements OnInit {
     if (this.currentUser.id === comment.userId) {
       this.authService.deleteComment(comment.id).subscribe(
         () => {
-          this.getComments(this.post.id)
+          this.lazyLoad(this.post.id)
         },
-        (error) => {
-          console.error(error)
-        },
-      )
-    } else {
-      console.error('Solo puedes eliminar tus comentarios')
+      );
     }
   }
 
   getTimeComment(comment: Comment) {
-    const now = new Date()
-    const createdAt = new Date(comment.createdAt)
-    const diffMilliseconds = now.getTime() - createdAt.getTime()
+    const now = new Date();
+    const createdAt = new Date(comment.createdAt);
+    const diffMilliseconds = now.getTime() - createdAt.getTime();
 
-    const diffSeconds = Math.floor(diffMilliseconds / 1000)
+    const diffSeconds = Math.floor(diffMilliseconds / 1000);
     if (diffSeconds < 60) {
-      return `${diffSeconds} s`
+      return `${diffSeconds} s`;
     }
 
-    const diffMinutes = Math.floor(diffMilliseconds / 1000 / 60)
+    const diffMinutes = Math.floor(diffMilliseconds / 1000 / 60);
     if (diffMinutes < 60) {
-      return `${diffMinutes} min`
+      return `${diffMinutes} min`;
     }
 
-    const diffHours = Math.floor(diffMilliseconds / 1000 / 60 / 60)
+    const diffHours = Math.floor(diffMilliseconds / 1000 / 60 / 60);
     if (diffHours < 24) {
-      return `${diffHours} h`
+      return `${diffHours} h`;
     }
 
-    const diffDays = Math.floor(diffMilliseconds / 1000 / 60 / 60 / 24)
+    const diffDays = Math.floor(diffMilliseconds / 1000 / 60 / 60 / 24);
     if (diffDays < 30) {
-      return `${diffDays} días`
+      return `${diffDays} días`;
     }
 
-    const diffMonths = Math.floor(diffDays / 30)
+    const diffMonths = Math.floor(diffDays / 30);
     if (diffMonths < 12) {
-      return `${diffMonths} sem`
+      return `${diffMonths} sem`;
     }
 
-    const diffYears = Math.floor(diffMonths / 12)
-    return `${diffYears} años`
+    const diffYears = Math.floor(diffMonths / 12);
+    return `${diffYears} años`;
   }
 
   isLiked(): boolean {
     if (this.currentUser) {
-      return this.post.likes.includes(this.currentUser.id)
+      return this.post.likes.includes(this.currentUser.id);
     }
-    return false
+    return false;
   }
 
   likePost(): void {
     if (this.isLiked()) {
-      const index = this.post.likes.indexOf(this.currentUser.id)
+      const index = this.post.likes.indexOf(this.currentUser.id);
       if (index > -1) {
-        this.post.likes.splice(index, 1)
+        this.post.likes.splice(index, 1);
       }
       this.authService.unlike(this.post.id, this.currentUser.id).subscribe(
         () => {
-          console.log('Like removed successfully')
         },
-        (error) => {
-          console.error('Error removing like', error)
-        },
-      )
+      );
     } else {
-      this.post.likes.push(this.currentUser.id)
+      this.post.likes.push(this.currentUser.id);
 
       this.authService.like(this.post.id, this.currentUser.id).subscribe(
         () => {
-          console.log('Like saved successfully')
         },
-        (error) => {
-          console.error('Error saving like', error)
-        },
-      )
+      );
     }
+  }
+
+  goToProfile(id: string): void {
+    this.router.navigate([id, 'profile'])
   }
 }

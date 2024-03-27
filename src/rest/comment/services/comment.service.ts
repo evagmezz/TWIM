@@ -4,7 +4,11 @@ import { InjectModel } from '@nestjs/mongoose'
 import { PaginateModel } from 'mongoose'
 import { CommentMapper } from '../mapper/comment-mapper'
 import { Comment, CommentDocument } from '../entities/comment.entity'
-import { UserService } from '../../user/services/user.service'
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../../user/entities/user.entity';
+import { Repository } from 'typeorm';
+import { UserMapper } from '../../user/mapper/user-mapper';
+
 
 @Injectable()
 export class CommentService {
@@ -14,7 +18,9 @@ export class CommentService {
     @InjectModel(Comment.name)
     private commentRepository: PaginateModel<CommentDocument>,
     private readonly commentMapper: CommentMapper,
-    private readonly userService: UserService,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly userMapper: UserMapper,
   ) {}
 
   async findAll(page: number, limit: number, orderBy: string, order: string) {
@@ -26,7 +32,22 @@ export class CommentService {
         [orderBy]: order,
       },
     }
-    return await this.commentRepository.paginate({}, options)
+    const result = await this.commentRepository.paginate({}, options);
+    const docs = await Promise.all(result.docs.map(async (comment) => {
+      const user = await this.getUserByUserId(comment.userId);
+      return this.commentMapper.toDto(comment, user);
+    }));
+
+    return {
+      ...result,
+      docs,
+    };
+  }
+
+  async getUserByUserId(userId: string) {
+    this.logger.log(`Buscando usuario con userId ${userId}`);
+    const user = await this.userRepository.findOneBy({ id: userId })
+    return this.userMapper.toDto(user);
   }
 
   async findOne(id: string) {
