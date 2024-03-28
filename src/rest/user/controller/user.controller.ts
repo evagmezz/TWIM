@@ -69,11 +69,47 @@ export class UserController {
 
   @Put('me/profile')
   @Roles('USER')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: process.env.UPLOADS_FOLDER || './photos',
+        filename: (req, file, cb) => {
+          const { name } = parse(file.originalname)
+          const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`
+          const fileExt = extname(file.originalname)
+          cb(null, `${fileName}${fileExt}`)
+        },
+      }),
+      fileFilter: (req, file, cb) => {
+        const allowedMimes = ['image/jpeg', 'image/png']
+        const maxFileSize = 1024 * 1024
+        if (!allowedMimes.includes(file.mimetype)) {
+          cb(
+            new BadRequestException(
+              'Imagen no valida, solo se permiten archivos .jpg y .png',
+            ),
+            false,
+          )
+        } else if (file.size > maxFileSize) {
+          cb(
+            new BadRequestException(
+              'Imagen no valida, el tamaño máximo es 1MB',
+            ),
+            false,
+          )
+        } else {
+          cb(null, true)
+        }
+      },
+    }),
+  )
   async updateProfile(
     @Req() request: any,
     @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: Request,
   ) {
-    return await this.userService.update(request.user.id, updateUserDto)
+    return await this.userService.update(request.user.id, updateUserDto, file, req)
   }
 
   @Get(':id/followers')
@@ -139,11 +175,47 @@ export class UserController {
 
   @Put(':id')
   @Roles('ADMIN')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: process.env.UPLOADS_FOLDER || './photos',
+        filename: (req, file, cb) => {
+          const { name } = parse(file.originalname)
+          const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`
+          const fileExt = extname(file.originalname)
+          cb(null, `${fileName}${fileExt}`)
+        },
+      }),
+      fileFilter: (req, file, cb) => {
+        const allowedMimes = ['image/jpeg', 'image/png']
+        const maxFileSize = 1024 * 1024
+        if (!allowedMimes.includes(file.mimetype)) {
+          cb(
+            new BadRequestException(
+              'Imagen no valida, solo se permiten archivos .jpg y .png',
+            ),
+            false,
+          )
+        } else if (file.size > maxFileSize) {
+          cb(
+            new BadRequestException(
+              'Imagen no valida, el tamaño máximo es 1MB',
+            ),
+            false,
+          )
+        } else {
+          cb(null, true)
+        }
+      },
+    }),
+  )
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: Request,
   ) {
-    return await this.userService.update(id, updateUserDto)
+    return await this.userService.update(id, updateUserDto, file, req)
   }
 
   @Post('follow')
@@ -191,5 +263,12 @@ export class UserController {
   @Roles('ADMIN')
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     return await this.userService.remove(id)
+  }
+
+  @Post('check')
+  @HttpCode(200)
+  @Roles('USER')
+  async checkUser(@Body('username') username: string, @Body('password') password: string) {
+    return await this.userService.checkUser(username, password)
   }
 }

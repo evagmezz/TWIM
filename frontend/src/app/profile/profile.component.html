@@ -1,13 +1,16 @@
-<div *ngIf="user">
+<p-messages [(value)]="message" [closable]="true" [enableService]="false"
+            class="position-absolute info-message"></p-messages>
+<div *ngIf="user && currentUser">
   <img [src]="user.image" alt="Profile Picture" class="profile-picture">
   <span class="username">{{ user.username }}</span>
-  <p><a  (click)="showFollowers()">Seguidores: {{ countFollowers() }}</a></p>
-  <p><a  (click)="showFollowing()">Siguiendo: {{ followingCount }}</a></p>
-  <p-button *ngIf="isFollowing && user.id !== currentUser.id" (click)="unFollow()" icon="pi pi-user-minus" [rounded]="true"
+  <p><a (click)="showFollowers()">Seguidores: {{ countFollowers() }}</a></p>
+  <p><a (click)="showFollowing()">Siguiendo: {{ followingCount }}</a></p>
+  <p-button *ngIf="isFollowing && user.id !== currentUser.id" (click)="unFollow()" icon="pi pi-user-minus"
+            [rounded]="true"
             severity="info"></p-button>
-  <p-button *ngIf="!isFollowing && user.id !== currentUser.id" (click)="follow()" icon="pi pi-user-plus" [rounded]="true" [text]="true" [raised]="true"
+  <p-button *ngIf="!isFollowing && user.id !== currentUser.id" (click)="follow()" icon="pi pi-user-plus"
+            [rounded]="true" [text]="true" [raised]="true"
             severity="info"></p-button>
-
   <div class="container">
     <div class="masonry">
       <div *ngFor="let post of posts">
@@ -15,18 +18,86 @@
       </div>
     </div>
   </div>
+
 </div>
+<p-button (click)="visibleEditProfile = true" icon="pi pi-user-edit" [rounded]="true" severity="info"></p-button>
+<p-button (click)="viewLikedPosts()" icon="pi pi-thumbs-up" [rounded]="true" severity="info"></p-button>
+<p-button (click)="visibleDeleteProfile = true" icon="pi pi-trash" [rounded]="true" severity="info"></p-button>
+<div *ngIf="user">
 
-<p-dialog header="Seguidores" [(visible)]="visibleFollowers" [style]="{ width: '25vw', height: '300px' }">
-  <div *ngFor="let follower of followers">
-    <img [src]="follower.image" alt="Profile Picture" class="profile-picture">
-    <span class="username">{{ follower.username }}</span>
-  </div>
-</p-dialog>
+  <p-dialog header="Seguidores" [(visible)]="visibleFollowers" [style]="{ width: '25vw', height: '300px' }">
+    <div *ngFor="let follower of followers">
+      <img [src]="follower.image" alt="Profile Picture" class="profile-picture">
+      <span class="username">{{ follower.username }}</span>
+    </div>
+  </p-dialog>
+  <p-dialog header="Seguidos" [(visible)]="visibleFollowing" [style]="{ width: '25vw', height: '300px' }">
+    <div *ngFor="let following of followings">
+      <img [src]="following.image" alt="Profile Picture" class="profile-picture">
+      <span class="username">{{ following.username }}</span>
+    </div>
+  </p-dialog>
+  <p-sidebar [(visible)]="visibleLikedPosts" [fullScreen]="true">
+    <h3>Publicaciones que te gustaron</h3>
+    <div class="grid-container">
+      <div *ngFor="let post of likedPosts">
+        <img [src]="post.photos[0]" alt="Liked post image" class="small-img" (click)="postDetails(post.id)">
+      </div>
+    </div>
+  </p-sidebar>
+  <p-dialog header="Editar Perfil" [(visible)]="visibleEditProfile" [modal]="true" [style]="{ width: '60vw' }"
+            [draggable]="false" [resizable]="false">
+    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+      <div class="card flex justify-content-center">
+        <div class="flex flex-column gap-2 column">
+          <label for="name">Nombre:</label>
+          <input type="text" pInputText id="name" formControlName="name">
 
-<p-dialog header="Seguidos" [(visible)]="visibleFollowing" [style]="{ width: '25vw', height: '300px' }">
-  <div *ngFor="let following of followings">
-    <img [src]="following.image" alt="Profile Picture" class="profile-picture">
-    <span class="username">{{ following.username }}</span>
-  </div>
-</p-dialog>
+          <label for="lastname">Apellidos:</label>
+          <input type="text" pInputText id="lastname" formControlName="lastname">
+
+          <label for="username">Nombre de usuario:</label>
+          <input type="text" pInputText id="username" aria-describedby="username-help" formControlName="username">
+        </div>
+        <div class="flex flex-column gap-2 column">
+          <label for="email">Correo:</label>
+          <input type="email" id="email" pInputText formControlName="email">
+
+          <label for="password">Contraseña:</label>
+          <p-password [feedback]="true" [toggleMask]="true" formControlName="password" id="password"
+                      placeholder="Contraseña" />
+
+          <label for="image">Imagen de perfil:</label>
+          <input type="file" name="image" id="image" (change)="onFileChange($event)">
+        </div>
+      </div>
+      <div class="card button-container">
+        <p-button label="Guardar" [rounded]="true" severity="help" type="submit"></p-button>
+        <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleEditProfile = false"
+                  severity="help"></p-button>
+      </div>
+    </form>
+  </p-dialog>
+  <p-dialog header="Delete Profile" [(visible)]="visibleDeleteProfile" [modal]="true" [style]="{ width: '30vw' }"
+            [draggable]="false" [resizable]="false">
+    <form [formGroup]="deleteProfileForm" (ngSubmit)="deleteProfile()">
+      <div class="p-d-flex p-flex-column p-jc-center p-ai-center">
+        <div class="p-mb-2">
+          <label for="user">Nombre de usuario:</label>
+          <input type="text" pInputText id="user" formControlName="username">
+        </div>
+        <div>
+          <label for="psswd">Contraseña:</label>
+          <p-password [feedback]="false" [toggleMask]="true" formControlName="password" id="psswd"
+                      placeholder="Contraseña" />
+        </div>
+      </div>
+      <div class="p-mt-3">
+        <p-button label="Eliminar" [rounded]="true" severity="help" type="submit"></p-button>
+        <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleDeleteProfile = false"
+                  severity="secondary"></p-button>
+      </div>
+    </form>
+  </p-dialog>
+
+</div>

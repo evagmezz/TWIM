@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { CreateUserDto } from '../dto/create-user.dto'
 import { UpdateUserDto } from '../dto/update-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -36,7 +30,8 @@ export class UserService {
     @InjectModel(Post.name)
     private postRepository: PaginateModel<PostDocument>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-  ) {}
+  ) {
+  }
 
   async findAll(query: PaginateQuery) {
     this.logger.log('Buscando todos los usuarios')
@@ -109,26 +104,35 @@ export class UserService {
     return this.userMapper.toDto(userCreated)
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto, file: Express.Multer.File, req: Request) {
     this.logger.log(`Actualizando usuario con id ${id}`)
     const user = await this.findOne(id)
     if (!user) {
       throw new NotFoundException(`Usuario con id ${id} no encontrado`)
     }
-    const userByUsername = await this.findByUsername(updateUserDto.username)
-    if (userByUsername && userByUsername.id !== id) {
-      throw new BadRequestException(
-        `El nombre de usuario ${updateUserDto.username} ya existe`,
-      )
+    if (updateUserDto.username) {
+      const userByUsername = await this.findByUsername(updateUserDto.username)
+      if (userByUsername && userByUsername.id !== id) {
+        throw new BadRequestException(
+          `El nombre de usuario ${updateUserDto.username} ya existe`,
+        )
+      }
     }
-    const userByEmail = await this.findByEmail(updateUserDto.email)
-    if (userByEmail && userByEmail.id !== id) {
-      throw new BadRequestException(`El email ${updateUserDto.email} ya existe`)
+    if (updateUserDto.email) {
+      const userByEmail = await this.findByEmail(updateUserDto.email)
+      if (userByEmail && userByEmail.id !== id) {
+        throw new BadRequestException(`El email ${updateUserDto.email} ya existe`)
+      }
     }
     if (updateUserDto.password) {
       updateUserDto.password = await this.bcryptService.hash(
         updateUserDto.password,
       )
+    }
+    if (file) {
+      updateUserDto.image = `${req.protocol}://${req.get('host')}/photos/${file.filename}`
+    } else {
+      updateUserDto.image = User.IMAGE_DEFAULT
     }
     const updatedUser = this.userMapper.toEntity(updateUserDto)
     updatedUser.id = id
@@ -261,7 +265,9 @@ export class UserService {
     } else {
       await this.invalidateCacheKey(`user_${id}`)
       await this.invalidateCacheKey('all_users')
-      this.storageService.removeFile(user.image)
+      if (user.image !== User.IMAGE_DEFAULT) {
+        this.storageService.removeFile(user.image)
+      }
       return await this.userRepository.delete(id)
     }
   }
@@ -293,6 +299,18 @@ export class UserService {
   async validatePassword(password: string, hashPassword: string) {
     this.logger.log(`Validando contraseña`)
     return await this.bcryptService.isMatch(password, hashPassword)
+  }
+
+  async checkUser(username: string, password: string) {
+    this.logger.log(`Validando usuario`)
+    const user = await this.findByUsername(username)
+    if (!user) {
+      throw new NotFoundException(`Usuario ${username} no encontrado`)
+    }
+    if (!user.password) {
+      throw new BadRequestException(`La contraseña del usuario ${username} no está definida`)
+    }
+    return await this.bcryptService.isMatch(password, user.password)
   }
 
   async invalidateCacheKey(keyPattern: string): Promise<void> {

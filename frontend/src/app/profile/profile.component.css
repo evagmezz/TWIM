@@ -38,3 +38,29 @@
     column-count: 4;
   }
 }
+.card {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column {
+  flex: 1;
+}
+
+label {
+  color: gray;
+  font-size: 0.8em;
+  display: block;
+  margin-top: 5px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.grid-container .small-img {
+  width: 100%;
+  height: auto;
+}

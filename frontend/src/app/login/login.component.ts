@@ -73,10 +73,21 @@ export class LoginComponent implements OnInit {
       const password = this.loginForm.controls.password.value || ''
       this.authService
         .login({ username, password })
-        .subscribe((data: Token) => {
-          localStorage.setItem('access_token', data.access_token)
-          this.router.navigate(['index'])
-        })
+        .subscribe(
+          (data: Token) => {
+            localStorage.setItem('access_token', data.access_token)
+            this.router.navigate(['index'])
+          },
+          () => {
+            this.messageService.changeMessage([
+              { severity: 'error', summary: 'Error', detail: 'Nombre de usuario o contraseña incorrectos' },
+            ])
+          }
+        )
+    } else {
+      this.messageService.changeMessage([
+        { severity: 'error', summary: 'Error', detail: 'Por favor, rellene todos los campos' },
+      ])
     }
   }
 }

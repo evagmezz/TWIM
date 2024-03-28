@@ -68,6 +68,12 @@ export class PostController {
     return await this.postService.getAllComments(id)
   }
 
+  @Get('user/:userId/liked')
+  @Roles('USER')
+  async findPostsLikedByUser(@Param('userId', ParseUUIDPipe) userId: string) {
+    return await this.postService.findPostsLikedByUser(userId);
+  }
+
   @Post()
   @HttpCode(201)
   @UseInterceptors(

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf } from '@angular/common';
-import { Comment, Post, User } from '../index/index.component';
+import { Comment, IndexComponent, Post, User } from '../index/index.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { CarouselModule } from 'primeng/carousel';
 
@@ -22,11 +22,13 @@ import { CarouselModule } from 'primeng/carousel';
   ],
 })
 export class DetailsComponent implements OnInit {
+
   newComment: string;
   post: Post
   users: User[]
   comments: Comment[]
   currentUser: User
+  @Output() isLike: boolean = false
 
   constructor(
     private authService: AuthService,
@@ -59,7 +61,6 @@ export class DetailsComponent implements OnInit {
       });
     });
   }
-
 
   addComment() {
     if (this.newComment) {
@@ -120,8 +121,10 @@ export class DetailsComponent implements OnInit {
 
   isLiked(): boolean {
     if (this.currentUser) {
+      this.isLike=true
       return this.post.likes.includes(this.currentUser.id);
     }
+    this.isLike=false
     return false;
   }
 

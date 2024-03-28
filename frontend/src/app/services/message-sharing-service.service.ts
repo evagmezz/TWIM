@@ -13,5 +13,11 @@ export class MessageSharingService {
 
   changeMessage(messages: Message[]) {
     this.messageSource.next(messages)
+    setTimeout(() => {
+      this.clearMessage()
+    }, 5000)
+  }
+  clearMessage(): void {
+    this.messageSource.next([])
   }
 }

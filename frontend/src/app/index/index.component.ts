@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router'
 import { AuthService } from '../services/auth.service'
 import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common'
@@ -7,7 +7,7 @@ import { RatingModule } from 'primeng/rating'
 import { TagModule } from 'primeng/tag'
 import { ButtonModule } from 'primeng/button'
 import { FormsModule } from '@angular/forms'
-import { DataViewLazyLoadEvent, DataViewModule } from 'primeng/dataview'
+import { DataViewModule } from 'primeng/dataview'
 
 export class Comment {
   id: string
@@ -51,13 +51,16 @@ export class User {
   styleUrl: './index.component.css',
 })
 export class IndexComponent implements OnInit {
+
   posts: Post[]
   users: User[]
 
   constructor(
     private router: Router,
     private authService: AuthService,
-  ) {}
+  ) {
+  }
+
 
   ngOnInit(): void {
     this.lazyLoad()
