@@ -191,4 +191,5 @@ export class ProfileComponent implements OnInit {
       this.likedPosts = posts
     })
   }
+
 }

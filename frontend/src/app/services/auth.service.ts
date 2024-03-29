@@ -24,6 +24,7 @@ export class AuthService {
   private postUrl = 'http://localhost:3000/post';
   private commentUrl = 'http://localhost:3000/comment';
   private usersUrl = 'http://localhost:3000/users';
+  private postsUrl = 'http://localhost:3000/post';
 
   constructor(private http: HttpClient) {
   }
@@ -123,5 +124,9 @@ export class AuthService {
 
   checkUser(username: string, password: string): Observable<boolean> {
     return this.http.post<boolean>(`${this.usersUrl}/check`, { username, password });
+  }
+
+  createPost = (formData: FormData): Observable<any> => {
+    return this.http.post(this.postsUrl, formData);
   }
 }

@@ -44,4 +44,8 @@ export class AppComponent {
       this.router.navigate([`${user.id}/profile`])
     })
   }
+
+  goToIndex(): void {
+    this.router.navigate(['index'])
+  }
 }

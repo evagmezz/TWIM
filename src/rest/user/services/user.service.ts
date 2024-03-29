@@ -130,8 +130,15 @@ export class UserService {
       )
     }
     if (file) {
+      if (user.image !== User.IMAGE_DEFAULT) {
+        this.storageService.removeFile(user.image)
+      }
       updateUserDto.image = `${req.protocol}://${req.get('host')}/photos/${file.filename}`
     } else {
+      if (user.image !== User.IMAGE_DEFAULT) {
+        this.storageService.removeFile(user.image)
+        updateUserDto.image = User.IMAGE_DEFAULT
+      }
       updateUserDto.image = User.IMAGE_DEFAULT
     }
     const updatedUser = this.userMapper.toEntity(updateUserDto)
