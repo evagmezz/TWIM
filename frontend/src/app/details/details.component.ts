@@ -1,11 +1,14 @@
-import { Component, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf } from '@angular/common';
-import { Comment, IndexComponent, Post, User } from '../index/index.component';
+import { Comment, Post, User } from '../index/index.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { CarouselModule } from 'primeng/carousel';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { SidebarModule } from 'primeng/sidebar';
 
 @Component({
   selector: 'app-details',
@@ -19,6 +22,9 @@ import { CarouselModule } from 'primeng/carousel';
     NgIf,
     InputTextModule,
     CarouselModule,
+    ButtonModule,
+    DialogModule,
+    SidebarModule,
   ],
 })
 export class DetailsComponent implements OnInit {
@@ -28,7 +34,8 @@ export class DetailsComponent implements OnInit {
   users: User[]
   comments: Comment[]
   currentUser: User
-  @Output() isLike: boolean = false
+  visibleOptions: boolean = false
+  visibleEditPost: boolean = false
 
   constructor(
     private authService: AuthService,
@@ -60,6 +67,23 @@ export class DetailsComponent implements OnInit {
         this.comments = data;
       });
     });
+  }
+
+  editPost() {
+    this.authService.updatePost(this.post.id, this.post.title).subscribe(
+      () => {
+        this.visibleEditPost = false;
+        this.visibleOptions = false;
+      },
+    );
+  }
+
+  deletePost() {
+    this.authService.deletePost(this.post.id).subscribe(
+      () => {
+        this.router.navigate(['index']);
+      },
+    )
   }
 
   addComment() {
@@ -121,10 +145,8 @@ export class DetailsComponent implements OnInit {
 
   isLiked(): boolean {
     if (this.currentUser) {
-      this.isLike=true
       return this.post.likes.includes(this.currentUser.id);
     }
-    this.isLike=false
     return false;
   }
 

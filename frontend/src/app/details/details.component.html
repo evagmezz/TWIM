@@ -12,6 +12,7 @@
     </div>
     <div class="comments-section">
       <div class="post-title">{{ post.title }}</div>
+      <i class="pi pi-ellipsis-h" (click)="visibleOptions = true"></i>
       <div class="comments">
         <div *ngFor="let comment of comments" class="comment">
           <div class="user-info">
@@ -29,3 +30,15 @@
     </div>
   </div>
 </div>
+
+<p-sidebar [(visible)]="visibleEditPost" [fullScreen]="true">
+  <label for="title">Título</label>
+  <input id="title" [(ngModel)]="post.title" pInputText type="text">
+  <p-button label="Guardar" (click)="editPost()"></p-button>
+</p-sidebar>
+
+<p-dialog [(visible)]="visibleOptions" [modal]="true" [style]="{ width: '30vw' }"
+          [draggable]="false" [resizable]="false">
+  <p-button label="Editar" [rounded]="true" severity="info" (click)="visibleEditPost = true"></p-button>
+  <p-button label="Eliminar" [rounded]="true" severity="danger" (click)="deletePost()"></p-button>
+</p-dialog>

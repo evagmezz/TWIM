@@ -1,0 +1,28 @@
+<footer *ngIf="shouldShowFooter()">
+  <button class="footer-button"><i class="pi pi-search" style="font-size: 1rem; color: #708090"></i></button>
+  <button (click)="visibleCreate = true" class="footer-button"><i class="pi pi-plus" style="font-size: 1rem; color: #708090"></i></button>
+  <button  (click)="goToIndex()" class="footer-button"><i class="pi pi-home" style="font-size: 1rem; color: #708090"></i></button>
+  <button class="footer-button"><i class="pi pi-send" style="font-size: 1rem; color: #708090"></i></button>
+  <button (click)="goToMyProfile()" class="footer-button"><i class="pi pi-user"
+                                                             style="font-size: 1rem; color: #708090"></i></button>
+</footer>
+
+<!--<p-dialog header="Create Post" [(visible)]="visibleCreate" [modal]="true" [style]="{ width: '60vw' }"
+          [draggable]="false" [resizable]="false">
+  <form [formGroup]="createPostForm " (ngSubmit)="createPost()">
+    <div class="p-d-flex p-flex-column p-jc-center p-ai-center">
+      <div class="p-mb-2">
+        <input type="text" pInputText id="title" formControlName="title" placeholder="Title" />
+      </div>
+      <div>
+        <label for="image"></label>
+        <input (change)="onFileChange($event)" id="image" type="file" />
+      </div>
+    </div>
+    <div class="p-mt-3">
+      <p-button label="Crear" [rounded]="true" severity="help" type="submit"></p-button>
+      <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleCreate = false"
+                severity="secondary"></p-button>
+    </div>
+  </form>
+</p-dialog>-->

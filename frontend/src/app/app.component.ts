@@ -2,12 +2,13 @@ import { Component } from '@angular/core'
 import { AuthService } from './services/auth.service'
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { LoginComponent } from './login/login.component'
-import { Router, RouterOutlet } from '@angular/router'
+import { RouterOutlet } from '@angular/router'
 import { RegisterComponent } from './register/register.component'
-import { IndexComponent, User } from './index/index.component';
+import { IndexComponent } from './index/index.component'
 import { NgIf } from '@angular/common'
 import { DetailsComponent } from './details/details.component'
 import { ProfileComponent } from './profile/profile.component'
+import { FooterComponent } from './footer/footer.component'
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,8 @@ import { ProfileComponent } from './profile/profile.component'
     IndexComponent,
     NgIf,
     DetailsComponent,
-    ProfileComponent
+    ProfileComponent,
+    FooterComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -29,23 +31,5 @@ import { ProfileComponent } from './profile/profile.component'
 export class AppComponent {
   title = 'TWIM'
 
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-  ) {}
 
-  shouldShowFooter(): boolean {
-    const url = this.router.url
-    return url !== '/login' && url !== '/register'
-  }
-
-  goToMyProfile(): void {
-    this.authService.getCurrentUser().subscribe((user) => {
-      this.router.navigate([`${user.id}/profile`])
-    })
-  }
-
-  goToIndex(): void {
-    this.router.navigate(['index'])
-  }
 }

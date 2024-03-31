@@ -24,7 +24,6 @@ export class AuthService {
   private postUrl = 'http://localhost:3000/post';
   private commentUrl = 'http://localhost:3000/comment';
   private usersUrl = 'http://localhost:3000/users';
-  private postsUrl = 'http://localhost:3000/post';
 
   constructor(private http: HttpClient) {
   }
@@ -126,7 +125,15 @@ export class AuthService {
     return this.http.post<boolean>(`${this.usersUrl}/check`, { username, password });
   }
 
-  createPost = (formData: FormData): Observable<any> => {
-    return this.http.post(this.postsUrl, formData);
+/*  createPost(userId: string, title: string, image: File[]): Observable<any> {
+    return this.http.post(this.postUrl, { userId, title, image });
+  }*/
+
+  updatePost(postId: string, title: string): Observable<any> {
+    return this.http.put(`${this.postUrl}/${postId}`, { title });
+  }
+
+  deletePost(postId: string): Observable<any> {
+    return this.http.delete(`${this.postUrl}/${postId}`);
   }
 }

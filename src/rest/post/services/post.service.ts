@@ -56,6 +56,9 @@ export class PostService {
   async getUserByUserId(userId: string) {
     this.logger.log(`Buscando usuario con userId ${userId}`)
     const user = await this.userRepository.findOneBy({ id: userId })
+    if (!user) {
+      throw new NotFoundException(`El usuario con el id ${userId} no existe`)
+    }
     return this.userMapper.toDto(user)
   }
 

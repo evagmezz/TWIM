@@ -98,12 +98,12 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     if (this.registerForm.valid) {
-      const name = this.registerForm.controls.name.value || ''
-      const lastname = this.registerForm.controls.lastname.value || ''
-      const username = this.registerForm.controls.username.value || ''
-      const password = this.registerForm.controls.password.value || ''
-      const email = this.registerForm.controls.email.value || ''
-      const repeatPwd = this.registerForm.controls.repeatPwd.value || ''
+      const name = this.registerForm.controls.name.value as string
+      const lastname = this.registerForm.controls.lastname.value as string
+      const username = this.registerForm.controls.username.value as string
+      const password = this.registerForm.controls.password.value as string
+      const email = this.registerForm.controls.email.value as string
+      const repeatPwd = this.registerForm.controls.repeatPwd.value as string
 
       const formData = new FormData()
       formData.append('name', name)
