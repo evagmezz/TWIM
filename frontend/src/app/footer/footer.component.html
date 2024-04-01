@@ -13,8 +13,8 @@
         <input type="text" pInputText id="title" formControlName="title" placeholder="Añade un título..." />
       </div>
       <div>
-        <label for="image"></label>
-        <input (change)="onFileChange($event)" id="image" type="file" multiple="multiple" />
+        <p-fileUpload name="image" (onSelect)="onFileChange($event)" [multiple]="true" accept="image/*" [auto]="true">
+        </p-fileUpload>
       </div>
     </div>
     <div class="p-mt-3" style="display: flex; justify-content: center;">

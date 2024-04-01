@@ -9,6 +9,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { PasswordModule } from 'primeng/password';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '../index/index.component';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @Component({
   selector: 'app-footer',
@@ -22,6 +23,7 @@ import { User } from '../index/index.component';
     PasswordModule,
     ReactiveFormsModule,
     NgStyle,
+    FileUploadModule,
   ],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css',
@@ -54,8 +56,9 @@ export class FooterComponent implements OnInit {
   }
 
  onFileChange(event: any): void {
-    if (event.target.files.length > 0) {
-      this.image = event.target.files
+    console.log(event)
+    if (event.currentFiles.length > 0) {
+      this.image = event.currentFiles
     }
   }
 
