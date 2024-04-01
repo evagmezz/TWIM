@@ -19,10 +19,10 @@
     </div>
   </div>
 
+  <p-button (click)="visibleEditProfile = true" icon="pi pi-user-edit" [rounded]="true" severity="info"></p-button>
+  <p-button (click)="viewLikedPosts()" icon="pi pi-thumbs-up" [rounded]="true" severity="info"></p-button>
+  <p-button (click)="visibleDeleteProfile = true" icon="pi pi-trash" [rounded]="true" severity="info"></p-button>
 </div>
-<p-button (click)="visibleEditProfile = true" icon="pi pi-user-edit" [rounded]="true" severity="info"></p-button>
-<p-button (click)="viewLikedPosts()" icon="pi pi-thumbs-up" [rounded]="true" severity="info"></p-button>
-<p-button (click)="visibleDeleteProfile = true" icon="pi pi-trash" [rounded]="true" severity="info"></p-button>
 <div *ngIf="user">
   <p-dialog header="Seguidores" [(visible)]="visibleFollowers" [style]="{ width: '25vw', height: '300px' }">
     <div *ngFor="let follower of followers">

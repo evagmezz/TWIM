@@ -61,12 +61,20 @@ export class AuthService {
     return this.http.get<Post>(`${this.postUrl}/${id}`);
   }
 
+  getComments(postId: string): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.postUrl}/${postId}/comments`);
+  }
+
   addComment(userId: string, postId: string, content: string): Observable<any> {
     return this.http.post(this.commentUrl, {
       userId,
       postId,
       content,
     });
+  }
+
+  deleteComment(commentId: string): Observable<any> {
+    return this.http.delete(`${this.commentUrl}/${commentId}`);
   }
 
   follow(userId: string, userToFollowId: string): Observable<any> {
@@ -77,24 +85,16 @@ export class AuthService {
     return this.http.post(`${this.usersUrl}/unfollow`, { userId, userToUnfollowId });
   }
 
-  getComments(postId: string): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.postUrl}/${postId}/comments`);
-  }
-
-  getCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${this.usersUrl}/me/profile`);
-  }
-
-  deleteComment(commentId: string): Observable<any> {
-    return this.http.delete(`${this.commentUrl}/${commentId}`);
-  }
-
   like(postId: string, userId: string): Observable<any> {
     return this.http.post(`${this.usersUrl}/like`, { postId, userId });
   }
 
   unlike(postId: string, userId: string): Observable<any> {
     return this.http.post(`${this.usersUrl}/unlike`, { postId, userId });
+  }
+
+  getCurrentUser(): Observable<User> {
+    return this.http.get<User>(`${this.usersUrl}/me/profile`);
   }
 
   getFollowing(userId: string): Observable<User[]> {
@@ -109,6 +109,10 @@ export class AuthService {
     return this.http.get<User[]>(this.usersUrl);
   }
 
+  checkUser(username: string, password: string): Observable<boolean> {
+    return this.http.post<boolean>(`${this.usersUrl}/check`, { username, password });
+  }
+
   getPostsLikedByUser(userId: string): Observable<Post[]> {
     return this.http.get<Post[]>(`${this.postUrl}/user/${userId}/liked`);
   }
@@ -121,13 +125,9 @@ export class AuthService {
     return this.http.delete(`${this.usersUrl}/me/profile`);
   }
 
-  checkUser(username: string, password: string): Observable<boolean> {
-    return this.http.post<boolean>(`${this.usersUrl}/check`, { username, password });
+  createPost(formData: FormData): Observable<any> {
+    return this.http.post(`${this.postUrl}`, formData);
   }
-
-/*  createPost(userId: string, title: string, image: File[]): Observable<any> {
-    return this.http.post(this.postUrl, { userId, title, image });
-  }*/
 
   updatePost(postId: string, title: string): Observable<any> {
     return this.http.put(`${this.postUrl}/${postId}`, { title });

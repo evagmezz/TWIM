@@ -113,18 +113,14 @@ export class PostService {
 
   async update(id: string, updatePostDto: UpdatePostDto) {
     this.logger.log(`Actualizando post con id ${id}`)
-    const post = this.postRepository.findById(id).exec()
+    const post = await this.postRepository.findById(id).exec()
     if (!post) {
       throw new NotFoundException(`El post con el id ${id} no existe`)
     }
-    const postUpdated = this.postMapper.toEntity(updatePostDto)
-    const postDto = await this.postRepository
-      .findByIdAndUpdate(id, postUpdated, {
-        new: true,
-      })
-      .exec()
-    const user = await this.userRepository.findOneBy({ id: postDto.userId })
-    return this.postMapper.toDto(postDto, user)
+    post.title = updatePostDto.title;
+    const updated = await post.save();
+    const user = await this.userRepository.findOneBy({ id: updated.userId })
+    return this.postMapper.toDto(updated, user)
   }
 
   async remove(id: string) {

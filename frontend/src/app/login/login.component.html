@@ -1,9 +1,9 @@
-<div class="container  position-relative">
+<div class="container  position-relative flex justify-content-center align-items-center">
   <p-messages [(value)]="message" [closable]="true" [enableService]="false"
-              class="position-absolute info-message"></p-messages>
+              class="position-absolute z-index-1"></p-messages>
   <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
     <div class="card flex flex-column align-items-center justify-content-center">
-     <span class="input-field mb-3">
+     <span class="input-field mb-5">
       <label for="username"></label>
       <input formControlName="username" id="username" pInputText placeholder="Usuario" type="text" />
       <div *ngIf="loginForm.controls['username'].invalid && loginForm.controls['username'].touched"
@@ -20,7 +20,7 @@
           <small *ngIf="loginForm.controls['password'].errors?.['required']" class="error-message">La contraseña es obligatoria</small>
         </div>
      </span>
-      <button class="p-button-rounded p-button-raised p-button-primary" label="Iniciar Sesion" pButton
+      <button class="p-button-rounded p-button-raised p-button-primary mt-2" label="Iniciar Sesion" pButton
               type="submit"></button>
       <p>¿No tienes cuenta?</p>
       <a [routerLink]="['/register']">Registrate</a>

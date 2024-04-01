@@ -1,31 +1,6 @@
-.split-screen {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column
-}
-
 .card {
   width: 60%;
-  display: flex;
   height: 80vh;
-  flex-direction: column;
-}
-
-.post-section {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.comments-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  overflow-y: auto;
 }
 
 .card-img-top {
@@ -42,19 +17,11 @@
   width: 100%;
 }
 
-.card-title {
-  margin-left: 10px;
-}
 
 .user-image {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-}
-
-.image-container {
-  display: flex;
-  overflow-x: auto;
 }
 
 .image-container img {
@@ -80,8 +47,6 @@
 }
 
 .comments {
-  flex-grow: 1;
-  overflow-y: auto;
   width: 100%;
 }
 
@@ -94,31 +59,21 @@
   background: transparent;
 }
 
-.comment {
-  margin-bottom: 20px;
-  word-wrap: break-word;
-}
-
-.add-comment {
-  position: sticky;
-  bottom: 0;
-}
-
-.post-title {
-  font-weight: bold;
-  margin-bottom: 30px;
-  margin-top: 20px;
-  font-size: 1em;
-}
-
 .pi-trash {
   color: gray;
   cursor: pointer;
   margin-left: auto;
 }
 
+.pi-ellipsis-h {
+  color: gray;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
 .pi-heart {
   color: gray;
+  cursor: pointer;
   margin-left: 20px;
 }
 

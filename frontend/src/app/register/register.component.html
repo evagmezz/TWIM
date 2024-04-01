@@ -1,9 +1,9 @@
-<div class="container position-relative">
+<div class="container position-relative flex justify-content-center align-items-center">
   <p-messages [(value)]="messages" [closable]="true" [enableService]="false"
               class="position-absolute info-message"></p-messages>
   <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
     <div class="card flex flex-column align-items-center justify-content-center">
-      <span class="input-field mb-3">
+      <span class="input-field mb-4">
         <label for="name"></label>
         <input formControlName="name" id="name" pInputText placeholder="Nombre" type="text" />
         <div *ngIf="registerForm.controls['name'].invalid && registerForm.controls['name'].touched"
@@ -11,7 +11,7 @@
           <small *ngIf="registerForm.controls['name'].errors?.['required']" class="error-message">El nombre es obligatorio</small>
         </div>
       </span>
-      <span class="input-field mb-3">
+      <span class="input-field mb-4">
         <label for="lastname"></label>
         <input formControlName="lastname" id="lastname" pInputText placeholder="Apellido" type="text" />
         <div *ngIf="registerForm.controls['lastname'].invalid && registerForm.controls['lastname'].touched"
@@ -19,7 +19,7 @@
           <small *ngIf="registerForm.controls['lastname'].errors?.['required']" class="error-message">El apellido es obligatorio</small>
         </div>
       </span>
-      <span class="input-field mb-3">
+      <span class="input-field mb-4">
       <label for="username"></label>
       <input formControlName="username" id="username" pInputText placeholder="Usuario" type="text" />
       <div *ngIf="registerForm.controls['username'].invalid && registerForm.controls['username'].touched"
@@ -32,7 +32,7 @@
         <small *ngIf="registerForm.controls['username'].errors?.['pattern']" class="error-message">El nombre de usuario no es válido</small>
       </div>
      </span>
-      <span class="input-field mb-3">
+      <span class="input-field mb-4">
         <label for="email"></label>
         <input formControlName="email" id="email" pInputText placeholder="Correo" type="text" />
         <div *ngIf="registerForm.controls['email'].invalid && registerForm.controls['email'].touched"
@@ -42,7 +42,7 @@
                  class="error-message">El correo no es válido</small>
         </div>
       </span>
-      <span class="input-field mb-3">
+      <span class="input-field mb-4">
         <label for="password"></label>
         <p-password [feedback]="true" [toggleMask]="true" formControlName="password" id="password"
                     placeholder="Contraseña" />
@@ -51,7 +51,7 @@
           <small *ngIf="registerForm.controls['password'].errors?.['required']" class="error-message">La contraseña es obligatoria</small>
         </div>
      </span>
-      <span class="input-field mb-3">
+      <span class="input-field mb-4">
         <label for="repeatPwd"></label>
         <p-password [feedback]="false" [toggleMask]="true" formControlName="repeatPwd" id="repeatPwd"
                     placeholder="Repetir contraseña" />
@@ -61,7 +61,7 @@
           <small *ngIf="registerForm.controls['repeatPwd'].errors?.['notEquivalent']" class="error-message">Las contraseñas no coinciden</small>
         </div>
       </span>
-      <span class="input-field mb-3">
+      <span class="input-field mb-4">
   <label for="image"></label>
   <input (change)="onFileChange($event)" id="image" type="file" />
 </span>

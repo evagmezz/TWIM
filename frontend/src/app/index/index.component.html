@@ -1,14 +1,13 @@
 <router-outlet></router-outlet>
-<div class="container">
-  <div class="masonry">
-    <div *ngFor="let post of posts" class="item">
-      <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid">
+<div class="container p-m-1 p-mb-5 width: 100%;">
+  <div class="masonry gap-1">
+    <div *ngFor="let post of posts" class="item" style="display: inline-block; margin: 0 0 1em; width: 100%;">
+      <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid" style="width: 100%; height: auto; border-radius: 10px;">
 
-      <div class="user-info">
-        <img [src]="post.user.image" alt="user image" class="user-image" (click)="goToProfile(post.user.id)">
+      <div class="user-info" style="display: flex; align-items: center;">
+        <img [src]="post.user.image" alt="user image" class="user-image" (click)="goToProfile(post.user.id)" style="border-radius: 50%; height: 5vh; width: 5vh; object-fit: cover; margin-right: 0.5em;">
         <p>{{ post.user.username }} </p>
       </div>
     </div>
   </div>
 </div>
-

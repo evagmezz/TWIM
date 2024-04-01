@@ -1,51 +1,17 @@
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  margin-bottom: 70px;
+@media (max-width: 768px) {
+  .masonry {
+    column-count: 2;
+  }
 }
 
-.masonry {
-  column-count: 2;
-  column-gap: 1em;
-}
-
-@media (min-width: 768px) {
+@media (min-width: 769px) and (max-width: 1024px) {
   .masonry {
     column-count: 3;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
   .masonry {
     column-count: 4;
   }
 }
-
-.item {
-  display: inline-block;
-  margin: 0 0 1em;
-  width: 100%;
-}
-
-.img-fluid {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-}
-
-.user-image {
-  border-radius: 50%;
-  height: 5vh;
-  width: 5vh;
-  object-fit: cover;
-  margin-right: 0.5em;
-}
-
-
-

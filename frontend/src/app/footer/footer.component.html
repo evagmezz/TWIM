@@ -1,28 +1,25 @@
-<footer *ngIf="shouldShowFooter()">
-  <button class="footer-button"><i class="pi pi-search" style="font-size: 1rem; color: #708090"></i></button>
-  <button (click)="visibleCreate = true" class="footer-button"><i class="pi pi-plus" style="font-size: 1rem; color: #708090"></i></button>
-  <button  (click)="goToIndex()" class="footer-button"><i class="pi pi-home" style="font-size: 1rem; color: #708090"></i></button>
-  <button class="footer-button"><i class="pi pi-send" style="font-size: 1rem; color: #708090"></i></button>
-  <button (click)="goToMyProfile()" class="footer-button"><i class="pi pi-user"
-                                                             style="font-size: 1rem; color: #708090"></i></button>
+<footer *ngIf="shouldShowFooter()" style="position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; padding: 10px; height: 70px; background-color: #d8c4f6;">
+  <p-button icon="pi pi-search" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
+  <p-button icon="pi pi-plus" (click)="visibleCreate = true" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
+  <p-button icon="pi pi-home" (click)="goToIndex()" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
+  <p-button icon="pi pi-send" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
+  <p-button icon="pi pi-user" (click)="goToMyProfile()" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
 </footer>
 
-<!--<p-dialog header="Create Post" [(visible)]="visibleCreate" [modal]="true" [style]="{ width: '60vw' }"
-          [draggable]="false" [resizable]="false">
+<p-dialog header="Nueva publicación" [(visible)]="visibleCreate" [modal]="true" [style]="{ width: '40vw' }" [draggable]="false" [resizable]="false" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
   <form [formGroup]="createPostForm " (ngSubmit)="createPost()">
     <div class="p-d-flex p-flex-column p-jc-center p-ai-center">
       <div class="p-mb-2">
-        <input type="text" pInputText id="title" formControlName="title" placeholder="Title" />
+        <input type="text" pInputText id="title" formControlName="title" placeholder="Añade un título..." />
       </div>
       <div>
         <label for="image"></label>
-        <input (change)="onFileChange($event)" id="image" type="file" />
+        <input (change)="onFileChange($event)" id="image" type="file" multiple="multiple" />
       </div>
     </div>
-    <div class="p-mt-3">
-      <p-button label="Crear" [rounded]="true" severity="help" type="submit"></p-button>
-      <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleCreate = false"
-                severity="secondary"></p-button>
+    <div class="p-mt-3" style="display: flex; justify-content: center;">
+      <p-button label="Crear" [rounded]="true" severity="help" type="submit" [ngStyle]="{'margin': '10px'}"></p-button>
+      <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleCreate = false" severity="secondary" [ngStyle]="{'margin': '10px'}"></p-button>
     </div>
   </form>
-</p-dialog>-->
+</p-dialog>
