@@ -100,6 +100,7 @@ export class ProfileComponent implements OnInit {
       const username = this.profileForm.controls.username.value || ''
       const email = this.profileForm.controls.email.value || ''
       const password = this.profileForm.controls.password.value || ''
+      const image = this.selectedFile
 
       const updateData = new FormData()
       updateData.append('name', name)
@@ -110,7 +111,7 @@ export class ProfileComponent implements OnInit {
         updateData.append('password', password)
       }
       if (this.selectedFile) {
-        updateData.append('image', this.selectedFile)
+        updateData.append('image', image)
       }
 
       this.authService.updateProfile(updateData).subscribe(
@@ -123,10 +124,9 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  onFileChange(event: Event) {
-    const target = event.target as HTMLInputElement
-    if (target.files && target.files.length > 0) {
-      this.selectedFile = target.files[0]
+  onFileChange(event: any): void {
+    if (event.currentFiles.length > 0) {
+      this.selectedFile = event.currentFiles[0];
     }
   }
 

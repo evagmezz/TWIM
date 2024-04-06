@@ -1,10 +1,18 @@
 <p-messages [(value)]="message" [closable]="true" [enableService]="false"
             class="position-absolute info-message"></p-messages>
 <div *ngIf="user && currentUser">
-  <img [src]="user.image" alt="Profile Picture" class="profile-picture">
-  <span class="username">{{ user.username }}</span>
-  <p><a (click)="showFollowers()">Seguidores: {{ countFollowers() }}</a></p>
-  <p><a (click)="showFollowing()">Siguiendo: {{ followingCount }}</a></p>
+  <div class="flex align-items-center">
+    <img [src]="user.image" alt="Profile Picture" class="profile-picture mr-2">
+    <span class="mr-2">{{ user.username }}</span>
+    <div class="mr-2">
+      <p><a (click)="showFollowers()">Seguidores: {{ countFollowers() }}</a></p>
+      <p><a (click)="showFollowing()">Siguiendo: {{ followingCount }}</a></p>
+    </div>
+    <i class="pi pi-ellipsis-h mr-2"></i>
+    <p-button *ngIf="user.id === currentUser.id" (click)="visibleEditProfile = true" icon="pi pi-user-edit" [rounded]="true" severity="info"></p-button>
+    <p-button *ngIf="user.id === currentUser.id" (click)="viewLikedPosts()" icon="pi pi-thumbs-up" [rounded]="true" severity="info"></p-button>
+    <p-button *ngIf="user.id === currentUser.id" (click)="visibleDeleteProfile = true" icon="pi pi-trash" [rounded]="true" severity="info"></p-button>
+  </div>
   <p-button *ngIf="isFollowing && user.id !== currentUser.id" (click)="unFollow()" icon="pi pi-user-minus"
             [rounded]="true"
             severity="info"></p-button>
@@ -19,21 +27,18 @@
     </div>
   </div>
 
-  <p-button (click)="visibleEditProfile = true" icon="pi pi-user-edit" [rounded]="true" severity="info"></p-button>
-  <p-button (click)="viewLikedPosts()" icon="pi pi-thumbs-up" [rounded]="true" severity="info"></p-button>
-  <p-button (click)="visibleDeleteProfile = true" icon="pi pi-trash" [rounded]="true" severity="info"></p-button>
 </div>
 <div *ngIf="user">
   <p-dialog header="Seguidores" [(visible)]="visibleFollowers" [style]="{ width: '25vw', height: '300px' }">
     <div *ngFor="let follower of followers">
       <img [src]="follower.image" alt="Profile Picture" class="profile-picture">
-      <span class="username">{{ follower.username }}</span>
+      <span class="ml-4">{{ follower.username }}</span>
     </div>
   </p-dialog>
   <p-dialog header="Seguidos" [(visible)]="visibleFollowing" [style]="{ width: '25vw', height: '300px' }">
     <div *ngFor="let following of followings">
       <img [src]="following.image" alt="Profile Picture" class="profile-picture">
-      <span class="username">{{ following.username }}</span>
+      <span class="ml-4">{{ following.username }}</span>
     </div>
   </p-dialog>
   <p-sidebar [(visible)]="visibleLikedPosts" [fullScreen]="true">
@@ -44,11 +49,11 @@
       </div>
     </div>
   </p-sidebar>
-  <p-dialog header="Editar Perfil" [(visible)]="visibleEditProfile" [modal]="true" [style]="{ width: '60vw' }"
+  <p-dialog header="Editar Perfil" [(visible)]="visibleEditProfile" [modal]="true" [style]="{ width: '40vw' }"
             [draggable]="false" [resizable]="false">
     <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
-      <div class="card flex justify-content-center">
-        <div class="flex flex-column gap-2 column">
+      <div class="flex justify-content-between ml-4">
+        <div class="flex flex-column gap-2">
           <label for="name">Nombre:</label>
           <input type="text" pInputText id="name" formControlName="name">
 
@@ -58,7 +63,7 @@
           <label for="username">Nombre de usuario:</label>
           <input type="text" pInputText id="username" aria-describedby="username-help" formControlName="username">
         </div>
-        <div class="flex flex-column gap-2 column">
+        <div class="flex flex-column gap-2">
           <label for="email">Correo:</label>
           <input type="email" id="email" pInputText formControlName="email">
 
@@ -66,11 +71,10 @@
           <p-password [feedback]="true" [toggleMask]="true" formControlName="password" id="password"
                       placeholder="Contraseña" />
 
-          <label for="image">Imagen de perfil:</label>
-          <input type="file" name="image" id="image" (change)="onFileChange($event)">
+          <p-fileUpload name="image" (onSelect)="onFileChange($event)" accept="image/*" [auto]="true"/>
         </div>
       </div>
-      <div class="card button-container">
+      <div class="flex justify-content-center mt-2">
         <p-button label="Guardar" [rounded]="true" severity="help" type="submit"></p-button>
         <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleEditProfile = false"
                   severity="help"></p-button>

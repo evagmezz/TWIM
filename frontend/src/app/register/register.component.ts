@@ -65,10 +65,9 @@ export class RegisterComponent implements OnInit {
     private messageService: MessageSharingService,
   ) {}
 
-  onFileChange(event: Event) {
-    const target = event.target as HTMLInputElement
-    if (target.files && target.files.length > 0) {
-      this.selectedFile = target.files[0]
+  onFileChange(event: any): void {
+    if (event.currentFiles.length > 0) {
+      this.selectedFile = event.currentFiles[0];
     }
   }
 
@@ -104,6 +103,7 @@ export class RegisterComponent implements OnInit {
       const password = this.registerForm.controls.password.value as string
       const email = this.registerForm.controls.email.value as string
       const repeatPwd = this.registerForm.controls.repeatPwd.value as string
+      const image = this.selectedFile
 
       const formData = new FormData()
       formData.append('name', name)
@@ -113,7 +113,7 @@ export class RegisterComponent implements OnInit {
       formData.append('email', email)
       formData.append('repeatPwd', repeatPwd)
       if (this.selectedFile) {
-        formData.append('image', this.selectedFile)
+        formData.append('image', image)
       }
 
       this.authService.register(formData).subscribe(

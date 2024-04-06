@@ -1,5 +1,5 @@
 <router-outlet></router-outlet>
-<div class="container p-m-1 p-mb-5 width: 100%;">
+<div class="container m-1 mb-7 width: 100%;">
   <div class="masonry gap-1">
     <div *ngFor="let post of posts" class="item" style="display: inline-block; margin: 0 0 1em; width: 100%;">
       <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid" style="width: 100%; height: auto; border-radius: 10px;">

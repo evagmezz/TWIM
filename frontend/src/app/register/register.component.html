@@ -62,8 +62,7 @@
         </div>
       </span>
       <span class="input-field mb-4">
-  <label for="image"></label>
-  <input (change)="onFileChange($event)" id="image" type="file" />
+          <p-fileUpload name="image" (onSelect)="onFileChange($event)" accept="image/*" [auto]="true"/>
 </span>
       <button class="p-button-rounded p-button-raised p-button-primary" label="Registrarse" pButton
               type="submit"></button>
