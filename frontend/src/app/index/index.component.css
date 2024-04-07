@@ -15,3 +15,14 @@
     column-count: 4;
   }
 }
+
+.pi-heart, .pi-comment {
+  color: gray;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.pi-heart-fill {
+  color: red;
+  margin-left: 20px;
+}

@@ -12,3 +12,15 @@
     /* CSS to Reset */
   }
 }
+
+.p-fileupload .p-fileupload-buttonbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.p-fileupload .p-fileupload-buttonbar .p-button {
+  margin-right: 0.5rem;
+  background-color: #c0a9f1;
+  border-color: transparent;
+}

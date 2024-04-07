@@ -46,7 +46,9 @@ export class FooterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if(!this.shouldShowFooter()) {
       this.lazyLoad()
+    }
     }
 
   lazyLoad() {

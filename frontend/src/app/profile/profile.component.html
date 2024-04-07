@@ -71,7 +71,16 @@
           <p-password [feedback]="true" [toggleMask]="true" formControlName="password" id="password"
                       placeholder="Contraseña" />
 
-          <p-fileUpload name="image" (onSelect)="onFileChange($event)" accept="image/*" [auto]="true"/>
+          <label for="image">Foto de perfil:</label>
+          <p-fileUpload name="image" id="image" chooseLabel="Seleccionar" chooseIcon="pi pi-image" (onSelect)="onFileChange($event)"
+                        accept="image/*" [auto]="true">
+            <ng-template pTemplate="content">
+              <div class="flex flex-column align-items-center gap-2">
+                <i class="pi pi-download"></i>
+                <div>Arrastre una imágen aquí</div>
+              </div>
+            </ng-template>
+          </p-fileUpload>
         </div>
       </div>
       <div class="flex justify-content-center mt-2">
@@ -81,21 +90,18 @@
       </div>
     </form>
   </p-dialog>
-  <p-dialog header="Delete Profile" [(visible)]="visibleDeleteProfile" [modal]="true" [style]="{ width: '30vw' }"
+  <p-dialog header="Eliminar perfil" [(visible)]="visibleDeleteProfile" [modal]="true" [style]="{ width: '30vw', position: 'relative' }"
             [draggable]="false" [resizable]="false">
     <form [formGroup]="deleteProfileForm" (ngSubmit)="deleteProfile()">
-      <div class="p-d-flex p-flex-column p-jc-center p-ai-center">
-        <div class="p-mb-2">
+      <div class="flex justify-content-center ml-4">
+        <div class="flex flex-column gap-2">
           <label for="user">Nombre de usuario:</label>
           <input type="text" pInputText id="user" formControlName="username">
-        </div>
-        <div>
           <label for="psswd">Contraseña:</label>
-          <p-password [feedback]="false" [toggleMask]="true" formControlName="password" id="psswd"
-                      placeholder="Contraseña" />
+          <p-password [feedback]="false" [toggleMask]="true" formControlName="password" id="psswd" />
         </div>
       </div>
-      <div class="p-mt-3">
+      <div class="flex justify-content-center mt-3">
         <p-button label="Eliminar" [rounded]="true" severity="help" type="submit"></p-button>
         <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleDeleteProfile = false"
                   severity="secondary"></p-button>

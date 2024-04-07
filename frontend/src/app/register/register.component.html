@@ -62,7 +62,15 @@
         </div>
       </span>
       <span class="input-field mb-4">
-          <p-fileUpload name="image" (onSelect)="onFileChange($event)" accept="image/*" [auto]="true"/>
+  <p-fileUpload name="image" chooseLabel="Seleccionar" chooseIcon="pi pi-image" (onSelect)="onFileChange($event)"
+                accept="image/*" [auto]="true">
+    <ng-template pTemplate="content">
+      <div class="flex flex-column align-items-center gap-2">
+      <i class="pi pi-download"></i>
+                <div>Arrastre una imágen aquí</div>
+        </div>
+    </ng-template>
+  </p-fileUpload>
 </span>
       <button class="p-button-rounded p-button-raised p-button-primary" label="Registrarse" pButton
               type="submit"></button>

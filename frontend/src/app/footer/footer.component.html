@@ -1,5 +1,5 @@
-<footer *ngIf="shouldShowFooter()" style="position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; padding: 10px; height: 70px; background-color: #d8c4f6;">
-  <p-button icon="pi pi-search" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
+<footer *ngIf="shouldShowFooter()" class="fixed flex justify-content-around " style=" bottom: 0; left: 0; width: 100%; padding: 10px; height: 70px; background-color: #d8c4f6">
+ <p-button icon="pi pi-search" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
   <p-button icon="pi pi-plus" (click)="visibleCreate = true" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
   <p-button icon="pi pi-home" (click)="goToIndex()" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
   <p-button icon="pi pi-send" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
@@ -8,12 +8,19 @@
 
 <p-dialog header="Nueva publicación" [(visible)]="visibleCreate" [modal]="true" [style]="{ width: '40vw' }" [draggable]="false" [resizable]="false" class="flex flex-column align-items-center justify-content-center;">
   <form [formGroup]="createPostForm " (ngSubmit)="createPost()">
-    <div class="flex flex-column justify-content-center align-items-center">
+    <div class="flex flex-column align-items-center gap-2">
       <div class="mb-2">
         <input type="text" pInputText id="title" formControlName="title" placeholder="Añade un título..." />
       </div>
       <div>
-        <p-fileUpload name="image" (onSelect)="onFileChange($event)" [multiple]="true" accept="image/*" [auto]="true">
+        <p-fileUpload name="image" chooseLabel="Seleccionar" chooseIcon="pi pi-image" (onSelect)="onFileChange($event)"
+                      accept="image/*" [auto]="true">
+          <ng-template pTemplate="content">
+            <div class="flex flex-column align-items-center gap-2">
+              <i class="pi pi-download"></i>
+              <div>Arrastre una imágen aquí</div>
+            </div>
+          </ng-template>
         </p-fileUpload>
       </div>
     </div>

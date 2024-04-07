@@ -22,6 +22,12 @@ export const routes: Routes = [
   {
     path: 'index',
     component: IndexComponent,
+    children: [
+      {
+        path: 'details/:id',
+        component: DetailsComponent
+      }
+    ]
   },
   {
     path: 'details/:id',
