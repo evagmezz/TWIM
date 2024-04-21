@@ -1,6 +1,5 @@
 .card {
-  width: 100%;
-  max-width: 400px;
+  max-width: 900px;
 }
 
 .card {
@@ -26,10 +25,6 @@
 
 .card button:not(:last-child) {
   margin-right: 10px;
-}
-
-.position-relative {
-  position: relative;
 }
 
 .position-absolute {

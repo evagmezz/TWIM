@@ -1,19 +1,22 @@
-<div class="position-relative flex justify-content-center align-items-center" style=" height: 100vh;">
+<div class="relative flex justify-content-center align-items-center" style=" height: 90vh;">
   <p-messages [(value)]="messages" [closable]="true" [enableService]="false"
               class="position-absolute z-1"></p-messages>
   <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
-    <div class="card flex flex-column align-items-center justify-content-center m-auto">
+    <div class="card flex flex-column align-items-center justify-content-center m-auto w-100">
+      <div class="flex justify-content-between ml-4 gap-4">
+        <div class="flex flex-column gap-2">
       <span class="input-field relative mb-4">
         <label for="name"></label>
         <input formControlName="name" id="name" pInputText placeholder="Nombre" type="text" />
         <div *ngIf="registerForm.controls['name'].invalid && registerForm.controls['name'].touched"
              class="absolute">
-          <small *ngIf="registerForm.controls['name'].errors?.['required']" style="color: red;">El nombre es obligatorio</small>
+          <small *ngIf="registerForm.controls['name'].errors?.['required']"
+                 style="color: red;">El nombre es obligatorio</small>
           <small *ngIf="registerForm.controls['name'].errors?.['pattern']"
                  style="color: red;">El nombre no es válido</small>
         </div>
       </span>
-      <span class="input-field mb-4">
+          <span class="input-field mb-4">
         <label for="lastname"></label>
         <input formControlName="lastname" id="lastname" pInputText placeholder="Apellido" type="text" />
         <div *ngIf="registerForm.controls['lastname'].invalid && registerForm.controls['lastname'].touched"
@@ -23,7 +26,7 @@
                  style="color: red;">El apellido no es válido</small>
         </div>
       </span>
-      <span class="input-field mb-4">
+          <span class="input-field mb-4">
       <label for="username"></label>
       <input formControlName="username" id="username" pInputText placeholder="Usuario" type="text" />
       <div *ngIf="registerForm.controls['username'].invalid && registerForm.controls['username'].touched"
@@ -36,7 +39,7 @@
         <small *ngIf="registerForm.controls['username'].errors?.['pattern']" style="color: red;">El nombre de usuario no es válido</small>
       </div>
      </span>
-      <span class="input-field mb-4">
+          <span class="input-field mb-4">
         <label for="email"></label>
         <input formControlName="email" id="email" pInputText placeholder="Correo" type="text" />
         <div *ngIf="registerForm.controls['email'].invalid && registerForm.controls['email'].touched"
@@ -45,7 +48,9 @@
           <small *ngIf="registerForm.controls['email'].errors?.['email']"
                  style="color: red;">El correo no es válido</small>
         </div>
-      </span>
+        </span>
+        </div>
+        <div class="flex flex-column gap-2">
       <span class="input-field mb-4">
         <label for="password"></label>
         <p-password [feedback]="true" [toggleMask]="true" formControlName="password" id="password"
@@ -55,7 +60,7 @@
           <small *ngIf="registerForm.controls['password'].errors?.['required']" style="color: red;">La contraseña es obligatoria</small>
         </div>
      </span>
-      <span class="input-field mb-4">
+          <span class="input-field mb-4">
         <label for="repeatPwd"></label>
         <p-password [feedback]="false" [toggleMask]="true" formControlName="repeatPwd" id="repeatPwd"
                     placeholder="Repetir contraseña" />
@@ -65,7 +70,7 @@
           <small *ngIf="registerForm.controls['repeatPwd'].errors?.['notEquivalent']" style="color: red;">Las contraseñas no coinciden</small>
         </div>
       </span>
-      <span class="input-field mb-4">
+          <span class="input-field mb-4">
   <p-fileUpload name="image" chooseLabel="Seleccionar" chooseIcon="pi pi-image" (onSelect)="onFileChange($event)"
                 accept="image/*" [auto]="true">
     <ng-template pTemplate="content">
@@ -75,11 +80,15 @@
         </div>
     </ng-template>
   </p-fileUpload>
-</span>
-      <button class="p-button-rounded p-button-raised p-button-primary" label="Registrarse" pButton
-              type="submit"></button>
-      <p>¿Ya tienes cuenta?</p>
-      <a [routerLink]="['/login']">Inicia sesión</a>
-    </div>
+     </span>
+        </div>
+      </div>
+      <div class="flex flex-column align-items-center justify-content-center mt-2">
+        <button class="p-button-rounded p-button-raised p-button-primary" label="Registrarse" pButton
+                type="submit"></button>
+          <p>¿Ya tienes cuenta?</p>
+          <a [routerLink]="['/login']">Inicia sesión</a>
+        </div>
+      </div>
   </form>
 </div>
