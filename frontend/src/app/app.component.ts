@@ -9,6 +9,7 @@ import { NgIf } from '@angular/common'
 import { DetailsComponent } from './details/details.component'
 import { ProfileComponent } from './profile/profile.component'
 import { FooterComponent } from './footer/footer.component'
+import { ChatComponent } from './chat/chat.component';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +24,7 @@ import { FooterComponent } from './footer/footer.component'
     NgIf,
     DetailsComponent,
     ProfileComponent,
+    ChatComponent,
     FooterComponent,
   ],
   templateUrl: './app.component.html',

@@ -79,6 +79,10 @@ export class IndexComponent implements OnInit {
     this.router.navigate(['details', id]);
   }
 
+  onDialogHide(): void {
+    this.router.navigate(['index']);
+  }
+
   totalRecords: number = 0
 
   lazyLoad() {

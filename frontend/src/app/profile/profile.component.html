@@ -1,46 +1,74 @@
 <p-messages [(value)]="message" [closable]="true" [enableService]="false"
             class="position-absolute info-message"></p-messages>
+<!-- Profile -->
 <div *ngIf="user && currentUser">
-  <div class="flex align-items-center">
-    <img [src]="user.image" alt="Profile Picture" class="profile-picture mr-2">
-    <span class="mr-2">{{ user.username }}</span>
-    <div class="mr-2">
-      <p><a (click)="showFollowers()">Seguidores: {{ countFollowers() }}</a></p>
-      <p><a (click)="showFollowing()">Siguiendo: {{ followingCount }}</a></p>
+  <div class="flex justify-content-center align-items-center">
+    <div class="flex justify-content-center align-items-center gap-4">
+      <img [src]="user.image" alt="Profile Picture" class="my-profile-picture mb-5 mt-4 mr-4">
     </div>
-    <i class="pi pi-ellipsis-h mr-2"></i>
-    <p-button *ngIf="user.id === currentUser.id" (click)="visibleEditProfile = true" icon="pi pi-user-edit" [rounded]="true" severity="info"></p-button>
-    <p-button *ngIf="user.id === currentUser.id" (click)="viewLikedPosts()" icon="pi pi-thumbs-up" [rounded]="true" severity="info"></p-button>
-    <p-button *ngIf="user.id === currentUser.id" (click)="visibleDeleteProfile = true" icon="pi pi-trash" [rounded]="true" severity="info"></p-button>
-  </div>
-  <p-button *ngIf="isFollowing && user.id !== currentUser.id" (click)="unFollow()" icon="pi pi-user-minus"
-            [rounded]="true"
-            severity="info"></p-button>
-  <p-button *ngIf="!isFollowing && user.id !== currentUser.id" (click)="follow()" icon="pi pi-user-plus"
-            [rounded]="true" [text]="true" [raised]="true"
-            severity="info"></p-button>
-  <div class="container">
-    <div class="masonry">
-      <div *ngFor="let post of posts">
-        <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid">
+    <div class="flex flex-column align-items-center gap-2">
+      <div class="username-container flex align-items-center gap-2">
+        <span class="username">{{ user.username }}</span>
+        <p-button *ngIf="isFollowing && user.id !== currentUser.id" (click)="unFollow()" icon="pi pi-user-minus"
+                  [rounded]="true"
+                  severity="help"></p-button>
+        <p-button *ngIf="!isFollowing && user.id !== currentUser.id" (click)="follow()" icon="pi pi-user-plus"
+                  [rounded]="true" [text]="true" [raised]="true"
+                  severity="help"></p-button>
+        <i *ngIf="user.id === currentUser.id" class="pi pi-ellipsis-h mr-2" (click)="visibleOptions = true"></i>
+      </div>
+      <div class="flex gap-2">
+        <p><a (click)="showFollowers()">{{ countFollowers() }} seguidores</a></p>
+        <p><a (click)="showFollowing()">{{ followingCount }} siguiendo</a></p>
       </div>
     </div>
   </div>
-
+</div>
+<div class="container">
+  <div class="masonry">
+    <div *ngFor="let post of posts">
+      <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid">
+    </div>
+  </div>
+</div>
+<!-- Options -->
+<div *ngIf="user && currentUser">
+  <p-dialog [(visible)]="visibleOptions" [modal]="true" [style]="{ width: '30vw' }">
+    <div class="flex flex-column align-items-start align-items-center justify-content-center gap-2">
+      <button pButton *ngIf="user.id === currentUser.id" (click)="visibleEditProfile = true"
+              class="bg-transparent border-transparent text-color-secondary gap-2">
+        Editar perfil <i class="pi pi-user-edit"></i>
+      </button>
+      <button pButton *ngIf="user.id === currentUser.id" (click)="viewLikedPosts()"
+              class="bg-transparent border-transparent text-color-secondary gap-2">
+        Ver publicaciones que te gustaron<i class="pi pi-thumbs-up"></i>
+      </button>
+      <button pButton *ngIf="user.id === currentUser.id" (click)="visibleDeleteProfile = true"
+              class="bg-transparent border-transparent text-color-secondary gap-2">
+        Eliminar perfil <i class="pi pi-trash"></i>
+      </button>
+      <button pButton *ngIf="user.id === currentUser.id" (click)="logout()"
+              class="bg-transparent border-transparent text-color-secondary gap-2">
+        Cerrar sesión <i class="pi pi-sign-out"></i>
+      </button>
+    </div>
+  </p-dialog>
 </div>
 <div *ngIf="user">
+  <!-- Followers and Following -->
   <p-dialog header="Seguidores" [(visible)]="visibleFollowers" [style]="{ width: '25vw', height: '300px' }">
-    <div *ngFor="let follower of followers">
+    <div *ngFor="let follower of followers" class="flex align-items-center">
       <img [src]="follower.image" alt="Profile Picture" class="profile-picture">
-      <span class="ml-4">{{ follower.username }}</span>
+      <span class="ml-4 username-large">{{ follower.username }}</span>
     </div>
   </p-dialog>
   <p-dialog header="Seguidos" [(visible)]="visibleFollowing" [style]="{ width: '25vw', height: '300px' }">
-    <div *ngFor="let following of followings">
+    <div *ngFor="let following of followings" class="flex align-items-center">
       <img [src]="following.image" alt="Profile Picture" class="profile-picture">
-      <span class="ml-4">{{ following.username }}</span>
+      <span class="ml-4 username-large">{{ following.username }}</span>
     </div>
   </p-dialog>
+  <!-- Liked posts -->
   <p-sidebar [(visible)]="visibleLikedPosts" [fullScreen]="true">
     <h3>Publicaciones que te gustaron</h3>
     <div class="grid-container">
@@ -49,6 +77,7 @@
       </div>
     </div>
   </p-sidebar>
+  <!-- Edit and Delete Profile -->
   <p-dialog header="Editar Perfil" [(visible)]="visibleEditProfile" [modal]="true" [style]="{ width: '40vw' }"
             [draggable]="false" [resizable]="false">
     <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
@@ -72,7 +101,8 @@
                       placeholder="Contraseña" />
 
           <label for="image">Foto de perfil:</label>
-          <p-fileUpload name="image" id="image" chooseLabel="Seleccionar" chooseIcon="pi pi-image" (onSelect)="onFileChange($event)"
+          <p-fileUpload name="image" id="image" chooseLabel="Seleccionar" chooseIcon="pi pi-image"
+                        (onSelect)="onFileChange($event)"
                         accept="image/*" [auto]="true">
             <ng-template pTemplate="content">
               <div class="flex flex-column align-items-center gap-2">
@@ -83,14 +113,15 @@
           </p-fileUpload>
         </div>
       </div>
-      <div class="flex justify-content-center mt-2">
+      <div class="flex justify-content-center mt-2 gap-2">
         <p-button label="Guardar" [rounded]="true" severity="help" type="submit"></p-button>
         <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleEditProfile = false"
                   severity="help"></p-button>
       </div>
     </form>
   </p-dialog>
-  <p-dialog header="Eliminar perfil" [(visible)]="visibleDeleteProfile" [modal]="true" [style]="{ width: '30vw', position: 'relative' }"
+  <p-dialog header="Eliminar perfil" [(visible)]="visibleDeleteProfile" [modal]="true"
+            [style]="{ width: '30vw', position: 'relative' }"
             [draggable]="false" [resizable]="false">
     <form [formGroup]="deleteProfileForm" (ngSubmit)="deleteProfile()">
       <div class="flex justify-content-center ml-4">
@@ -101,7 +132,7 @@
           <p-password [feedback]="false" [toggleMask]="true" formControlName="password" id="psswd" />
         </div>
       </div>
-      <div class="flex justify-content-center mt-3">
+      <div class="flex justify-content-center mt-3 gap-2">
         <p-button label="Eliminar" [rounded]="true" severity="help" type="submit"></p-button>
         <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleDeleteProfile = false"
                   severity="secondary"></p-button>

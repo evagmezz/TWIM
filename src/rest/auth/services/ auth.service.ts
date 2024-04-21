@@ -71,6 +71,13 @@ export class AuthService {
     return await this.userService.findOne(id)
   }
 
+  async validateUserByToken(token: string) {
+    this.logger.log(`Validating user by token ${token}`)
+    const payload = this.jwtService.verify(token)
+    console.log('payload', payload.id)
+    return await this.userService.findOne(payload.id)
+  }
+
   private getAccessToken(userId: string) {
     this.logger.log(`Obteniendo token de acceso para ${userId}`)
     try {

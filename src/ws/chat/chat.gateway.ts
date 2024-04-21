@@ -11,7 +11,12 @@ import { Server, Socket } from 'socket.io'
 import { AuthService } from '../../rest/auth/services/ auth.service'
 import { UserMapper } from '../../rest/user/mapper/user-mapper'
 
-@WebSocketGateway()
+@WebSocketGateway( 4200, {
+  cors: {
+    origin: '*',
+  }
+})
+
 export class ChatGateway implements OnModuleInit {
   @WebSocketServer()
   public server: Server
@@ -24,14 +29,14 @@ export class ChatGateway implements OnModuleInit {
 
   onModuleInit() {
     this.server.on('connect', async (socket: Socket) => {
-      const { username, token } = socket.handshake.auth
-      if (!username || !token) {
+      const { token } = socket.handshake.auth
+      if (!token) {
         socket.disconnect()
         return
       }
 
-      const responseUserDto = await this.authService.validateUser(token)
-      if (!responseUserDto || responseUserDto.username !== username) {
+      const responseUserDto = await this.authService.validateUserByToken(token)
+      if (!responseUserDto) {
         socket.disconnect()
         return
       }
@@ -50,19 +55,19 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('send-message')
-  handleMessage(
+  async handleMessage(
     @MessageBody() message: string,
     @ConnectedSocket() client: Socket,
   ) {
-    const username = client.handshake.auth
+    const user = await this.authService.validateUserByToken(client.handshake.auth.token)
 
-    if (!message) {
+    if (!message || !user) {
       return
     }
     this.server.emit('on-message', {
       userId: client.id,
       message: message,
-      username: username,
+      username: user.username,
     })
   }
 }

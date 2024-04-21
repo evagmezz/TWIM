@@ -36,6 +36,10 @@ export class AuthService {
     return this.http.post(`${this.authUrl}/signup`, formData);
   }
 
+  signout(): void {
+    localStorage.removeItem('access_token')
+  }
+
   index(): Observable<Paginate<Post>> {
     return this.http.get<Paginate<Post>>(this.postUrl).pipe(
       map((res) => ({
@@ -135,5 +139,9 @@ export class AuthService {
 
   deletePost(postId: string): Observable<any> {
     return this.http.delete(`${this.postUrl}/${postId}`);
+  }
+
+  searchByUsername(username: string): Observable<any> {
+    return this.http.get(`${this.usersUrl}?search=${username}`);
   }
 }

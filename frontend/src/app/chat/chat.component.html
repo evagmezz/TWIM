@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <p-card class="mb-10">
+    <div class="chat-container flex relative " *ngIf="currentUser">
+      <div class="followers overflow-y-auto">
+        <div *ngFor="let follower of currentUser.followers">
+          <img [src]="follower.image" alt="Profile Picture" class="profile-picture">
+          {{ follower.name }}
+        </div>
+      </div>
+      <div class="chat flex align-items-center justify-content-start flex-1 overflow-y-auto flex-column">
+        <div class="messages flex-grow-1 overflow-y-auto flex-1">
+          <div *ngFor="let message of messages">
+            {{ message }}
+          </div>
+        </div>
+        <div class="position-sticky bottom-0">
+          <input (keyup.enter)="sendMessage()" [(ngModel)]="message" pInputText placeholder="Escribir mensaje...">
+        </div>
+      </div>
+    </div>
+  </p-card>
+</div>

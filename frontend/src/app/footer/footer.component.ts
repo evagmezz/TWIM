@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgIf, NgStyle } from '@angular/common';
+import { NgForOf, NgIf, NgStyle } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ButtonModule } from 'primeng/button';
@@ -10,6 +10,9 @@ import { PasswordModule } from 'primeng/password';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '../index/index.component';
 import { FileUploadModule } from 'primeng/fileupload';
+import { debounceTime, Subject } from 'rxjs';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-footer',
@@ -24,6 +27,9 @@ import { FileUploadModule } from 'primeng/fileupload';
     ReactiveFormsModule,
     NgStyle,
     FileUploadModule,
+    NgForOf,
+    IconFieldModule,
+    InputIconModule,
   ],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css',
@@ -31,8 +37,11 @@ import { FileUploadModule } from 'primeng/fileupload';
 export class FooterComponent implements OnInit {
 
   visibleCreate:  boolean = false
+  searchSubject = new Subject<string>();
   currentUser: User
   image: File[] = []
+  searchResults: User[] = [];
+  visibleSearch: boolean = false;
 
   createPostForm = this.fb.group({
     title: ['', [Validators.required]],
@@ -49,6 +58,9 @@ export class FooterComponent implements OnInit {
     if(!this.shouldShowFooter()) {
       this.lazyLoad()
     }
+    this.searchSubject.pipe(debounceTime(100)).subscribe(searchValue => {
+      this.search(searchValue);
+    });
     }
 
   lazyLoad() {
@@ -64,6 +76,9 @@ export class FooterComponent implements OnInit {
     }
   }
 
+  openChat(): void {
+    this.router.navigate(['/chat']);
+  }
 
   createPost(): void {
     const userId = this.currentUser.id
@@ -95,5 +110,20 @@ export class FooterComponent implements OnInit {
 
   goToIndex(): void {
     this.router.navigate(['index'])
+  }
+
+  search(username: string): void {
+    this.authService.searchByUsername(username).subscribe(results => {
+      if (Array.isArray(results.data)) {
+        this.searchResults = results.data;
+      } else {
+        this.searchResults = [];
+      }
+    });
+  }
+
+  goProfile(id: string): void {
+    this.router.navigate([id, 'profile'])
+    this.visibleSearch = false
   }
 }

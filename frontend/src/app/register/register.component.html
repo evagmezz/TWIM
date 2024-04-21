@@ -1,45 +1,49 @@
-<div class="container position-relative flex justify-content-center align-items-center">
+<div class="position-relative flex justify-content-center align-items-center" style=" height: 100vh;">
   <p-messages [(value)]="messages" [closable]="true" [enableService]="false"
-              class="position-absolute info-message"></p-messages>
+              class="position-absolute z-1"></p-messages>
   <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
-    <div class="card flex flex-column align-items-center justify-content-center">
-      <span class="input-field mb-4">
+    <div class="card flex flex-column align-items-center justify-content-center m-auto">
+      <span class="input-field relative mb-4">
         <label for="name"></label>
         <input formControlName="name" id="name" pInputText placeholder="Nombre" type="text" />
         <div *ngIf="registerForm.controls['name'].invalid && registerForm.controls['name'].touched"
-             class="container-error">
-          <small *ngIf="registerForm.controls['name'].errors?.['required']" class="error-message">El nombre es obligatorio</small>
+             class="absolute">
+          <small *ngIf="registerForm.controls['name'].errors?.['required']" style="color: red;">El nombre es obligatorio</small>
+          <small *ngIf="registerForm.controls['name'].errors?.['pattern']"
+                 style="color: red;">El nombre no es válido</small>
         </div>
       </span>
       <span class="input-field mb-4">
         <label for="lastname"></label>
         <input formControlName="lastname" id="lastname" pInputText placeholder="Apellido" type="text" />
         <div *ngIf="registerForm.controls['lastname'].invalid && registerForm.controls['lastname'].touched"
-             class="container-error">
-          <small *ngIf="registerForm.controls['lastname'].errors?.['required']" class="error-message">El apellido es obligatorio</small>
+             class="absolute">
+          <small *ngIf="registerForm.controls['lastname'].errors?.['required']" style="color: red;">El apellido es obligatorio</small>
+          <small *ngIf="registerForm.controls['lastname'].errors?.['pattern']"
+                 style="color: red;">El apellido no es válido</small>
         </div>
       </span>
       <span class="input-field mb-4">
       <label for="username"></label>
       <input formControlName="username" id="username" pInputText placeholder="Usuario" type="text" />
       <div *ngIf="registerForm.controls['username'].invalid && registerForm.controls['username'].touched"
-           class="container-error">
-         <small *ngIf="registerForm.controls['username'].errors?.['required']" class="error-message">El nombre de usuario es obligatorio</small>
+           class="absolute">
+         <small *ngIf="registerForm.controls['username'].errors?.['required']" style="color: red;">El nombre de usuario es obligatorio</small>
         <small *ngIf="registerForm.controls['username'].errors?.['minlength']"
-               class="error-message">Demasiado corto</small>
+               style="color: red;">Demasiado corto</small>
         <small *ngIf="registerForm.controls['username'].errors?.['maxlength']"
-               class="error-message">Demasiado largo</small>
-        <small *ngIf="registerForm.controls['username'].errors?.['pattern']" class="error-message">El nombre de usuario no es válido</small>
+               style="color: red;">Demasiado largo</small>
+        <small *ngIf="registerForm.controls['username'].errors?.['pattern']" style="color: red;">El nombre de usuario no es válido</small>
       </div>
      </span>
       <span class="input-field mb-4">
         <label for="email"></label>
         <input formControlName="email" id="email" pInputText placeholder="Correo" type="text" />
         <div *ngIf="registerForm.controls['email'].invalid && registerForm.controls['email'].touched"
-             class="container-error">
-          <small *ngIf="registerForm.controls['email'].errors?.['required']" class="error-message">El correo es obligatorio</small>
+             class="absolute">
+          <small *ngIf="registerForm.controls['email'].errors?.['required']" style="color: red;">El correo es obligatorio</small>
           <small *ngIf="registerForm.controls['email'].errors?.['email']"
-                 class="error-message">El correo no es válido</small>
+                 style="color: red;">El correo no es válido</small>
         </div>
       </span>
       <span class="input-field mb-4">
@@ -47,8 +51,8 @@
         <p-password [feedback]="true" [toggleMask]="true" formControlName="password" id="password"
                     placeholder="Contraseña" />
         <div *ngIf="registerForm.controls['password'].invalid && registerForm.controls['password'].touched"
-             class="container-error">
-          <small *ngIf="registerForm.controls['password'].errors?.['required']" class="error-message">La contraseña es obligatoria</small>
+             class="absolute">
+          <small *ngIf="registerForm.controls['password'].errors?.['required']" style="color: red;">La contraseña es obligatoria</small>
         </div>
      </span>
       <span class="input-field mb-4">
@@ -56,9 +60,9 @@
         <p-password [feedback]="false" [toggleMask]="true" formControlName="repeatPwd" id="repeatPwd"
                     placeholder="Repetir contraseña" />
         <div *ngIf="registerForm.controls['repeatPwd'].invalid && registerForm.controls['repeatPwd'].touched"
-             class="container-error">
-          <small *ngIf="registerForm.controls['repeatPwd'].errors?.['required']" class="error-message">La contraseña es obligatoria</small>
-          <small *ngIf="registerForm.controls['repeatPwd'].errors?.['notEquivalent']" class="error-message">Las contraseñas no coinciden</small>
+             class="absolute">
+          <small *ngIf="registerForm.controls['repeatPwd'].errors?.['required']" style="color: red;">La contraseña es obligatoria</small>
+          <small *ngIf="registerForm.controls['repeatPwd'].errors?.['notEquivalent']" style="color: red;">Las contraseñas no coinciden</small>
         </div>
       </span>
       <span class="input-field mb-4">

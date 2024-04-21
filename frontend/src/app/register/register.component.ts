@@ -42,8 +42,8 @@ export class RegisterComponent implements OnInit {
   messages: Message[]
   selectedFile: File
   registerForm = this.fb.group({
-    name: ['', [Validators.required]],
-    lastname: ['', [Validators.required]],
+    name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
+    lastname: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
     username: [
       '',
       [

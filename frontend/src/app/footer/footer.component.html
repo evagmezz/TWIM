@@ -1,12 +1,19 @@
-<footer *ngIf="shouldShowFooter()" class="fixed flex justify-content-around " style=" bottom: 0; left: 0; width: 100%; padding: 10px; height: 70px; background-color: #d8c4f6">
- <p-button icon="pi pi-search" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
-  <p-button icon="pi pi-plus" (click)="visibleCreate = true" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
-  <p-button icon="pi pi-home" (click)="goToIndex()" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
-  <p-button icon="pi pi-send" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
-  <p-button icon="pi pi-user" (click)="goToMyProfile()" class="footer-button" [rounded]="true" [text]="true" severity="help"></p-button>
+<footer *ngIf="shouldShowFooter()" class="fixed flex justify-content-around "
+        style=" bottom: 0; left: 0; width: 100%; padding: 10px; height: 70px; background-color: #d8c4f6">
+  <p-button icon="pi pi-search" (click)="visibleSearch = true" class="footer-button" [rounded]="true" [text]="true"
+            severity="help"></p-button>
+  <p-button icon="pi pi-plus" (click)="visibleCreate = true" class="footer-button" [rounded]="true" [text]="true"
+            severity="help"></p-button>
+  <p-button icon="pi pi-home" (click)="goToIndex()" class="footer-button" [rounded]="true" [text]="true"
+            severity="help"></p-button>
+  <p-button icon="pi pi-send" (click)="openChat()" class="footer-button" [rounded]="true" [text]="true"
+            severity="help"></p-button>
+  <p-button icon="pi pi-user" (click)="goToMyProfile()" class="footer-button" [rounded]="true" [text]="true"
+            severity="help"></p-button>
 </footer>
 
-<p-dialog header="Nueva publicación" [(visible)]="visibleCreate" [modal]="true" [style]="{ width: '40vw' }" [draggable]="false" [resizable]="false" class="flex flex-column align-items-center justify-content-center;">
+<p-dialog header="Nueva publicación" [(visible)]="visibleCreate" [modal]="true" [style]="{ width: '40vw' }"
+          [draggable]="false" [resizable]="false" class="flex flex-column align-items-center justify-content-center;">
   <form [formGroup]="createPostForm " (ngSubmit)="createPost()">
     <div class="flex flex-column align-items-center gap-2">
       <div class="mb-2">
@@ -26,7 +33,33 @@
     </div>
     <div class="mt-3 flex justify-content-center">
       <p-button label="Crear" [rounded]="true" severity="help" type="submit" [ngStyle]="{'margin': '10px'}"></p-button>
-      <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleCreate = false" severity="secondary" [ngStyle]="{'margin': '10px'}"></p-button>
+      <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleCreate = false" severity="secondary"
+                [ngStyle]="{'margin': '10px'}"></p-button>
     </div>
   </form>
+</p-dialog>
+
+<p-dialog [(visible)]="visibleSearch" [modal]="true"
+          [style]="{ width: '30vw',height:'40vw', position: 'relative' }"
+          [draggable]="false" [resizable]="false">
+  <form (ngSubmit)="search(username.value)">
+    <div class="flex justify-content-center ml-4">
+      <div class="flex flex-column gap-2 position-relative">
+        <p-iconField iconPosition="left">
+          <p-inputIcon styleClass="pi pi-search" />
+          <input type="text" pInputText placeholder="Buscar" (input)="searchSubject.next(username.value)" #username
+                 style="padding-left: 30px;" />
+        </p-iconField>
+      </div>
+    </div>
+    <div class="flex justify-content-center mt-3 gap-2">
+    </div>
+  </form>
+  <ul class="list-none">
+      <li *ngFor="let result of searchResults" class="flex align-items-center gap-2 mt-4" (click)="goProfile(result.id)">
+        <img [src]="result.image"
+             style="width: 50px; height: 50px; margin-right: 10px; border-radius:50%; object-fit: cover;" alt="">
+        {{ result.username }}
+      </li>
+  </ul>
 </p-dialog>
