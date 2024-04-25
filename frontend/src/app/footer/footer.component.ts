@@ -42,6 +42,7 @@ export class FooterComponent implements OnInit {
   image: File[] = []
   searchResults: User[] = []
   visibleSearch: boolean = false
+  submitted: boolean = false
 
   createPostForm = this.fb.group({
     title: ['', [Validators.required]],
@@ -85,21 +86,24 @@ export class FooterComponent implements OnInit {
   }
 
   createPost(): void {
-    console.log('createPost called, currentUser:', this.currentUser);
-    const userId = this.currentUser.id
-    const title = this.createPostForm.controls.title.value as string
-    const image = this.image
-    const formData = new FormData()
-    formData.append('userId', userId)
-    formData.append('title', title)
-    for (let i = 0; i < image.length; i++) {
-      formData.append('image', image[i])
-    }
+    this.submitted = true;
+    if (this.createPostForm.valid) {
+      console.log('createPost called, currentUser:', this.currentUser);
+      const userId = this.currentUser.id
+      const title = this.createPostForm.controls.title.value as string
+      const image = this.image
+      const formData = new FormData()
+      formData.append('userId', userId)
+      formData.append('title', title)
+      for (let i = 0; i < image.length; i++) {
+        formData.append('image', image[i])
+      }
 
-    this.authService.createPost(formData).subscribe(() => {
-      this.visibleCreate = false
-      this.router.navigate([`${userId}/profile`])
-    })
+      this.authService.createPost(formData).subscribe(() => {
+        this.visibleCreate = false
+        this.router.navigate([`${userId}/profile`])
+      })
+    }
   }
 
   shouldShowFooter(): boolean {

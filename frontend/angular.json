@@ -5,7 +5,11 @@
   "projects": {
     "frontend": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -26,9 +30,19 @@
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/primeflex/primeflex.css"
+              "node_modules/primeflex/primeflex.css",
+              "node_modules/primeicons/primeicons.css",
+              {
+                "input": "src/theme-lara-light-purple.scss",
+                "bundleName": "lara-light-purple",
+                "inject": false
+              },
+              {
+                "input": "src/theme-lara-dark-purple.scss",
+                "bundleName": "lara-dark-purple",
+                "inject": false
+              }
             ],
             "scripts": []
           },
