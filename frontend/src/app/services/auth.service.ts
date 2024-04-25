@@ -40,8 +40,8 @@ export class AuthService {
     localStorage.removeItem('access_token')
   }
 
-  index(): Observable<Paginate<Post>> {
-    return this.http.get<Paginate<Post>>(this.postUrl).pipe(
+  index(page: number, limit: number): Observable<Paginate<Post>> {
+    return this.http.get<Paginate<Post>>(`${this.postUrl}?page=${page}&limit=${limit}`).pipe(
       map((res) => ({
         docs: res.docs,
         totalDocs: res.totalDocs,
@@ -54,7 +54,7 @@ export class AuthService {
         prevPage: res.prevPage,
         nextPage: res.nextPage,
       })),
-    );
+    )
   }
 
   getUserById(id: string): Observable<User> {
