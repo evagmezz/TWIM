@@ -88,7 +88,7 @@ export class PostController {
         },
       }),
       fileFilter: (req, file, cb) => {
-        if (file.mimetype.match(/\/(jpg|jpeg|png|heic)$/)) {
+        if (file.mimetype.match(/\/(jpg|jpeg|png|MP4)$/)) {
           cb(null, true)
         } else {
           cb(new BadRequestException('Formato de archivo no soportado'), false)
