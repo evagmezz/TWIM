@@ -18,9 +18,10 @@ export class CreateUserDto {
   @Length(2, 20, {
     message: 'El nombre de usuario debe tener entre 2 y 20 caracteres',
   })
-  @Matches(/^[a-zA-Z0-9_]*$/, {
+
+  @Matches(/^[a-zA-Z0-9._-]+$/,{
     message:
-      'El nombre de usuario solo puede contener letras, números y guiones bajos',
+      'El nombre de usuario solo puede contener letras, números, puntos y guiones bajos',
   })
   @Transform(({ value }) => value.trim())
   username: string

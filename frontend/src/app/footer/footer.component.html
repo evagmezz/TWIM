@@ -20,12 +20,12 @@
         <input type="text" pInputText id="title" formControlName="title" placeholder="Añade un título..." />
       </div>
       <div>
-        <p-fileUpload name="image" chooseLabel="Seleccionar" chooseIcon="pi pi-image" (onSelect)="onFileChange($event)"
+        <p-fileUpload [multiple]="true" name="image" chooseLabel="Seleccionar" chooseIcon="pi pi-image" (onSelect)="onFileChange($event)"
                       accept="image/*" [auto]="true">
           <ng-template pTemplate="content">
             <div class="flex flex-column align-items-center gap-2">
               <i class="pi pi-download"></i>
-              <div>Arrastre una imágen aquí</div>
+              <div>Arrastre sus imágenes aquí</div>
             </div>
           </ng-template>
         </p-fileUpload>

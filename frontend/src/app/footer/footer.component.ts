@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { NgForOf, NgIf, NgStyle } from '@angular/common';
-import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
-import { InputTextModule } from 'primeng/inputtext';
-import { PaginatorModule } from 'primeng/paginator';
-import { PasswordModule } from 'primeng/password';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { User } from '../index/index.component';
-import { FileUploadModule } from 'primeng/fileupload';
-import { debounceTime, Subject } from 'rxjs';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
+import {Component, OnInit} from '@angular/core'
+import {NgForOf, NgIf, NgStyle} from '@angular/common'
+import {Router} from '@angular/router'
+import {AuthService} from '../services/auth.service'
+import {ButtonModule} from 'primeng/button'
+import {DialogModule} from 'primeng/dialog'
+import {InputTextModule} from 'primeng/inputtext'
+import {PaginatorModule} from 'primeng/paginator'
+import {PasswordModule} from 'primeng/password'
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms'
+import {User} from '../index/index.component'
+import {FileUploadModule} from 'primeng/fileupload'
+import {debounceTime, Subject} from 'rxjs'
+import {IconFieldModule} from 'primeng/iconfield'
+import {InputIconModule} from 'primeng/inputicon'
 
 @Component({
   selector: 'app-footer',
@@ -36,12 +36,12 @@ import { InputIconModule } from 'primeng/inputicon';
 })
 export class FooterComponent implements OnInit {
 
-  visibleCreate:  boolean = false
-  searchSubject = new Subject<string>();
+  visibleCreate: boolean = false
+  searchSubject = new Subject<string>()
   currentUser: User
   image: File[] = []
-  searchResults: User[] = [];
-  visibleSearch: boolean = false;
+  searchResults: User[] = []
+  visibleSearch: boolean = false
 
   createPostForm = this.fb.group({
     title: ['', [Validators.required]],
@@ -52,16 +52,19 @@ export class FooterComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private fb: FormBuilder,
-  ) {}
+  ) {
+  }
+
 
   ngOnInit(): void {
-    if(!this.shouldShowFooter()) {
+    if (this.shouldShowFooter()) {
       this.lazyLoad()
     }
     this.searchSubject.pipe(debounceTime(100)).subscribe(searchValue => {
-      this.search(searchValue);
-    });
-    }
+      this.search(searchValue)
+    })
+  }
+
 
   lazyLoad() {
     this.authService.getCurrentUser().subscribe((user) => {
@@ -69,7 +72,8 @@ export class FooterComponent implements OnInit {
     })
   }
 
- onFileChange(event: any): void {
+
+  onFileChange(event: any): void {
     console.log(event)
     if (event.currentFiles.length > 0) {
       this.image = event.currentFiles
@@ -77,10 +81,11 @@ export class FooterComponent implements OnInit {
   }
 
   openChat(): void {
-    this.router.navigate(['/chat']);
+    this.router.navigate(['/chat'])
   }
 
   createPost(): void {
+    console.log('createPost called, currentUser:', this.currentUser);
     const userId = this.currentUser.id
     const title = this.createPostForm.controls.title.value as string
     const image = this.image
@@ -115,11 +120,11 @@ export class FooterComponent implements OnInit {
   search(username: string): void {
     this.authService.searchByUsername(username).subscribe(results => {
       if (Array.isArray(results.data)) {
-        this.searchResults = results.data;
+        this.searchResults = results.data
       } else {
-        this.searchResults = [];
+        this.searchResults = []
       }
-    });
+    })
   }
 
   goProfile(id: string): void {
