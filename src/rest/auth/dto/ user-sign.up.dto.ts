@@ -2,10 +2,7 @@ import { IsOptional, Length, Matches } from 'class-validator'
 import { Transform } from 'class-transformer'
 
 export class UserSignUpDto {
-  @Transform(({ value }) => value.trim())
   name: string
-
-  @Transform(({ value }) => value.trim())
   lastname: string
 
   @Length(2, 20, {

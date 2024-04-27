@@ -27,7 +27,7 @@
         <input (keyup.enter)="addComment()" [(ngModel)]="newComment" pInputText placeholder="Añade un comentario..."
                type="text">
         <i (click)="likePost()" [ngClass]="{'pi-heart': !isLiked(), 'pi-heart-fill': isLiked()}" class="pi"></i>
-        <i class="pi pi-ellipsis-h" (click)="visibleOptions = true"></i>
+        <i class="pi pi-ellipsis-h" *ngIf="currentUser.id === post.user.id" (click)="visibleOptions = true"></i>
       </div>
     </div>
   </div>

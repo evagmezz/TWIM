@@ -35,8 +35,8 @@ export class ProfileComponent implements OnInit {
   }
 
   profileForm = this.fb.group({
-    name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
-    lastname: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
+    name: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÁÉÍÓÚáéíóú ]*$/)]],
+    lastname: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÁÉÍÓÚáéíóú ]*$/)]],
     username: [
       '',
       [
@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit {
   followings: User[];
   likedPosts: Post[];
   selectedFile: File;
-  isFollowing: boolean = true;
+  isFollowing: boolean;
   visibleOptions: boolean = false;
   visibleFollowers: boolean = false;
   visibleFollowing: boolean = false;
@@ -76,55 +76,59 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.authService.getCurrentUser().subscribe((currentUser) => {
       this.currentUser = currentUser;
-      this.profileForm.patchValue(currentUser);
+      this.profileForm.patchValue(currentUser)
     });
     this.messageService.currentMessage.subscribe(
       (message) => (this.message = message),
     );
     this.routeSub = this.activatedRoute.params.subscribe(params => {
-      const userId = params['id'];
-      this.lazyLoad(userId);
+      const userId = params['id']
+      this.lazyLoad(userId)
     });
   }
 
   lazyLoad(userId: string): void {
     this.authService.getUserById(userId).subscribe((user) => {
-      this.user = user;
-      this.followers = user.followers;
+      this.user = user
+      this.followers = user.followers
     });
     this.authService.getUserPosts(userId).subscribe((posts) => {
-      this.posts = posts;
+      this.posts = posts
     });
-    this.authService.getFollowing(userId).subscribe((following) => {
-      this.followingCount = following.length;
-      this.followings = following;
-    });
+    this.authService.getCurrentUser().subscribe((currentUser) => {
+      this.currentUser = currentUser;
+      this.authService.getFollowing(this.currentUser.id).subscribe((following) => {
+        this.followingCount = following.length;
+        this.followings = following;
+        this.isFollowing = following.some(followedUser => followedUser.id === userId);
+      })
+    })
   }
 
   postDetails(postId: string): void {
-    this.router.navigate(['details', postId]);
+    this.router.navigate(['details', postId])
   }
 
   updateProfile(): void {
-    this.visibleEditProfile = true;
+    this.visibleEditProfile = true
     if (this.profileForm.valid) {
-      const name = this.profileForm.controls.name.value || '';
-      const lastname = this.profileForm.controls.lastname.value || '';
-      const username = this.profileForm.controls.username.value || '';
-      const email = this.profileForm.controls.email.value || '';
-      const password = this.profileForm.controls.password.value || '';
-      const image = this.selectedFile;
+      const name = this.profileForm.controls.name.value || ''
+      const lastname = this.profileForm.controls.lastname.value || ''
+      const username = this.profileForm.controls.username.value || ''
+      const email = this.profileForm.controls.email.value || ''
+      const password = this.profileForm.controls.password.value || ''
+      const image = this.selectedFile
 
-      const updateData = new FormData();
+      const updateData = new FormData()
       updateData.append('name', name);
-      updateData.append('lastname', lastname);
-      updateData.append('username', username);
-      updateData.append('email', email);
+      updateData.append('lastname', lastname)
+      updateData.append('username', username)
+      updateData.append('email', email)
       if (password) {
-        updateData.append('password', password);
+        updateData.append('password', password)
       }
       if (this.selectedFile) {
-        updateData.append('image', image);
+        updateData.append('image', image)
       }
 
       this.authService.updateProfile(updateData).subscribe(
@@ -168,8 +172,13 @@ export class ProfileComponent implements OnInit {
       this.currentUser = currentUser;
       const userId = this.activatedRoute.snapshot.paramMap.get('id') as string;
       this.isFollowing = true;
+      this.followingCount++;
       this.authService.follow(this.currentUser.id, userId).subscribe(() => {
         this.lazyLoad(userId);
+        this.lazyLoad(this.currentUser.id);
+      }, error => {
+        this.isFollowing = false;
+        this.followingCount--;
       });
     });
   }
@@ -180,6 +189,7 @@ export class ProfileComponent implements OnInit {
       this.isFollowing = false;
       this.authService.unfollow(currentUser.id, userId).subscribe(() => {
         this.lazyLoad(userId);
+        this.lazyLoad(this.currentUser.id);
       });
     });
   }

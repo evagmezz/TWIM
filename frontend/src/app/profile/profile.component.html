@@ -9,11 +9,11 @@
     <div class="flex flex-column align-items-center gap-2">
       <div class="username-container flex align-items-center gap-2">
         <span class="username">{{ user.username }}</span>
-        <p-button *ngIf="isFollowing && user.id !== currentUser.id" (click)="unFollow()" icon="pi pi-user-minus"
-                  [rounded]="true"
-                  severity="help"></p-button>
         <p-button *ngIf="!isFollowing && user.id !== currentUser.id" (click)="follow()" icon="pi pi-user-plus"
                   [rounded]="true" [text]="true" [raised]="true"
+                  severity="help"></p-button>
+        <p-button *ngIf="isFollowing && user.id !== currentUser.id" (click)="unFollow()" icon="pi pi-user-minus"
+                  [rounded]="true"
                   severity="help"></p-button>
         <i *ngIf="user.id === currentUser.id" class="pi pi-ellipsis-h mr-2" (click)="visibleOptions = true"></i>
       </div>
@@ -81,8 +81,8 @@
   <p-dialog header="Editar Perfil" [(visible)]="visibleEditProfile" [modal]="true" [style]="{ width: '40vw' }"
             [draggable]="false" [resizable]="false">
     <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
-      <div class="flex justify-content-between ml-4">
-        <div class="flex flex-column gap-3">
+      <div class="flex justify-content-between ml-2">
+        <div class="flex flex-column gap-4">
           <div>
             <label for="name">Nombre:</label>
             <input type="text" pInputText id="name" formControlName="name">

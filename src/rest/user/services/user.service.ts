@@ -172,6 +172,7 @@ export class UserService {
     await this.userRepository.save(userToFollow)
     await this.cacheManager.del(`user_${userToFollowId}`)
     await this.cacheManager.del(`followers_${userToFollowId}`)
+    await this.cacheManager.del(`user_${userId}`);
     return this.userMapper.toDto(user)
   }
 
@@ -196,6 +197,7 @@ export class UserService {
     await this.userRepository.save(userToUnfollow)
     await this.cacheManager.del(`user_${userToUnfollowId}`)
     await this.cacheManager.del(`followers_${userToUnfollowId}`)
+    await this.cacheManager.del(`user_${userId}`);
     return this.userMapper.toDto(user)
   }
 

@@ -44,7 +44,7 @@ export class AppComponent implements AfterViewInit {
   constructor(@Inject(DOCUMENT) private document: Document) {
     let theme = window.localStorage.getItem('theme')
     if(theme) {
-      this.themeSelection = theme == 'dark' ? true : false
+      this.themeSelection = theme == 'dark'
       this.changeTheme(this.themeSelection)
     }
   }
