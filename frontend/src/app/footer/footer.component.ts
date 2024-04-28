@@ -58,6 +58,10 @@ export class FooterComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.authService.getCurrentUser().subscribe(user => {
+      this.currentUser = user;
+    })
+
     if (this.shouldShowFooter()) {
       this.lazyLoad()
     }
@@ -75,35 +79,27 @@ export class FooterComponent implements OnInit {
 
 
   onFileChange(event: any): void {
-    console.log(event)
     if (event.currentFiles.length > 0) {
       this.image = event.currentFiles
     }
   }
 
-  openChat(): void {
-    this.router.navigate(['/chat'])
-  }
-
   createPost(): void {
-    this.submitted = true;
-    if (this.createPostForm.valid) {
-      console.log('createPost called, currentUser:', this.currentUser);
-      const userId = this.currentUser.id
-      const title = this.createPostForm.controls.title.value as string
-      const image = this.image
-      const formData = new FormData()
-      formData.append('userId', userId)
-      formData.append('title', title)
-      for (let i = 0; i < image.length; i++) {
-        formData.append('image', image[i])
-      }
-
-      this.authService.createPost(formData).subscribe(() => {
-        this.visibleCreate = false
-        this.router.navigate([`${userId}/profile`])
-      })
+    console.log('createPost called, currentUser:', this.currentUser);
+    const userId = this.currentUser.id
+    const title = this.createPostForm.controls.title.value as string
+    const image = this.image
+    const formData = new FormData()
+    formData.append('userId', userId)
+    formData.append('title', title)
+    for (let i = 0; i < image.length; i++) {
+      formData.append('image', image[i])
     }
+
+    this.authService.createPost(formData).subscribe(() => {
+      this.visibleCreate = false
+      this.router.navigate([`${userId}/profile`])
+    })
   }
 
   shouldShowFooter(): boolean {

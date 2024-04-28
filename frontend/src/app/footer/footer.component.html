@@ -1,15 +1,17 @@
-<footer *ngIf="shouldShowFooter()" class="fixed flex justify-content-around "
-        style=" bottom: 0; left: 0; width: 100%; padding: 10px; height: 70px; background-color: #d8c4f6">
-  <p-button icon="pi pi-search" (click)="visibleSearch = true" class="footer-button" [rounded]="true" [text]="true"
-            severity="help"></p-button>
-  <p-button icon="pi pi-plus" (click)="visibleCreate = true" class="footer-button" [rounded]="true" [text]="true"
-            severity="help"></p-button>
-  <p-button icon="pi pi-home" (click)="goToIndex()" class="footer-button" [rounded]="true" [text]="true"
-            severity="help"></p-button>
-  <p-button icon="pi pi-send" (click)="openChat()" class="footer-button" [rounded]="true" [text]="true"
-            severity="help"></p-button>
-  <p-button icon="pi pi-user" (click)="goToMyProfile()" class="footer-button" [rounded]="true" [text]="true"
-            severity="help"></p-button>
+<footer *ngIf="shouldShowFooter()" class="fixed flex justify-content-around bg-primary-600"
+        style=" bottom: 0; left: 0; width: 100%; padding: 10px; height: 80px; background-color: #f8f9fa;">
+  <p-button (click)="visibleSearch = true" [text]="true">
+    <i class="pi pi-search" style="color: white;"></i>
+  </p-button>
+  <p-button (click)="visibleCreate = true" [text]="true">
+    <i class="pi pi-plus" style="color: white;"></i>
+  </p-button>
+  <p-button (click)="goToIndex()" [text]="true">
+    <i class="pi pi-home" style="color: white;"></i>
+  </p-button>
+  <p-button (click)="goToMyProfile()" [text]="true">
+    <i class="pi pi-user" style="color: white;"></i>
+  </p-button>
 </footer>
 
 <p-dialog header="Nueva publicación" [(visible)]="visibleCreate" [modal]="true" [style]="{ width: '40vw' }"
@@ -33,10 +35,6 @@
             </div>
           </ng-template>
         </p-fileUpload>
-        <div *ngIf="submitted && createPostForm.controls['image'].invalid" class="absolute">
-          <small *ngIf="createPostForm.controls['image'].errors?.['required']"
-                 style="color: red;">Debes añadir una imagen al menos</small>
-        </div>
       </div>
     </div>
     <div class="mt-3 flex justify-content-center">
