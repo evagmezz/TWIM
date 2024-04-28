@@ -9,7 +9,6 @@ import {DOCUMENT, NgIf} from '@angular/common'
 import { DetailsComponent } from './details/details.component'
 import { ProfileComponent } from './profile/profile.component'
 import { FooterComponent } from './footer/footer.component'
-import { ChatComponent } from './chat/chat.component';
 import {Document} from "typeorm";
 import {RippleModule} from "primeng/ripple";
 import {InputSwitchModule} from "primeng/inputswitch";
@@ -28,7 +27,6 @@ import {FormsModule} from "@angular/forms";
     NgIf,
     DetailsComponent,
     ProfileComponent,
-    ChatComponent,
     FooterComponent,
     RippleModule,
     InputSwitchModule,

@@ -4,7 +4,6 @@ import { RegisterComponent } from './register/register.component'
 import { IndexComponent } from './index/index.component'
 import { DetailsComponent } from './details/details.component'
 import { ProfileComponent } from './profile/profile.component'
-import { ChatComponent } from './chat/chat.component';
 
 export const routes: Routes = [
   {
@@ -41,9 +40,5 @@ export const routes: Routes = [
   {
     path: 'me/profile',
     component: ProfileComponent,
-  },
-  {
-    path: 'chat',
-    component: ChatComponent,
   }
 ]
