@@ -10,6 +10,8 @@ export class ResponsePostDto {
 
   photos: string[]
 
+  location: string
+
   createdAt: Date
 
   updatedAt: Date

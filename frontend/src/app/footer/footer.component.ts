@@ -8,7 +8,7 @@ import {InputTextModule} from 'primeng/inputtext'
 import {PaginatorModule} from 'primeng/paginator'
 import {PasswordModule} from 'primeng/password'
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms'
-import {User} from '../index/index.component'
+import {User} from '../models/user'
 import {FileUploadModule} from 'primeng/fileupload'
 import {debounceTime, Subject} from 'rxjs'
 import {IconFieldModule} from 'primeng/iconfield'
@@ -47,6 +47,7 @@ export class FooterComponent implements OnInit {
   createPostForm = this.fb.group({
     title: ['', [Validators.required]],
     image: this.fb.array([], [Validators.required, Validators.maxLength(7)]),
+    location: [''],
   })
 
   constructor(
@@ -55,7 +56,6 @@ export class FooterComponent implements OnInit {
     private fb: FormBuilder,
   ) {
   }
-
 
   ngOnInit(): void {
     this.authService.getCurrentUser().subscribe(user => {
@@ -89,9 +89,11 @@ export class FooterComponent implements OnInit {
     const userId = this.currentUser.id
     const title = this.createPostForm.controls.title.value as string
     const image = this.image
+    const location = this.createPostForm.controls.location.value as string
     const formData = new FormData()
     formData.append('userId', userId)
     formData.append('title', title)
+    formData.append('location', location)
     for (let i = 0; i < image.length; i++) {
       formData.append('image', image[i])
     }

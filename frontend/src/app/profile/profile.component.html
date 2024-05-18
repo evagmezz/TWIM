@@ -18,8 +18,8 @@
         <i *ngIf="user.id === currentUser.id" class="pi pi-ellipsis-h mr-2" (click)="visibleOptions = true"></i>
       </div>
       <div class="flex gap-2">
-        <p><a (click)="showFollowers()">{{ countFollowers() }} seguidores</a></p>
-        <p><a (click)="showFollowing()">{{ followingCount }} siguiendo</a></p>
+        <p><a class="cursor-pointer" (click)="showFollowers()">{{ countFollowers() }} seguidores</a></p>
+        <p><a class="cursor-pointer" (click)="showFollowing()">{{ followingCount }} siguiendo</a></p>
       </div>
     </div>
   </div>
@@ -35,6 +35,9 @@
 <div *ngIf="user && currentUser">
   <p-dialog [(visible)]="visibleOptions" [modal]="true" [style]="{ width: '30vw' }">
     <div class="flex flex-column align-items-start align-items-center justify-content-center gap-2">
+      <a pRipple>
+        <p-inputSwitch [(ngModel)]="themeSelection" (onChange)="changeTheme($event.checked)"></p-inputSwitch>
+      </a>
       <button pButton *ngIf="user.id === currentUser.id" (click)="visibleEditProfile = true"
               class="bg-transparent border-transparent text-color-secondary gap-2">
         Editar perfil <i class="pi pi-user-edit"></i>

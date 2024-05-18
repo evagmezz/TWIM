@@ -34,8 +34,9 @@
 </div>
 
 <p-dialog [(visible)]="visibleEditPost" [modal]="true" *ngIf="post" [style]="{ width: '30vw' }">
-  <div class="flex flex-column align-items-center">
+  <div class="flex flex-column align-items-center gap-2">
     <input id="title" [(ngModel)]="post.title" pInputText type="text" class="width-100">
+    <input id="location" [(ngModel)]="post.location" pInputText type="text" class="width-100">
     <div class="flex justify-content-center mt-3 gap-3">
       <p-button label="Guardar" (click)="editPost()" [rounded]="true" severity="help"></p-button>
       <p-button label="Cancelar" (click)="visibleEditPost = false" [rounded]="true" [outlined]="true"

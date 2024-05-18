@@ -18,6 +18,7 @@ export class PostMapper {
       photos: post.photos,
       likes: post.likes,
       title: post.title,
+      location: post.location,
       comments: post.comments,
       user: userDto,
       createdAt: post.createdAt,

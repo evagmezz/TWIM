@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { Comment, Post, User } from '../index/index.component';
+import { Comment } from '../models/comment';
+import { Post } from '../models/post';
+import { User } from '../models/user';
 
 export class Paginate<T> {
   docs: T[];
@@ -133,8 +135,8 @@ export class AuthService {
     return this.http.post(`${this.postUrl}`, formData);
   }
 
-  updatePost(postId: string, title: string): Observable<any> {
-    return this.http.put(`${this.postUrl}/${postId}`, { title });
+  updatePost(postId: string, title: string, location: string): Observable<any> {
+    return this.http.put(`${this.postUrl}/${postId}`, { title, location});
   }
 
   deletePost(postId: string): Observable<any> {

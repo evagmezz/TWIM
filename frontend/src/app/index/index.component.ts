@@ -10,40 +10,8 @@ import { FormsModule } from '@angular/forms'
 import { DataViewModule } from 'primeng/dataview'
 import { DialogModule } from 'primeng/dialog'
 import { HostListener } from '@angular/core'
-
-export class Comment {
-  id: string
-  postId: string
-  userId: string
-  content: string
-  createdAt: string
-  user: User
-}
-
-export class Post {
-  user: User
-  title: string
-  photos: string[]
-  createdAt: string
-  updatedAt: string
-  comments: Comment[]
-  id: string
-  likes: string[]
-}
-
-export class User {
-  id: string
-  name: string
-  lastname: string
-  username: string
-  password: string
-  email: string
-  image: string
-  role: string
-  createdAt: string
-  updatedAt: string
-  followers: User[]
-}
+import {User} from "../models/user";
+import {Post} from "../models/post";
 
 @Component({
   selector: 'app-index',

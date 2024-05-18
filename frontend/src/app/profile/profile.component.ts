@@ -1,29 +1,40 @@
-import { Component, OnInit } from '@angular/core';
-import { Post, User } from '../index/index.component';
-import { AuthService } from '../services/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NgForOf, NgIf } from '@angular/common';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
-import { SidebarModule } from 'primeng/sidebar';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { FileUploadModule } from 'primeng/fileupload';
-import { MessageSharingService } from '../services/message-sharing-service.service';
-import { Message } from 'primeng/api';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { Subscription } from 'rxjs';
+import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
+import {User} from '../models/user';
+import {Post} from '../models/post';
+import {AuthService} from '../services/auth.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DOCUMENT, NgForOf, NgIf} from '@angular/common';
+import {DialogModule} from 'primeng/dialog';
+import {ButtonModule} from 'primeng/button';
+import {SidebarModule} from 'primeng/sidebar';
+import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {InputTextModule} from 'primeng/inputtext';
+import {PasswordModule} from 'primeng/password';
+import {FileUploadModule} from 'primeng/fileupload';
+import {MessageSharingService} from '../services/message-sharing-service.service';
+import {Message} from 'primeng/api';
+import {RadioButtonModule} from 'primeng/radiobutton';
+import {Subscription} from 'rxjs';
+import {InputSwitchModule} from "primeng/inputswitch";
+import {RippleModule} from "primeng/ripple";
+import {Document} from "typeorm";
 
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [NgIf, NgForOf, ButtonModule, DialogModule, RadioButtonModule, SidebarModule, FormsModule, ReactiveFormsModule, InputTextModule, PasswordModule, FileUploadModule],
+  imports: [NgIf, NgForOf, ButtonModule, DialogModule, RadioButtonModule, SidebarModule, FormsModule, ReactiveFormsModule, InputTextModule, PasswordModule, FileUploadModule, InputSwitchModule, RippleModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
+
+  themeSelection: boolean = false
+
+
+  ngAfterViewInit() {
+    this.changeTheme(this.themeSelection);
+  }
 
   constructor(
     private authService: AuthService,
@@ -31,7 +42,13 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private messageService: MessageSharingService,
+    @Inject(DOCUMENT) private document: Document
   ) {
+    let theme = window.localStorage.getItem('theme')
+    if (theme) {
+      this.themeSelection = theme == 'dark'
+      this.changeTheme(this.themeSelection)
+    }
   }
 
   profileForm = this.fb.group({
@@ -160,7 +177,7 @@ export class ProfileComponent implements OnInit {
           );
         } else {
           this.messageService.changeMessage([
-            { severity: 'error', summary: 'Error', detail: 'Las credenciales no coinciden' },
+            {severity: 'error', summary: 'Error', detail: 'Las credenciales no coinciden'},
           ]);
         }
       });
@@ -217,6 +234,13 @@ export class ProfileComponent implements OnInit {
   logout(): void {
     this.authService.signout();
     this.router.navigate(['login']);
+  }
+
+  changeTheme(state: boolean) {
+    let theme = state ? 'dark' : 'light'
+    window.localStorage.setItem('theme', theme)
+    let themeLink = this.document['getElementById']('app-themes') as HTMLLinkElement
+    themeLink.href = `lara-` + theme + `-purple` + `.css`
   }
 
 }

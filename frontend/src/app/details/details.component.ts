@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { NgForOf, NgIf } from '@angular/common';
-import { Comment, Post, User } from '../index/index.component';
+import { Comment } from '../models/comment';
+import { Post } from '../models/post';
+import { User } from '../models/user';
 import { InputTextModule } from 'primeng/inputtext';
 import { CarouselModule } from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';
@@ -15,17 +17,18 @@ import { SidebarModule } from 'primeng/sidebar';
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css'],
   standalone: true,
-  imports: [
-    RouterOutlet,
-    FormsModule,
-    NgForOf,
-    NgIf,
-    InputTextModule,
-    CarouselModule,
-    ButtonModule,
-    DialogModule,
-    SidebarModule,
-  ],
+    imports: [
+        RouterOutlet,
+        FormsModule,
+        NgForOf,
+        NgIf,
+        InputTextModule,
+        CarouselModule,
+        ButtonModule,
+        DialogModule,
+        SidebarModule,
+        ReactiveFormsModule,
+    ],
 })
 export class DetailsComponent implements OnInit {
 
@@ -70,7 +73,7 @@ export class DetailsComponent implements OnInit {
   }
 
   editPost() {
-    this.authService.updatePost(this.post.id, this.post.title).subscribe(
+    this.authService.updatePost(this.post.id, this.post.title, this.post.location).subscribe(
       () => {
         this.visibleEditPost = false;
         this.visibleOptions = false;
