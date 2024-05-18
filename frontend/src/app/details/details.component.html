@@ -15,8 +15,8 @@
       <div class="comments flex-grow-1 overflow-y-auto flex-1">
         <div *ngFor="let comment of comments" class="mb-2 word-wrap-break-word">
           <div class="user-info">
-            <img [src]="comment.user.image" alt="User image" class="user-image" (click)="goToProfile(comment.user.id)">
-            <strong class="ml-3" (click)="goToProfile(comment.user.id)">{{ comment.user.username }}
+            <img [src]="comment.user.image" alt="User image" class="user-image cursor-pointer" (click)="goToProfile(comment.user.id)">
+            <strong class="ml-3 cursor-pointer" (click)="goToProfile(comment.user.id)">{{ comment.user.username }}
               : </strong>{{ comment.content }}
             <i (click)="deleteComment(comment)" *ngIf="currentUser.id === comment.user.id" class="pi pi-trash"></i>
           </div>

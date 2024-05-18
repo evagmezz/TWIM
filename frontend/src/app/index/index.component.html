@@ -4,8 +4,8 @@
       <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid" style="width: 100%; height: auto; border-radius: 10px;">
 
       <div class="user-info" style="display: flex; align-items: center;">
-        <img [src]="post.user.image" alt="user image" class="user-image" (click)="goToProfile(post.user.id)" style="border-radius: 50%; height: 5vh; width: 5vh; object-fit: cover; margin-right: 0.5em;">
-        <p>{{ post.user.username }} </p>
+        <img [src]="post.user.image" alt="user image" class="user-image cursor-pointer" (click)="goToProfile(post.user.id)" style="border-radius: 50%; height: 5vh; width: 5vh; object-fit: cover; margin-right: 0.5em;">
+        <p (click)="goToProfile(post.user.id)" class="cursor-pointer">{{ post.user.username }} </p>
         <i (click)="likePost(post)" [ngClass]="{'pi-heart': !isLiked(post), 'pi-heart-fill': isLiked(post)}" class="pi"></i>
         <i (click)="postDetailsDialog(post.id)" class="pi pi-comment"></i>
       </div>
