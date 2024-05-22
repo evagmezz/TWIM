@@ -243,4 +243,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     themeLink.href = `lara-` + theme + `-purple` + `.css`
   }
 
+  goToProfile(id: string): void {
+    this.router.navigate([id, 'profile'])
+    this.visibleFollowers = false
+    this.visibleFollowing = false
+  }
 }

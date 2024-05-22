@@ -1,5 +1,5 @@
-<div class="container m-1 mb-7 width: 100%;" style="height: 100vh;">
-  <div class="masonry gap-1">
+<div style="height: 100vh;width: 100%;">
+  <div class="posts">
     <div *ngFor="let post of posts" class="item" style="display: inline-block; margin: 0 0 1em; width: 100%;">
       <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid" style="width: 100%; height: auto; border-radius: 10px;">
 

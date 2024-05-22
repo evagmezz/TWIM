@@ -22,7 +22,7 @@
 }
 
 .img-fluid {
-  width: 70%;
+  width: 100%;
   height: auto;
   border-radius: 10px;
 }
@@ -38,19 +38,18 @@
   margin-bottom: 70px;
 }
 
-.masonry {
+.posts {
   column-count: 2;
-  column-gap: 1em;
 }
 
 @media (min-width: 768px) {
-  .masonry {
+  .posts {
     column-count: 3;
   }
 }
 
 @media (min-width: 1024px) {
-  .masonry {
+  .posts {
     column-count: 4;
   }
 }

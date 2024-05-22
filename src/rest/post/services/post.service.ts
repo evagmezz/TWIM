@@ -118,6 +118,7 @@ export class PostService {
       throw new NotFoundException(`El post con el id ${id} no existe`)
     }
     post.title = updatePostDto.title;
+    post.location = updatePostDto.location;
     const updated = await post.save();
     const user = await this.userRepository.findOneBy({ id: updated.userId })
     return this.postMapper.toDto(updated, user)

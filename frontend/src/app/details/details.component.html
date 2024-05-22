@@ -12,6 +12,7 @@
     </div>
     <div class="flex align-items-center justify-content-start flex-1 overflow-y-auto flex-column">
       <div class="bold mt-2 mb-3 font-bold 1em">{{ post.title }}</div>
+      <div class="small-text mb-3"> <i class="pi pi-map-marker"></i>{{ post.location }}</div>
       <div class="comments flex-grow-1 overflow-y-auto flex-1">
         <div *ngFor="let comment of comments" class="mb-2 word-wrap-break-word">
           <div class="user-info">
