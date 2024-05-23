@@ -32,7 +32,7 @@
   </div>
 </div>
 <!-- Profile Picture Dialog -->
-<p-dialog [(visible)]="visibleProfilePicture" [modal]="true" [style]="{ width: '30vw', height: '35vw', border: 'none'}" [contentStyle]="{'max-height': '100vw', 'overflow': 'hidden', 'background-color': 'transparent'}">
+<p-dialog class="profile-picture-dialog" [(visible)]="visibleProfilePicture" [modal]="true" [style]="{ width: '30vw', height: '35vw', border: 'none'}" [contentStyle]="{'max-height': '100vw', 'overflow': 'hidden', 'background-color': 'transparent'}">
   <img *ngIf="user" [src]="user.image" alt="Profile Picture" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center;">
 </p-dialog>
 <!-- Options -->

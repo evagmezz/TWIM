@@ -71,6 +71,15 @@ label {
   width: 100%;
   height: auto;
 }
-::ng-deep .p-dialog .p-dialog-header {
+
+::ng-deep .profile-picture-dialog .p-dialog-header {
   background-color: transparent;
+}
+
+::ng-deep .profile-picture-dialog .p-dialog-mask {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+::ng-deep .profile-picture-dialog .p-dialog {
+  box-shadow: none !important;
 }
