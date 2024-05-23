@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject} from '@angular/core'
+import { Component, Inject, OnInit} from '@angular/core'
 import { AuthService } from './services/auth.service'
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { LoginComponent } from './login/login.component'
@@ -13,6 +13,7 @@ import {RippleModule} from "primeng/ripple";
 import {InputSwitchModule} from "primeng/inputswitch";
 import {FormsModule} from "@angular/forms";
 import {Document} from "typeorm";
+import {AdminComponent} from "./admin/admin.component";
 
 @Component({
   selector: 'app-root',
@@ -31,16 +32,17 @@ import {Document} from "typeorm";
     RippleModule,
     InputSwitchModule,
     FormsModule,
+    AdminComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent implements  AfterViewInit {
+export class AppComponent implements  OnInit {
   title = 'TWIM'
 
   themeSelection: boolean = false
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.changeTheme(this.themeSelection);
   }
 

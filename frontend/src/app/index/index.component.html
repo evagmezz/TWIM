@@ -13,7 +13,6 @@
   </div>
 </div>
 
-<p-dialog [(visible)]="visibleAddComment" (onHide)="onDialogHide()" [modal]="true" [style]="{ width: '80vw', height: '70vw', position: 'relative' }"
-          [draggable]="false" [resizable]="false">
+<p-sidebar [(visible)]="visibleAddComment" [fullScreen]="true">
   <router-outlet></router-outlet>
-</p-dialog>
+</p-sidebar>

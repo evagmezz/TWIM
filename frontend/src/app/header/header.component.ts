@@ -44,6 +44,7 @@ export class HeaderComponent implements OnInit {
   searchResults: User[] = []
   visibleSearch: boolean = false
   submitted: boolean = false
+  isAdmin: boolean = false
 
   createPostForm = this.fb.group({
     title: ['', [Validators.required]],
@@ -60,7 +61,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.getCurrentUser().subscribe(user => {
-      this.currentUser = user;
+      this.currentUser = user
     })
 
     if (this.shouldShowHeader()) {
@@ -68,6 +69,10 @@ export class HeaderComponent implements OnInit {
     }
     this.searchSubject.pipe(debounceTime(100)).subscribe(searchValue => {
       this.search(searchValue)
+    })
+
+    this.authService.isAdmin().subscribe((isAdmin) => {
+      this.isAdmin = isAdmin
     })
   }
 
@@ -133,5 +138,9 @@ export class HeaderComponent implements OnInit {
   goProfile(id: string): void {
     this.router.navigate([id, 'profile'])
     this.visibleSearch = false
+  }
+
+  goToAdmin(): void {
+    this.router.navigate(['admin'])
   }
 }

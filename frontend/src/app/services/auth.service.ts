@@ -42,6 +42,12 @@ export class AuthService {
     localStorage.removeItem('access_token')
   }
 
+  isAdmin(): Observable<boolean> {
+    return this.getCurrentUser().pipe(
+      map(user => user.role === 'admin')
+    );
+  }
+
   index(page: number, limit: number): Observable<Paginate<Post>> {
     return this.http.get<Paginate<Post>>(`${this.postUrl}?page=${page}&limit=${limit}`).pipe(
       map((res) => ({

@@ -12,11 +12,12 @@ import { DialogModule } from 'primeng/dialog'
 import { HostListener } from '@angular/core'
 import {User} from "../models/user";
 import {Post} from "../models/post";
+import {SidebarModule} from "primeng/sidebar";
 
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [RouterOutlet, NgForOf, CardModule, NgIf, AsyncPipe, DataViewModule, RatingModule, TagModule, ButtonModule, NgClass, FormsModule, DataViewModule, DialogModule],
+  imports: [RouterOutlet, NgForOf, CardModule, NgIf, AsyncPipe, DataViewModule, RatingModule, TagModule, ButtonModule, NgClass, FormsModule, DataViewModule, DialogModule, SidebarModule],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css',
 })
@@ -51,10 +52,6 @@ export class IndexComponent implements OnInit {
 
   postDetails(id: string): void {
     this.router.navigate(['details', id]);
-  }
-
-  onDialogHide(): void {
-    this.router.navigate(['index']);
   }
 
   lazyLoad() {
