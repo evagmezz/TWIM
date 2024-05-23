@@ -46,7 +46,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   ) {
     let theme = window.localStorage.getItem('theme')
     if (theme) {
-      this.themeSelection = theme == 'dark'
+      this.themeSelection = theme == 'light'
       this.changeTheme(this.themeSelection)
     }
   }
@@ -85,6 +85,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   visibleFollowing: boolean = false;
   visibleLikedPosts: boolean = false;
   visibleEditProfile: boolean = false;
+  visibleProfilePicture: boolean = false;
   visibleDeleteProfile: boolean = false;
   followingCount: number = 0;
 
@@ -247,5 +248,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.router.navigate([id, 'profile'])
     this.visibleFollowers = false
     this.visibleFollowing = false
+  }
+
+  showProfilePicture() {
+    this.visibleProfilePicture = true;
   }
 }

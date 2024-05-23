@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core'
-import {NgForOf, NgIf, NgStyle} from '@angular/common'
+import {NgForOf, NgIf, NgOptimizedImage, NgStyle} from '@angular/common'
 import {Router} from '@angular/router'
 import {AuthService} from '../services/auth.service'
 import {ButtonModule} from 'primeng/button'
@@ -15,7 +15,7 @@ import {IconFieldModule} from 'primeng/iconfield'
 import {InputIconModule} from 'primeng/inputicon'
 
 @Component({
-  selector: 'app-footer',
+  selector: 'app-header',
   standalone: true,
   imports: [
     NgIf,
@@ -30,11 +30,12 @@ import {InputIconModule} from 'primeng/inputicon'
     NgForOf,
     IconFieldModule,
     InputIconModule,
+    NgOptimizedImage,
   ],
-  templateUrl: './footer.component.html',
-  styleUrl: './footer.component.css',
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.css',
 })
-export class FooterComponent implements OnInit {
+export class HeaderComponent implements OnInit {
 
   visibleCreate: boolean = false
   searchSubject = new Subject<string>()
@@ -62,7 +63,7 @@ export class FooterComponent implements OnInit {
       this.currentUser = user;
     })
 
-    if (this.shouldShowFooter()) {
+    if (this.shouldShowHeader()) {
       this.lazyLoad()
     }
     this.searchSubject.pipe(debounceTime(100)).subscribe(searchValue => {
@@ -104,7 +105,7 @@ export class FooterComponent implements OnInit {
     })
   }
 
-  shouldShowFooter(): boolean {
+  shouldShowHeader(): boolean {
     const url = this.router.url
     return url !== '/login' && url !== '/register'
   }

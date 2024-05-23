@@ -71,3 +71,6 @@ label {
   width: 100%;
   height: auto;
 }
+::ng-deep .p-dialog .p-dialog-header {
+  background-color: transparent;
+}

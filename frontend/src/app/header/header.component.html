@@ -1,18 +1,18 @@
-<footer *ngIf="shouldShowFooter()" class="fixed flex justify-content-around bg-primary-600"
-        style=" bottom: 0; left: 0; width: 100%; padding: 10px; height: 80px; background-color: #f8f9fa;">
+<header *ngIf="shouldShowHeader()" class="fixed flex justify-content-around"
+        style=" top: 0; left: 0; width: 100%; padding: 10px; height: 60px; background-color: rgba(75, 0, 130, 0.5); ">
+  <div style="display: flex; align-items: center; margin-right: 5px;">
+    <span class="cursor-pointer" style="font-weight: 300; font-size: 30px; color: white; font-family: 'Cambria',serif; letter-spacing: 3px;"  (click)="goToIndex()">TWIM</span>
+  </div>
   <p-button (click)="visibleSearch = true" [text]="true">
     <i class="pi pi-search" style="color: white;"></i>
   </p-button>
   <p-button (click)="visibleCreate = true" [text]="true">
     <i class="pi pi-plus" style="color: white;"></i>
   </p-button>
-  <p-button (click)="goToIndex()" [text]="true">
-    <i class="pi pi-home" style="color: white;"></i>
-  </p-button>
   <p-button (click)="goToMyProfile()" [text]="true">
     <i class="pi pi-user" style="color: white;"></i>
   </p-button>
-</footer>
+</header>
 
 <p-dialog header="Nueva publicación" [(visible)]="visibleCreate" [modal]="true" [style]="{ width: '40vw' }"
           [draggable]="false" [resizable]="false" class="flex flex-column align-items-center justify-content-center;">
