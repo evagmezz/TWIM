@@ -1,8 +1,7 @@
-
 import { Test, TestingModule } from '@nestjs/testing'
 import * as fs from 'fs'
 import { join } from 'path'
-import {StorageService} from "../services/ storage.service";
+import {StorageService} from "./ storage.service"
 
 jest.mock('fs')
 
