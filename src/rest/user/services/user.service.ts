@@ -43,8 +43,8 @@ export class UserService {
       return cache
     }
     const page = await paginate(query, this.userRepository, {
-      sortableColumns: ['id', 'username', 'email'],
-      searchableColumns: ['username', 'email'],
+      sortableColumns: ['id'],
+      searchableColumns: ['username'],
     })
     const res = {
       data: (page.data ?? []).map((user) =>

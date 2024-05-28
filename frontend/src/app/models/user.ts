@@ -1,3 +1,5 @@
+import {Role} from "./roles";
+
 export class User {
   id: string
   name: string
@@ -6,7 +8,7 @@ export class User {
   password: string
   email: string
   image: string
-  role: string
+  role: Role['name']
   createdAt: string
   updatedAt: string
   followers: User[]

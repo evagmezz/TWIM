@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'
 import { Router, RouterOutlet } from '@angular/router'
-import {AuthService, Paginate} from '../services/auth.service'
-import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common'
+import {AuthService} from '../services/auth.service'
+import { AsyncPipe, NgClass } from '@angular/common';
 import { CardModule } from 'primeng/card'
 import { RatingModule } from 'primeng/rating'
 import { TagModule } from 'primeng/tag'
@@ -10,14 +10,15 @@ import { FormsModule } from '@angular/forms'
 import { DataViewModule } from 'primeng/dataview'
 import { DialogModule } from 'primeng/dialog'
 import { HostListener } from '@angular/core'
-import {User} from "../models/user";
-import {Post} from "../models/post";
-import {SidebarModule} from "primeng/sidebar";
+import {User} from "../models/user"
+import {Post} from "../models/post"
+import {SidebarModule} from "primeng/sidebar"
+import {PaginateMongo} from "../models/paginateMongo"
 
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [RouterOutlet, NgForOf, CardModule, NgIf, AsyncPipe, DataViewModule, RatingModule, TagModule, ButtonModule, NgClass, FormsModule, DataViewModule, DialogModule, SidebarModule],
+  imports: [RouterOutlet, CardModule, AsyncPipe, DataViewModule, RatingModule, TagModule, ButtonModule, NgClass, FormsModule, DataViewModule, DialogModule, SidebarModule],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css',
 })
@@ -51,7 +52,7 @@ export class IndexComponent implements OnInit {
   }
 
   postDetails(id: string): void {
-    this.router.navigate(['details', id]);
+    this.router.navigate(['details', id])
   }
 
   lazyLoad() {
@@ -59,30 +60,30 @@ export class IndexComponent implements OnInit {
       this.users = data
     })
     this.authService.getCurrentUser().subscribe((user) => {
-      this.currentUser = user;
+      this.currentUser = user
     })
-    this.loadPosts();
+    this.loadPosts()
   }
 
   loadPosts(): void {
     if (this.currentPage <= this.totalPages && !this.isLoadingPosts) {
       this.isLoadingPosts = true
-      this.authService.index(this.currentPage, this.pageSize).subscribe((data: Paginate<Post>) => {
+      this.authService.index(this.currentPage, this.pageSize).subscribe((data: PaginateMongo<Post>) => {
         this.posts = [...this.posts, ...data.docs]
         this.totalRecords = data.totalDocs
         this.totalPages = data.totalPages
         this.currentPage++
         this.isLoadingPosts = false
-      });
+      })
     }
   }
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(event: Event) {
-    let pos = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
-    let max = document.documentElement.scrollHeight;
+    let pos = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight
+    let max = document.documentElement.scrollHeight
     if (pos >= max) {
-      this.loadPosts();
+      this.loadPosts()
     }
   }
 
@@ -92,21 +93,21 @@ export class IndexComponent implements OnInit {
 
   isLiked(post: Post): boolean {
     if (this.currentUser) {
-      return post.likes.includes(this.currentUser.id);
+      return post.likes.includes(this.currentUser.id)
     }
-    return false;
+    return false
   }
 
   likePost(post: Post): void {
     if (this.isLiked(post)) {
-      const index = post.likes.indexOf(this.currentUser.id);
+      const index = post.likes.indexOf(this.currentUser.id)
       if (index > -1) {
-        post.likes.splice(index, 1);
+        post.likes.splice(index, 1)
       }
-      this.authService.unlike(post.id, this.currentUser.id).subscribe();
+      this.authService.unlike(post.id, this.currentUser.id).subscribe()
     } else {
-      post.likes.push(this.currentUser.id);
-      this.authService.like(post.id, this.currentUser.id).subscribe();
+      post.likes.push(this.currentUser.id)
+      this.authService.like(post.id, this.currentUser.id).subscribe()
     }
   }
 }

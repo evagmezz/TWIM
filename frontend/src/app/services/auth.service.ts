@@ -4,19 +4,9 @@ import { map, Observable } from 'rxjs';
 import { Comment } from '../models/comment';
 import { Post } from '../models/post';
 import { User } from '../models/user';
-
-export class Paginate<T> {
-  docs: T[];
-  totalDocs: number;
-  limit: number;
-  totalPages: number;
-  page: number;
-  pagingCounter: number;
-  hasPrevPage: boolean;
-  hasNextPage: boolean;
-  prevPage: number;
-  nextPage: number;
-}
+import { PaginateMongo } from '../models/paginateMongo';
+import {PaginatePostgre} from "../models/paginatePostgre";
+import {Form} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root',
@@ -48,8 +38,8 @@ export class AuthService {
     );
   }
 
-  index(page: number, limit: number): Observable<Paginate<Post>> {
-    return this.http.get<Paginate<Post>>(`${this.postUrl}?page=${page}&limit=${limit}`).pipe(
+  index(page: number, limit: number): Observable<PaginateMongo<Post>> {
+    return this.http.get<PaginateMongo<Post>>(`${this.postUrl}?page=${page}&limit=${limit}`).pipe(
       map((res) => ({
         docs: res.docs,
         totalDocs: res.totalDocs,
@@ -121,8 +111,24 @@ export class AuthService {
     return this.http.get<User[]>(this.usersUrl);
   }
 
+  getUsersPaginate(): Observable<PaginatePostgre<User>> {
+  return this.http.get<PaginatePostgre<User>>(`${this.usersUrl}`)
+}
+
   checkUser(username: string, password: string): Observable<boolean> {
     return this.http.post<boolean>(`${this.usersUrl}/check`, { username, password });
+  }
+
+  createUser(formData: FormData): Observable<any> {
+    return this.http.post(`${this.usersUrl}`, formData);
+  }
+
+  updateUser(userId: string, role: string): Observable<any> {
+    return this.http.put(`${this.usersUrl}/${userId}`, { role });
+  }
+
+  deleteUser(userId: string): Observable<any> {
+    return this.http.delete(`${this.usersUrl}/${userId}`);
   }
 
   getPostsLikedByUser(userId: string): Observable<Post[]> {
@@ -149,7 +155,7 @@ export class AuthService {
     return this.http.delete(`${this.postUrl}/${postId}`);
   }
 
-  searchByUsername(username: string): Observable<any> {
-    return this.http.get(`${this.usersUrl}?search=${username}`);
+  searchBy(data: string): Observable<any> {
+    return this.http.get(`${this.usersUrl}?search=${data}`);
   }
 }

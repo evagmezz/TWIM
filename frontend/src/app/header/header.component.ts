@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core'
-import {NgForOf, NgIf, NgOptimizedImage, NgStyle} from '@angular/common'
+import { NgOptimizedImage, NgStyle } from '@angular/common';
 import {Router} from '@angular/router'
 import {AuthService} from '../services/auth.service'
 import {ButtonModule} from 'primeng/button'
@@ -13,12 +13,12 @@ import {FileUploadModule} from 'primeng/fileupload'
 import {debounceTime, Subject} from 'rxjs'
 import {IconFieldModule} from 'primeng/iconfield'
 import {InputIconModule} from 'primeng/inputicon'
+import {Role} from "../models/roles"
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    NgIf,
     ButtonModule,
     DialogModule,
     InputTextModule,
@@ -27,11 +27,10 @@ import {InputIconModule} from 'primeng/inputicon'
     ReactiveFormsModule,
     NgStyle,
     FileUploadModule,
-    NgForOf,
     IconFieldModule,
     InputIconModule,
-    NgOptimizedImage,
-  ],
+    NgOptimizedImage
+],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -42,7 +41,9 @@ export class HeaderComponent implements OnInit {
   currentUser: User
   image: File[] = []
   searchResults: User[] = []
+  role: Role[] | undefined
   visibleSearch: boolean = false
+  visibleCreateUser: boolean = false
   submitted: boolean = false
   isAdmin: boolean = false
 
@@ -51,6 +52,24 @@ export class HeaderComponent implements OnInit {
     image: this.fb.array([], [Validators.required, Validators.maxLength(7)]),
     location: [''],
   })
+
+  createUserForm = this.fb.group({
+    name: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÁÉÍÓÚáéíóú ]*$/)]],
+    lastname: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÁÉÍÓÚáéíóú ]*$/)]],
+    username: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(20),
+        Validators.pattern(/^[a-zA-Z0-9._-]+$/),
+      ],
+    ],
+    password: ['', [Validators.required]],
+    email: ['', [Validators.email, Validators.required]],
+    role: ['', [Validators.required]]
+  })
+
 
   constructor(
     private router: Router,
@@ -74,6 +93,10 @@ export class HeaderComponent implements OnInit {
     this.authService.isAdmin().subscribe((isAdmin) => {
       this.isAdmin = isAdmin
     })
+    this.role = [
+      {name: 'admin'},
+      {name: 'user'}
+    ]
   }
 
 
@@ -89,9 +112,21 @@ export class HeaderComponent implements OnInit {
       this.image = event.currentFiles
     }
   }
+  createUser() {
+    const formData = new FormData()
+    formData.append('name', this.createUserForm.controls.name.value as string)
+    formData.append('lastname', this.createUserForm.controls.lastname.value as string)
+    formData.append('username', this.createUserForm.controls.username.value as string)
+    formData.append('password', this.createUserForm.controls.password.value as string)
+    formData.append('email', this.createUserForm.controls.email.value as string)
+    formData.append('role', this.createUserForm.controls.role.value as string)
+    this.authService.createUser(formData).subscribe(() => {
+      this.visibleCreateUser = false
+    })
+  }
+
 
   createPost(): void {
-    console.log('createPost called, currentUser:', this.currentUser);
     const userId = this.currentUser.id
     const title = this.createPostForm.controls.title.value as string
     const image = this.image
@@ -126,7 +161,7 @@ export class HeaderComponent implements OnInit {
   }
 
   search(username: string): void {
-    this.authService.searchByUsername(username).subscribe(results => {
+    this.authService.searchBy(username).subscribe(results => {
       if (Array.isArray(results.data)) {
         this.searchResults = results.data
       } else {

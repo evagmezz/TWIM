@@ -12,7 +12,7 @@ import { ButtonModule } from 'primeng/button'
 import { PasswordModule } from 'primeng/password'
 import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Router, RouterLink } from '@angular/router'
-import { NgClass, NgForOf, NgIf } from '@angular/common'
+import { NgClass } from '@angular/common';
 import { MessagesModule } from 'primeng/messages'
 import { MessageSharingService } from '../services/message-sharing-service.service'
 import { Message } from 'primeng/api'
@@ -40,11 +40,9 @@ export class Token {
     ButtonModule,
     PasswordModule,
     RouterLink,
-    NgIf,
-    NgForOf,
     NgClass,
-    MessagesModule,
-  ],
+    MessagesModule
+],
   providers: [HttpClientModule],
 })
 export class LoginComponent implements OnInit {

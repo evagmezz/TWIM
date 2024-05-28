@@ -1,15 +1,16 @@
 <div style="height: 100vh;width: 100%;">
   <div class="posts">
-    <div *ngFor="let post of posts" class="item" style="display: inline-block; margin: 0 0 1em; width: 100%;">
-      <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid" style="width: 100%; height: auto; border-radius: 10px;">
-
-      <div class="user-info" style="display: flex; align-items: center;">
-        <img [src]="post.user.image" alt="user image" class="user-image cursor-pointer" (click)="goToProfile(post.user.id)" style="border-radius: 50%; height: 5vh; width: 5vh; object-fit: cover; margin-right: 0.5em;">
-        <p (click)="goToProfile(post.user.id)" class="cursor-pointer">{{ post.user.username }} </p>
-        <i (click)="likePost(post)" [ngClass]="{'pi-heart': !isLiked(post), 'pi-heart-fill': isLiked(post)}" class="pi"></i>
-        <i (click)="postDetailsDialog(post.id)" class="pi pi-comment"></i>
+    @for (post of posts; track post) {
+      <div class="item" style="display: inline-block; margin: 0 0 1em; width: 100%;">
+        <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid" style="width: 100%; height: auto; border-radius: 10px;">
+        <div class="user-info" style="display: flex; align-items: center;">
+          <img [src]="post.user.image" alt="user image" class="user-image cursor-pointer" (click)="goToProfile(post.user.id)" style="border-radius: 50%; height: 5vh; width: 5vh; object-fit: cover; margin-right: 0.5em;">
+          <p (click)="goToProfile(post.user.id)" class="cursor-pointer">{{ post.user.username }} </p>
+          <i (click)="likePost(post)" [ngClass]="{'pi-heart': !isLiked(post), 'pi-heart-fill': isLiked(post)}" class="pi"></i>
+          <i (click)="postDetailsDialog(post.id)" class="pi pi-comment"></i>
+        </div>
       </div>
-    </div>
+    }
   </div>
 </div>
 

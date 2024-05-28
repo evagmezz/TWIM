@@ -1,55 +1,65 @@
-<div class="flex align-items-center justify-content-center flex-column" *ngIf="post">
-  <div class="card flex-direction-row flex mt-4">
-    <div class="flex align-items-center justify-content-center flex-1">
-      <p-carousel [circular]="false"
-                  [indicatorStyle]="{ 'background-color': 'light-gray', 'border-radius': '50%', 'width' : '5px', 'height': '5px'}"
-                  [numScroll]="1" [numVisible]="1"
-                  [value]="post.photos">
-        <ng-template let-photo pTemplate="item">
-          <img [src]="photo" alt="Post image" class="card-img-top flex-1">
-        </ng-template>
-      </p-carousel>
-    </div>
-    <div class="flex align-items-center justify-content-start flex-1 overflow-y-auto flex-column">
-      <div class="bold mt-2 mb-3 font-bold 1em">{{ post.title }}</div>
-      <div class="small-text mb-3"> <i class="pi pi-map-marker"></i>{{ post.location }}</div>
-      <div class="comments flex-grow-1 overflow-y-auto flex-1">
-        <div *ngFor="let comment of comments" class="mb-2 word-wrap-break-word">
-          <div class="user-info">
-            <img [src]="comment.user.image" alt="User image" class="user-image cursor-pointer" (click)="goToProfile(comment.user.id)">
-            <strong class="ml-3 cursor-pointer" (click)="goToProfile(comment.user.id)">{{ comment.user.username }}
-              : </strong>{{ comment.content }}
-            <i (click)="deleteComment(comment)" *ngIf="currentUser.id === comment.user.id" class="pi pi-trash"></i>
+@if (post) {
+  <div class="flex align-items-center justify-content-center flex-column">
+    <div class="card flex-direction-row flex mt-4">
+      <div class="flex align-items-center justify-content-center flex-1">
+        <p-carousel [circular]="false"
+          [indicatorStyle]="{ 'background-color': 'light-gray', 'border-radius': '50%', 'width' : '5px', 'height': '5px'}"
+          [numScroll]="1" [numVisible]="1"
+          [value]="post.photos">
+          <ng-template let-photo pTemplate="item">
+            <img [src]="photo" alt="Post image" class="card-img-top flex-1">
+          </ng-template>
+        </p-carousel>
+      </div>
+      <div class="flex align-items-center justify-content-start flex-1 overflow-y-auto flex-column">
+        <div class="bold mt-2 mb-3 font-bold 1em">{{ post.title }}</div>
+        <div class="small-text mb-3"> <i class="pi pi-map-marker"></i>{{ post.location }}</div>
+        <div class="comments flex-grow-1 overflow-y-auto flex-1">
+          @for (comment of comments; track comment) {
+            <div class="mb-2 word-wrap-break-word">
+              <div class="user-info">
+                <img [src]="comment.user.image" alt="User image" class="user-image cursor-pointer" (click)="goToProfile(comment.user.id)">
+                <strong class="ml-3 cursor-pointer" (click)="goToProfile(comment.user.id)">{{ comment.user.username }}
+                : </strong>{{ comment.content }}
+                @if (currentUser.id === comment.user.id) {
+                  <i (click)="deleteComment(comment)" class="pi pi-trash"></i>
+                }
+              </div>
+              <div class="comment-date small-text ">{{ getTimeComment(comment) }}</div>
+            </div>
+          }
+        </div>
+        <div class="position-sticky bottom-0">
+          <input (keyup.enter)="addComment()" [(ngModel)]="newComment" pInputText placeholder="Añade un comentario..."
+            type="text">
+            <i (click)="likePost()" [ngClass]="{'pi-heart': !isLiked(), 'pi-heart-fill': isLiked()}" class="pi"></i>
+            @if (currentUser.id === post.user.id) {
+              <i class="pi pi-ellipsis-h" (click)="visibleOptions = true"></i>
+            }
           </div>
-          <div class="comment-date small-text ">{{ getTimeComment(comment) }}</div>
         </div>
       </div>
-      <div class="position-sticky bottom-0">
-        <input (keyup.enter)="addComment()" [(ngModel)]="newComment" pInputText placeholder="Añade un comentario..."
-               type="text">
-        <i (click)="likePost()" [ngClass]="{'pi-heart': !isLiked(), 'pi-heart-fill': isLiked()}" class="pi"></i>
-        <i class="pi pi-ellipsis-h" *ngIf="currentUser.id === post.user.id" (click)="visibleOptions = true"></i>
+    </div>
+  }
+
+  @if (post) {
+    <p-dialog [(visible)]="visibleEditPost" [modal]="true" [style]="{ width: '30vw' }">
+      <div class="flex flex-column align-items-center gap-2">
+        <input id="title" [(ngModel)]="post.title" pInputText type="text" class="width-100">
+        <input id="location" [(ngModel)]="post.location" pInputText type="text" class="width-100">
+        <div class="flex justify-content-center mt-3 gap-3">
+          <p-button label="Guardar" (click)="editPost()" [rounded]="true" severity="help"></p-button>
+          <p-button label="Cancelar" (click)="visibleEditPost = false" [rounded]="true" [outlined]="true"
+          severity="help"></p-button>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
+    </p-dialog>
+  }
 
-<p-dialog [(visible)]="visibleEditPost" [modal]="true" *ngIf="post" [style]="{ width: '30vw' }">
-  <div class="flex flex-column align-items-center gap-2">
-    <input id="title" [(ngModel)]="post.title" pInputText type="text" class="width-100">
-    <input id="location" [(ngModel)]="post.location" pInputText type="text" class="width-100">
-    <div class="flex justify-content-center mt-3 gap-3">
-      <p-button label="Guardar" (click)="editPost()" [rounded]="true" severity="help"></p-button>
-      <p-button label="Cancelar" (click)="visibleEditPost = false" [rounded]="true" [outlined]="true"
-                severity="help"></p-button>
+  <p-dialog [(visible)]="visibleOptions" [modal]="true" [style]="{ width: '20vw' }"
+    [draggable]="false" [resizable]="false">
+    <div class="flex justify-content-center gap-3">
+      <p-button label="Editar" [rounded]="true" severity="help" (click)="visibleEditPost = true"></p-button>
+      <p-button label="Eliminar" [rounded]="true" [outlined]="true" severity="help" (click)="deletePost()"></p-button>
     </div>
-  </div>
-</p-dialog>
-
-<p-dialog [(visible)]="visibleOptions" [modal]="true" [style]="{ width: '20vw' }"
-          [draggable]="false" [resizable]="false">
-  <div class="flex justify-content-center gap-3">
-    <p-button label="Editar" [rounded]="true" severity="help" (click)="visibleEditPost = true"></p-button>
-    <p-button label="Eliminar" [rounded]="true" [outlined]="true" severity="help" (click)="deletePost()"></p-button>
-  </div>
-</p-dialog>
+  </p-dialog>

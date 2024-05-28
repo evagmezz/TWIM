@@ -3,7 +3,7 @@ import {User} from '../models/user'
 import {Post} from '../models/post'
 import {AuthService} from '../services/auth.service'
 import {ActivatedRoute, Router} from '@angular/router'
-import {DOCUMENT, NgForOf, NgIf} from '@angular/common'
+import { DOCUMENT } from '@angular/common';
 import {DialogModule} from 'primeng/dialog'
 import {ButtonModule} from 'primeng/button'
 import {SidebarModule} from 'primeng/sidebar'
@@ -23,7 +23,7 @@ import {Document} from "typeorm"
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [NgIf, NgForOf, ButtonModule, DialogModule, RadioButtonModule, SidebarModule, FormsModule, ReactiveFormsModule, InputTextModule, PasswordModule, FileUploadModule, InputSwitchModule, RippleModule],
+  imports: [ButtonModule, DialogModule, RadioButtonModule, SidebarModule, FormsModule, ReactiveFormsModule, InputTextModule, PasswordModule, FileUploadModule, InputSwitchModule, RippleModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
@@ -37,11 +37,6 @@ export class ProfileComponent implements OnInit {
     private messageService: MessageSharingService,
     @Inject(DOCUMENT) private document: Document
   ) {
-    let theme = window.localStorage.getItem('theme')
-    if (theme) {
-      this.themeSelection = theme == 'light'
-      this.changeTheme(this.themeSelection)
-    }
   }
 
   profileForm = this.fb.group({
@@ -80,7 +75,7 @@ export class ProfileComponent implements OnInit {
   visibleEditProfile: boolean = false
   visibleProfilePicture: boolean = false
   visibleDeleteProfile: boolean = false
-  themeSelection: boolean = false
+  themeSelection: boolean
   followingCount: number = 0
 
   private routeSub: Subscription
@@ -97,7 +92,6 @@ export class ProfileComponent implements OnInit {
       const userId = params['id']
       this.lazyLoad(userId)
     })
-    this.changeTheme(this.themeSelection)
   }
 
   lazyLoad(userId: string): void {
@@ -236,6 +230,8 @@ export class ProfileComponent implements OnInit {
     let theme = state ? 'dark' : 'light'
     window.localStorage.setItem('theme', theme)
     let themeLink = this.document['getElementById']('app-themes') as HTMLLinkElement
+    this.document['documentElement'].classList.remove('dark-theme', 'light-theme')
+    this.document['documentElement'].classList.add(theme + '-theme')
     themeLink.href = `lara-` + theme + `-purple` + `.css`
   }
 
@@ -248,4 +244,5 @@ export class ProfileComponent implements OnInit {
   showProfilePicture() {
     this.visibleProfilePicture = true
   }
+
 }

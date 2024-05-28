@@ -5,27 +5,27 @@ import { LoginComponent } from './login/login.component'
 import { RouterOutlet } from '@angular/router'
 import { RegisterComponent } from './register/register.component'
 import { IndexComponent } from './index/index.component'
-import {DOCUMENT, NgIf} from '@angular/common'
+import { DOCUMENT } from '@angular/common';
 import { DetailsComponent } from './details/details.component'
 import { ProfileComponent } from './profile/profile.component'
 import { HeaderComponent } from './header/header.component'
-import {RippleModule} from "primeng/ripple";
-import {InputSwitchModule} from "primeng/inputswitch";
-import {FormsModule} from "@angular/forms";
-import {Document} from "typeorm";
-import {AdminComponent} from "./admin/admin.component";
+import {RippleModule} from "primeng/ripple"
+import {InputSwitchModule} from "primeng/inputswitch"
+import {FormsModule} from "@angular/forms"
+import {Document} from "typeorm"
+import {AdminComponent} from "./admin/admin.component"
+import {ConfirmationService} from "primeng/api";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  providers: [AuthService, HttpClient],
+  providers: [AuthService, HttpClient,  ConfirmationService],
   imports: [
     HttpClientModule,
     LoginComponent,
     RouterOutlet,
     RegisterComponent,
     IndexComponent,
-    NgIf,
     DetailsComponent,
     ProfileComponent,
     HeaderComponent,
@@ -33,33 +33,31 @@ import {AdminComponent} from "./admin/admin.component";
     InputSwitchModule,
     FormsModule,
     AdminComponent
-  ],
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent implements  OnInit {
+export class AppComponent  {
   title = 'TWIM'
 
-  themeSelection: boolean = false
 
-  ngOnInit() {
-    this.changeTheme(this.themeSelection);
+  constructor(@Inject(DOCUMENT) private document: Document) {
+    this.setDefaultTheme()
   }
 
-  constructor(@Inject(DOCUMENT) private document: Document
-  ) {
+  setDefaultTheme() {
     let theme = window.localStorage.getItem('theme')
-    if (theme) {
-      this.themeSelection = theme == 'light'
-      this.changeTheme(this.themeSelection)
+    if (!theme) {
+      theme = 'light'
+      window.localStorage.setItem('theme', theme)
     }
+    this.applyTheme(theme)
   }
 
-  changeTheme(state: boolean) {
-    let theme = state ? 'dark' : 'light'
-    window.localStorage.setItem('theme', theme)
+  applyTheme(theme: string) {
     let themeLink = this.document['getElementById']('app-themes') as HTMLLinkElement
+    this.document['documentElement'].classList.remove('dark-theme', 'light-theme')
+    this.document['documentElement'].classList.add(theme + '-theme')
     themeLink.href = `lara-` + theme + `-purple` + `.css`
   }
-
 }

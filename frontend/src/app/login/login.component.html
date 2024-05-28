@@ -1,29 +1,37 @@
 <div class="container  position-relative flex justify-content-center align-items-center" style=" height: 90vh;">
   <p-messages [(value)]="message" [closable]="true" [enableService]="false"
-              class="position-absolute z-index-1"></p-messages>
+  class="position-absolute z-index-1"></p-messages>
   <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
     <div class="card flex flex-column align-items-center justify-content-center">
-     <span class="input-field mb-5">
-      <label for="username"></label>
-      <input formControlName="username" id="username" pInputText placeholder="Usuario" type="text" />
-      <div *ngIf="loginForm.controls['username'].invalid && loginForm.controls['username'].touched"
-           class="container-error">
-         <small *ngIf="loginForm.controls['username'].errors?.['required']" class="error-message">El nombre de usuario es obligatorio</small>
-      </div>
-     </span>
+      <span class="input-field mb-5">
+        <label for="username"></label>
+        <input formControlName="username" id="username" pInputText placeholder="Usuario" type="text" />
+        @if (loginForm.controls['username'].invalid && loginForm.controls['username'].touched) {
+          <div
+            class="container-error">
+            @if (loginForm.controls['username'].errors?.['required']) {
+              <small class="error-message">El nombre de usuario es obligatorio</small>
+            }
+          </div>
+        }
+      </span>
       <span class="input-field mb-3">
         <label for="password"></label>
         <p-password [feedback]="false" [toggleMask]="true" formControlName="password" id="password"
-                    placeholder="Contraseña" />
-        <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched"
-             class="container-error">
-          <small *ngIf="loginForm.controls['password'].errors?.['required']" class="error-message">La contraseña es obligatoria</small>
-        </div>
-     </span>
-      <button class="p-button-rounded p-button-raised p-button-primary mt-2" label="Iniciar Sesion" pButton
-              type="submit"></button>
-      <p>¿No tienes cuenta?</p>
-      <a [routerLink]="['/register']">Registrate</a>
-    </div>
-  </form>
-</div>
+          placeholder="Contraseña" />
+          @if (loginForm.controls['password'].invalid && loginForm.controls['password'].touched) {
+            <div
+              class="container-error">
+              @if (loginForm.controls['password'].errors?.['required']) {
+                <small class="error-message">La contraseña es obligatoria</small>
+              }
+            </div>
+          }
+        </span>
+        <button class="p-button-rounded p-button-raised p-button-primary mt-2" label="Iniciar Sesion" pButton
+        type="submit"></button>
+        <p>¿No tienes cuenta?</p>
+        <a [routerLink]="['/register']">Registrate</a>
+      </div>
+    </form>
+  </div>

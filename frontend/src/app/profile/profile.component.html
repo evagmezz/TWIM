@@ -1,189 +1,244 @@
 <p-messages [(value)]="message" [closable]="true" [enableService]="false"
-            class="position-absolute info-message"></p-messages>
+class="position-absolute info-message"></p-messages>
 <!-- Profile -->
-<div *ngIf="user && currentUser">
-  <div class="flex justify-content-center align-items-center">
-    <div class="flex justify-content-center align-items-center gap-4">
-      <img [src]="user.image" alt="Profile Picture" class="my-profile-picture mb-5 mt-4 mr-4" (click)="showProfilePicture()">
-    </div>
-    <div class="flex flex-column align-items-center gap-2">
-      <div class="username-container flex align-items-center gap-2">
-        <span class="username">{{ user.username }}</span>
-        <p-button *ngIf="!isFollowing && user.id !== currentUser.id" (click)="follow()" icon="pi pi-user-plus"
-                  [rounded]="true" [text]="true" [raised]="true"
-                  severity="help"></p-button>
-        <p-button *ngIf="isFollowing && user.id !== currentUser.id" (click)="unFollow()" icon="pi pi-user-minus"
-                  [rounded]="true"
-                  severity="help"></p-button>
-        <i *ngIf="user.id === currentUser.id" class="pi pi-ellipsis-h mr-2" (click)="visibleOptions = true"></i>
+@if (user && currentUser) {
+  <div>
+    <div class="flex justify-content-center align-items-center">
+      <div class="flex justify-content-center align-items-center gap-4">
+        <img [src]="user.image" alt="Profile Picture" class="my-profile-picture mb-5 mt-4 mr-4" (click)="showProfilePicture()">
       </div>
-      <div class="flex gap-2">
-        <p><a class="cursor-pointer" (click)="showFollowers()">{{ countFollowers() }} seguidores</a></p>
-        <p><a class="cursor-pointer" (click)="showFollowing()">{{ followingCount }} siguiendo</a></p>
+      <div class="flex flex-column align-items-center gap-2">
+        <div class="username-container flex align-items-center gap-2">
+          <span class="username">{{ user.username }}</span>
+          @if (!isFollowing && user.id !== currentUser.id) {
+            <p-button (click)="follow()" icon="pi pi-user-plus"
+              [rounded]="true" [text]="true" [raised]="true"
+            severity="help"></p-button>
+          }
+          @if (isFollowing && user.id !== currentUser.id) {
+            <p-button (click)="unFollow()" icon="pi pi-user-minus"
+              [rounded]="true"
+            severity="help"></p-button>
+          }
+          @if (user.id === currentUser.id) {
+            <i class="pi pi-ellipsis-h mr-2" (click)="visibleOptions = true"></i>
+          }
+        </div>
+        <div class="flex gap-2">
+          <p><a class="cursor-pointer" (click)="showFollowers()">{{ countFollowers() }} seguidores</a></p>
+          <p><a class="cursor-pointer" (click)="showFollowing()">{{ followingCount }} siguiendo</a></p>
+        </div>
       </div>
     </div>
   </div>
-</div>
+}
 <div class="container">
   <div class="posts">
-    <div *ngFor="let post of posts">
-      <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid mb-2">
-    </div>
+    @for (post of posts; track post) {
+      <div>
+        <img (click)="postDetails(post.id)" [src]="post.photos[0]" alt="post image" class="img-fluid mb-2">
+      </div>
+    }
   </div>
 </div>
 <!-- Profile Picture Dialog -->
 <p-dialog class="profile-picture-dialog" [(visible)]="visibleProfilePicture" [modal]="true" [style]="{ width: '30vw', height: '35vw', border: 'none'}" [contentStyle]="{'max-height': '100vw', 'overflow': 'hidden', 'background-color': 'transparent'}">
-  <img *ngIf="user" [src]="user.image" alt="Profile Picture" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center;">
+  @if (user) {
+    <img [src]="user.image" alt="Profile Picture" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center;">
+  }
 </p-dialog>
 <!-- Options -->
-<div *ngIf="user && currentUser">
-  <p-dialog [(visible)]="visibleOptions" [modal]="true" [style]="{ width: '30vw' }">
-    <div class="flex flex-column align-items-start align-items-center justify-content-center gap-2">
-      <a pRipple>
-        <p-inputSwitch [(ngModel)]="themeSelection" (onChange)="changeTheme($event.checked)"></p-inputSwitch>
-      </a>
-      <button pButton *ngIf="user.id === currentUser.id" (click)="visibleEditProfile = true"
-              class="bg-transparent border-transparent text-color-secondary gap-2">
-        Editar perfil <i class="pi pi-user-edit"></i>
-      </button>
-      <button pButton *ngIf="user.id === currentUser.id" (click)="viewLikedPosts()"
-              class="bg-transparent border-transparent text-color-secondary gap-2">
-        Ver publicaciones que te gustaron<i class="pi pi-thumbs-up"></i>
-      </button>
-      <button pButton *ngIf="user.id === currentUser.id" (click)="visibleDeleteProfile = true"
-              class="bg-transparent border-transparent text-color-secondary gap-2">
-        Eliminar perfil <i class="pi pi-trash"></i>
-      </button>
-      <button pButton *ngIf="user.id === currentUser.id" (click)="logout()"
-              class="bg-transparent border-transparent text-color-secondary gap-2">
-        Cerrar sesión <i class="pi pi-sign-out"></i>
-      </button>
-    </div>
-  </p-dialog>
-</div>
-<div *ngIf="user">
-  <!-- Followers and Following -->
-  <p-dialog header="Seguidores" [(visible)]="visibleFollowers" [style]="{ width: '25vw', height: '300px' }">
-    <div *ngFor="let follower of followers" class="flex align-items-center cursor-pointer" (click)="goToProfile(follower.id)">
-      <img [src]="follower.image" alt="Profile Picture" class="profile-picture">
-      <span class="ml-4 username-large">{{ follower.username }}</span>
-    </div>
-  </p-dialog>
-  <p-dialog header="Seguidos" [(visible)]="visibleFollowing" [style]="{ width: '25vw', height: '300px' }">
-    <div *ngFor="let following of followings" class="flex align-items-center cursor-pointer" (click)="goToProfile(following.id)">
-      <img [src]="following.image" alt="Profile Picture" class="profile-picture">
-      <span class="ml-4 username-large">{{ following.username }}</span>
-    </div>
-  </p-dialog>
-  <!-- Liked posts -->
-  <p-sidebar [(visible)]="visibleLikedPosts" [fullScreen]="true">
-    <h3>Publicaciones que te gustaron</h3>
-    <div class="grid-container">
-      <div *ngFor="let post of likedPosts">
-        <img [src]="post.photos[0]" alt="Liked post image" class="small-img" (click)="postDetails(post.id)">
+@if (user && currentUser) {
+  <div>
+    <p-dialog [(visible)]="visibleOptions" [modal]="true" [style]="{ width: '30vw' }">
+      <div class="flex flex-column align-items-start align-items-center justify-content-center gap-2">
+        <a pRipple>
+          <p-inputSwitch [(ngModel)]="themeSelection" (onChange)="changeTheme($event.checked)"></p-inputSwitch>
+        </a>
+        @if (user.id === currentUser.id) {
+          <button pButton (click)="visibleEditProfile = true"
+            class="bg-transparent border-transparent text-color-secondary gap-2">
+            Editar perfil <i class="pi pi-user-edit"></i>
+          </button>
+        }
+        @if (user.id === currentUser.id) {
+          <button pButton (click)="viewLikedPosts()"
+            class="bg-transparent border-transparent text-color-secondary gap-2">
+            Ver publicaciones que te gustaron<i class="pi pi-thumbs-up"></i>
+          </button>
+        }
+        @if (user.id === currentUser.id) {
+          <button pButton (click)="visibleDeleteProfile = true"
+            class="bg-transparent border-transparent text-color-secondary gap-2">
+            Eliminar perfil <i class="pi pi-trash"></i>
+          </button>
+        }
+        @if (user.id === currentUser.id) {
+          <button pButton (click)="logout()"
+            class="bg-transparent border-transparent text-color-secondary gap-2">
+            Cerrar sesión <i class="pi pi-sign-out"></i>
+          </button>
+        }
       </div>
-    </div>
-  </p-sidebar>
-  <!-- Edit and Delete Profile -->
-  <p-dialog header="Editar Perfil" [(visible)]="visibleEditProfile" [modal]="true" [style]="{ width: '40vw' }"
-            [draggable]="false" [resizable]="false">
-    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
-      <div class="flex justify-content-between ml-2">
-        <div class="flex flex-column gap-4">
-          <div>
-            <label for="name">Nombre:</label>
-            <input type="text" pInputText id="name" formControlName="name">
-            <div *ngIf="profileForm.controls['name'].invalid && profileForm.controls['name'].touched"
-                 class="absolute">
-              <small *ngIf="profileForm.controls['name'].errors?.['required']"
-                     style="color: red;">El nombre es obligatorio</small>
-              <small *ngIf="profileForm.controls['name'].errors?.['pattern']"
-                     style="color: red;">El nombre no es válido</small>
-            </div>
-          </div>
-
-          <div>
-            <label for="lastname">Apellidos:</label>
-            <input type="text" pInputText id="lastname" formControlName="lastname">
-            <div *ngIf="profileForm.controls['lastname'].invalid && profileForm.controls['lastname'].touched"
-                 class="absolute">
-              <small *ngIf="profileForm.controls['lastname'].errors?.['required']" style="color: red;">El apellido es obligatorio</small>
-              <small *ngIf="profileForm.controls['lastname'].errors?.['pattern']"
-                     style="color: red;">El apellido no es válido</small>
-            </div>
-          </div>
-
-          <div>
-            <label for="username">Nombre de usuario:</label>
-            <input type="text" pInputText id="username" aria-describedby="username-help" formControlName="username">
-            <div *ngIf="profileForm.controls['username'].invalid && profileForm.controls['username'].touched"
-                 class="absolute">
-              <small *ngIf="profileForm.controls['username'].errors?.['required']" style="color: red;">El nombre de usuario es obligatorio</small>
-              <small *ngIf="profileForm.controls['username'].errors?.['minlength']"
-                     style="color: red;">Demasiado corto</small>
-              <small *ngIf="profileForm.controls['username'].errors?.['maxlength']"
-                     style="color: red;">Demasiado largo</small>
-              <small *ngIf="profileForm.controls['username'].errors?.['pattern']" style="color: red;">El nombre de usuario no es válido</small>
-            </div>
-          </div>
+    </p-dialog>
+  </div>
+}
+@if (user) {
+  <div>
+    <!-- Followers and Following -->
+    <p-dialog header="Seguidores" [(visible)]="visibleFollowers" [style]="{ width: '25vw', height: '300px' }">
+      @for (follower of followers; track follower) {
+        <div class="flex align-items-center cursor-pointer" (click)="goToProfile(follower.id)">
+          <img [src]="follower.image" alt="Profile Picture" class="profile-picture">
+          <span class="ml-4 username-large">{{ follower.username }}</span>
         </div>
-        <div class="flex flex-column gap-3">
+      }
+    </p-dialog>
+    <p-dialog header="Seguidos" [(visible)]="visibleFollowing" [style]="{ width: '25vw', height: '300px' }">
+      @for (following of followings; track following) {
+        <div class="flex align-items-center cursor-pointer" (click)="goToProfile(following.id)">
+          <img [src]="following.image" alt="Profile Picture" class="profile-picture">
+          <span class="ml-4 username-large">{{ following.username }}</span>
+        </div>
+      }
+    </p-dialog>
+    <!-- Liked posts -->
+    <p-sidebar [(visible)]="visibleLikedPosts" [fullScreen]="true">
+      <h3>Publicaciones que te gustaron</h3>
+      <div class="grid-container">
+        @for (post of likedPosts; track post) {
           <div>
-            <label for="email">Correo:</label>
-            <input type="email" id="email" pInputText formControlName="email">
-            <div *ngIf="profileForm.controls['email'].invalid && profileForm.controls['email'].touched"
-                 class="absolute">
-              <small *ngIf="profileForm.controls['email'].errors?.['required']" style="color: red;">El correo es obligatorio</small>
-              <small *ngIf="profileForm.controls['email'].errors?.['email']"
-                     style="color: red;">El correo no es válido</small>
-            </div>
+            <img [src]="post.photos[0]" alt="Liked post image" class="small-img" (click)="postDetails(post.id)">
           </div>
-
-          <div>
-            <label for="password">Contraseña:</label>
-            <p-password [feedback]="true" [toggleMask]="true" formControlName="password" id="password"
-                        placeholder="Contraseña" />
-          </div>
-
-          <div>
-            <label for="image">Foto de perfil:</label>
-            <p-fileUpload name="image" id="image" chooseLabel="Seleccionar" chooseIcon="pi pi-image"
-                          (onSelect)="onFileChange($event)"
-                          accept="image/*" [auto]="true">
-              <ng-template pTemplate="content">
-                <div class="flex flex-column align-items-center gap-2">
-                  <i class="pi pi-download"></i>
-                  <div>Arrastre una imágen aquí</div>
+        }
+      </div>
+    </p-sidebar>
+    <!-- Edit and Delete Profile -->
+    <p-dialog header="Editar Perfil" [(visible)]="visibleEditProfile" [modal]="true" [style]="{ width: '40vw' }"
+      [draggable]="false" [resizable]="false">
+      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+        <div class="flex justify-content-between ml-2">
+          <div class="flex flex-column gap-4">
+            <div>
+              <label for="name">Nombre:</label>
+              <input type="text" pInputText id="name" formControlName="name">
+              @if (profileForm.controls['name'].invalid && profileForm.controls['name'].touched) {
+                <div
+                  class="absolute">
+                  @if (profileForm.controls['name'].errors?.['required']) {
+                    <small
+                    style="color: red;">El nombre es obligatorio</small>
+                  }
+                  @if (profileForm.controls['name'].errors?.['pattern']) {
+                    <small
+                    style="color: red;">El nombre no es válido</small>
+                  }
                 </div>
-              </ng-template>
-            </p-fileUpload>
+              }
+            </div>
+            <div>
+              <label for="lastname">Apellidos:</label>
+              <input type="text" pInputText id="lastname" formControlName="lastname">
+              @if (profileForm.controls['lastname'].invalid && profileForm.controls['lastname'].touched) {
+                <div
+                  class="absolute">
+                  @if (profileForm.controls['lastname'].errors?.['required']) {
+                    <small style="color: red;">El apellido es obligatorio</small>
+                  }
+                  @if (profileForm.controls['lastname'].errors?.['pattern']) {
+                    <small
+                    style="color: red;">El apellido no es válido</small>
+                  }
+                </div>
+              }
+            </div>
+            <div>
+              <label for="username">Nombre de usuario:</label>
+              <input type="text" pInputText id="username" aria-describedby="username-help" formControlName="username">
+              @if (profileForm.controls['username'].invalid && profileForm.controls['username'].touched) {
+                <div
+                  class="absolute">
+                  @if (profileForm.controls['username'].errors?.['required']) {
+                    <small style="color: red;">El nombre de usuario es obligatorio</small>
+                  }
+                  @if (profileForm.controls['username'].errors?.['minlength']) {
+                    <small
+                    style="color: red;">Demasiado corto</small>
+                  }
+                  @if (profileForm.controls['username'].errors?.['maxlength']) {
+                    <small
+                    style="color: red;">Demasiado largo</small>
+                  }
+                  @if (profileForm.controls['username'].errors?.['pattern']) {
+                    <small style="color: red;">El nombre de usuario no es válido</small>
+                  }
+                </div>
+              }
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="flex justify-content-center mt-2 gap-2">
-        <p-button label="Guardar" [rounded]="true" severity="help" type="submit"></p-button>
-        <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleEditProfile = false"
-                  severity="help"></p-button>
-      </div>
-    </form>
-  </p-dialog>
-  <p-dialog header="Eliminar perfil" [(visible)]="visibleDeleteProfile" [modal]="true"
-            [style]="{ width: '30vw', position: 'relative' }"
-            [draggable]="false" [resizable]="false">
-    <form [formGroup]="deleteProfileForm" (ngSubmit)="deleteProfile()">
-      <div class="flex justify-content-center ml-4">
-        <div class="flex flex-column gap-2">
-          <label for="user">Nombre de usuario:</label>
-          <input type="text" pInputText id="user" formControlName="username">
-          <label for="psswd">Contraseña:</label>
-          <p-password [feedback]="false" [toggleMask]="true" formControlName="password" id="psswd" />
-        </div>
-      </div>
-      <div class="flex justify-content-center mt-3 gap-2">
-        <p-button label="Eliminar" [rounded]="true" severity="help" type="submit"></p-button>
-        <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleDeleteProfile = false"
-                  severity="secondary"></p-button>
-      </div>
-    </form>
-  </p-dialog>
-</div>
+          <div class="flex flex-column gap-3">
+            <div>
+              <label for="email">Correo:</label>
+              <input type="email" id="email" pInputText formControlName="email">
+              @if (profileForm.controls['email'].invalid && profileForm.controls['email'].touched) {
+                <div
+                  class="absolute">
+                  @if (profileForm.controls['email'].errors?.['required']) {
+                    <small style="color: red;">El correo es obligatorio</small>
+                  }
+                  @if (profileForm.controls['email'].errors?.['email']) {
+                    <small
+                    style="color: red;">El correo no es válido</small>
+                  }
+                </div>
+              }
+            </div>
+            <div>
+              <label for="password">Contraseña:</label>
+              <p-password [feedback]="true" [toggleMask]="true" formControlName="password" id="password"
+                placeholder="Contraseña" />
+              </div>
+              <div>
+                <label for="image">Foto de perfil:</label>
+                <p-fileUpload name="image" id="image" chooseLabel="Seleccionar" chooseIcon="pi pi-image"
+                  (onSelect)="onFileChange($event)"
+                  accept="image/*" [auto]="true">
+                  <ng-template pTemplate="content">
+                    <div class="flex flex-column align-items-center gap-2">
+                      <i class="pi pi-download"></i>
+                      <div>Arrastre una imágen aquí</div>
+                    </div>
+                  </ng-template>
+                </p-fileUpload>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-content-center mt-2 gap-2">
+            <p-button label="Guardar" [rounded]="true" severity="help" type="submit"></p-button>
+            <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleEditProfile = false"
+            severity="help"></p-button>
+          </div>
+        </form>
+      </p-dialog>
+
+      <p-dialog header="Eliminar perfil" [(visible)]="visibleDeleteProfile" [modal]="true"
+        [style]="{ width: '30vw', position: 'relative' }"
+        [draggable]="false" [resizable]="false">
+        <form [formGroup]="deleteProfileForm" (ngSubmit)="deleteProfile()">
+          <div class="flex justify-content-center ml-4">
+            <div class="flex flex-column gap-2">
+              <label for="user">Nombre de usuario:</label>
+              <input type="text" pInputText id="user" formControlName="username">
+              <label for="psswd">Contraseña:</label>
+              <p-password [feedback]="false" [toggleMask]="true" formControlName="password" id="psswd" />
+            </div>
+          </div>
+          <div class="flex justify-content-center mt-3 gap-2">
+            <p-button label="Eliminar" [rounded]="true" severity="help" type="submit"></p-button>
+            <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleDeleteProfile = false"
+            severity="secondary"></p-button>
+          </div>
+        </form>
+      </p-dialog>
+    </div>
+  }

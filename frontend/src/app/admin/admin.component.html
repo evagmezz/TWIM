@@ -1,21 +1,52 @@
-<p-table [value]="users"  styleClass="p-datatable-striped" >
-  <ng-template pTemplate="header">
-    <tr>
-      <th>Nombre</th>
-      <th>Apellidos</th>
-      <th>Usuario</th>
-      <th>Correo</th>
-      <th>Rol</th>
-      <th>Acciones</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" *ngFor="let user of users">
-  <tr>
-      <td>{{user.name}}</td>
-      <td>{{user.lastname}}</td>
-      <td>{{user.username}}</td>
-      <td>{{user.email}}</td>
-      <td>{{user.role}}</td>
-    </tr>
-  </ng-template>
-</p-table>
+@if (users) {
+  <p-table [value]="users" styleClass="p-datatable-striped"  [tableStyle]="{ 'min-width': '20rem' }">>
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width:15%">Nombre</th>
+        <th style="width:15%">Apellidos</th>
+        <th style="width:15%">Usuario</th>
+        <th style="width:15%">Correo</th>
+        <th style="width:15%">Rol</th>
+        <th style="width:15%">Acciones</th>
+      </tr>
+      <tr>
+        <th><p-columnFilter type="text" placeholder="Nombre" field="name" [showClearButton]="false" ></p-columnFilter></th>
+        <th><p-columnFilter type="text" placeholder="Apellidos" field="lastname" [showClearButton]="false" ></p-columnFilter></th>
+        <th><p-columnFilter type="text" placeholder="Usuario" field="username" [showClearButton]="false" ></p-columnFilter></th>
+        <th><p-columnFilter type="text" placeholder="Correo" field="email" [showClearButton]="false" ></p-columnFilter></th>
+        <th><p-columnFilter type="text" placeholder="Rol" field="role" [showClearButton]="false" ></p-columnFilter></th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.lastname }}</td>
+        <td>&#64;{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <p-button  type="button" icon="pi pi-user-edit"
+                   (click)="selectUserForEdit(user); visibleEdit = true" [text]="true"></p-button>
+          <p-button  type="button" icon="pi pi-user-minus"
+                  (click)="deleteUser(user)" [text]="true"></p-button>
+      </tr>
+    </ng-template>
+  </p-table>
+}
+
+<p-dialog header="Editar usuario" [(visible)]="visibleEdit" [modal]="true" [style]="{ width: '40vw' }"
+          [draggable]="false" [resizable]="false" class="flex flex-column align-items-center justify-content-center;">
+  <form [formGroup]="editUserForm" (ngSubmit)="editUser()">
+    <div class="flex flex-column align-items-center gap-2">
+      <p-dropdown [options]="role" formControlName="role" placeholder="Rol" optionLabel="name" optionValue="name"></p-dropdown>
+    </div>
+    <div class="mt-3 flex justify-content-center">
+      <p-button label="Editar" [rounded]="true" severity="help" type="submit" [ngStyle]="{'margin': '10px'}"></p-button>
+      <p-button label="Cancelar" [rounded]="true" [outlined]="true" (click)="visibleEdit = false" severity="secondary"
+                [ngStyle]="{'margin': '10px'}"></p-button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-confirmDialog header="Confirmación" icon="pi pi-exclamation-triangle" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '40vw'}"></p-confirmDialog>

@@ -11,7 +11,7 @@ import { PasswordModule } from 'primeng/password'
 import { HttpClientModule } from '@angular/common/http'
 import { AuthService } from '../services/auth.service'
 import { Router, RouterLink } from '@angular/router'
-import { CommonModule, NgIf } from '@angular/common'
+
 import { DividerModule } from 'primeng/divider'
 import { MessagesModule } from 'primeng/messages'
 import { Message } from 'primeng/api'
@@ -24,18 +24,16 @@ import { MessageSharingService } from '../services/message-sharing-service.servi
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     FormsModule,
     InputTextModule,
     ButtonModule,
     PasswordModule,
     RouterLink,
-    NgIf,
     DividerModule,
     MessagesModule,
-    FileUploadModule,
-  ],
+    FileUploadModule
+],
   providers: [HttpClientModule],
 })
 export class RegisterComponent implements OnInit {
