@@ -52,11 +52,12 @@ export class CommentService {
 
   async findOne(id: string) {
     this.logger.log(`Buscando comentario con id ${id}`)
-    const comment = this.commentRepository.findById(id).exec()
+    const comment = await this.commentRepository.findById(id).exec()
     if (!comment) {
       throw new NotFoundException(`El comentario con el id ${id} no existe`)
     }
-    return comment
+    const user = await this.getUserByUserId(comment.userId);
+    return this.commentMapper.toDto(comment, user);
   }
 
   async findByPostId(postId: string) {
@@ -67,7 +68,9 @@ export class CommentService {
   async create(createCommentDto: CreateCommentDto) {
     this.logger.log('Creando comentario')
     const comment = this.commentMapper.toEntity(createCommentDto)
-    return await this.commentRepository.create(comment)
+    const user = await this.userRepository.findOneBy({ id: comment.userId })
+    await this.commentRepository.create(comment)
+    return this.commentMapper.toDto(comment, user)
   }
 
   async remove(id: string) {
@@ -76,6 +79,6 @@ export class CommentService {
     if (!comment) {
       throw new NotFoundException(`El comentario con el id ${id} no existe`)
     }
-    return this.commentRepository.findByIdAndDelete(id).exec()
+     await this.commentRepository.findByIdAndDelete(id).exec()
   }
 }

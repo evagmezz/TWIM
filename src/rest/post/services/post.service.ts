@@ -131,7 +131,7 @@ export class PostService {
       throw new NotFoundException(`El post con el id ${id} no existe`)
     }
     this.storageService.removeFiles(post.photos)
-    return await this.postRepository.findByIdAndDelete(id).exec()
+     await this.postRepository.findByIdAndDelete(id).exec()
   }
 
   async findPostsLikedByUser(userId: string) {
