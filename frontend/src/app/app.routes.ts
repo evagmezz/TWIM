@@ -1,10 +1,11 @@
-import { Routes } from '@angular/router'
+import {Routes} from '@angular/router'
 import { LoginComponent } from './login/login.component'
 import { RegisterComponent } from './register/register.component'
 import { IndexComponent } from './index/index.component'
 import { DetailsComponent } from './details/details.component'
 import { ProfileComponent } from './profile/profile.component'
 import {AdminComponent} from "./admin/admin.component";
+import {AdminGuard} from "./guards/admin.guard";
 
 export const routes: Routes = [
   {
@@ -45,5 +46,6 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
+    canActivate: [AdminGuard],
   }
 ]

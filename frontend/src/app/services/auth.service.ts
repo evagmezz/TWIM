@@ -6,7 +6,7 @@ import { Post } from '../models/post';
 import { User } from '../models/user';
 import { PaginateMongo } from '../models/paginateMongo';
 import {PaginatePostgre} from "../models/paginatePostgre";
-import {Form} from "@angular/forms";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +17,7 @@ export class AuthService {
   private commentUrl = 'http://localhost:3000/comment';
   private usersUrl = 'http://localhost:3000/users';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
   }
 
   login(credentials: { username: string; password: string }): Observable<any> {

@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core'
-import { Router, RouterOutlet } from '@angular/router'
+import {Component, OnInit} from '@angular/core'
+import {Router, RouterOutlet} from '@angular/router'
 import {AuthService} from '../services/auth.service'
-import { AsyncPipe, NgClass } from '@angular/common';
-import { CardModule } from 'primeng/card'
-import { RatingModule } from 'primeng/rating'
-import { TagModule } from 'primeng/tag'
-import { ButtonModule } from 'primeng/button'
-import { FormsModule } from '@angular/forms'
-import { DataViewModule } from 'primeng/dataview'
-import { DialogModule } from 'primeng/dialog'
-import { HostListener } from '@angular/core'
+import {AsyncPipe, NgClass} from '@angular/common';
+import {CardModule} from 'primeng/card'
+import {RatingModule} from 'primeng/rating'
+import {TagModule} from 'primeng/tag'
+import {ButtonModule} from 'primeng/button'
+import {FormsModule} from '@angular/forms'
+import {DataViewModule} from 'primeng/dataview'
+import {DialogModule} from 'primeng/dialog'
+import {HostListener} from '@angular/core'
 import {User} from "../models/user"
 import {Post} from "../models/post"
 import {SidebarModule} from "primeng/sidebar"
 import {PaginateMongo} from "../models/paginateMongo"
+import {HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-index',
@@ -31,7 +32,7 @@ export class IndexComponent implements OnInit {
   post: Post
   visibleAddComment: boolean = false
   currentPage = 1
-  pageSize =10
+  pageSize = 10
   totalPages = 1
   isLoadingPosts = false
   totalRecords: number = 0

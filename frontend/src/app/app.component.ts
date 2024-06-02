@@ -14,7 +14,8 @@ import {InputSwitchModule} from "primeng/inputswitch"
 import {FormsModule} from "@angular/forms"
 import {Document} from "typeorm"
 import {AdminComponent} from "./admin/admin.component"
-import {ConfirmationService} from "primeng/api";
+import {ConfirmationService} from "primeng/api"
+import { provideHttpClient } from '@angular/common/http'
 
 @Component({
   selector: 'app-root',
@@ -32,7 +33,7 @@ import {ConfirmationService} from "primeng/api";
     RippleModule,
     InputSwitchModule,
     FormsModule,
-    AdminComponent
+    AdminComponent,
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
