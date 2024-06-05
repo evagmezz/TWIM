@@ -10,6 +10,7 @@ import {ResponseCommentDto} from "../dto/response-comment.dto"
 import {Comment} from "../entities/comment.entity"
 import {UserMapper} from "../../user/mapper/user-mapper"
 
+
 describe('CommentService', () => {
     let service: CommentService
     let mapper: CommentMapper
@@ -86,6 +87,7 @@ describe('CommentService', () => {
                 meta: {},
             }
             jest.spyOn(service, 'findAll').mockImplementation(async () => result)
+            jest.spyOn(mapper, 'toDto').mockImplementation(() => responseCommentDto)
             expect(await service.findAll(1, 10, 'createdAt', 'asc')).toBe(result)
         })
     })
@@ -153,6 +155,7 @@ describe('CommentService', () => {
             comment.createdAt = new Date()
 
             jest.spyOn(service, 'findOne').mockImplementation(async () => responseCommentDto)
+            jest.spyOn(mapper, 'toEntity').mockImplementation(() => comment)
             expect(await service.findOne('1')).toStrictEqual(responseCommentDto)
         })
         it('should throw an error', async () => {
@@ -198,6 +201,7 @@ describe('CommentService', () => {
             comment.createdAt = new Date()
 
             jest.spyOn(service, 'create').mockImplementation(async () => responseCommentDto)
+            jest.spyOn(mapper, 'toEntity').mockImplementation(() => comment)
             expect(await service.create(comment)).toStrictEqual(responseCommentDto)
         })
     })
