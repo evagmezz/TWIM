@@ -15,7 +15,6 @@ import {FormsModule} from "@angular/forms"
 import {Document} from "typeorm"
 import {AdminComponent} from "./admin/admin.component"
 import {ConfirmationService} from "primeng/api"
-import { provideHttpClient } from '@angular/common/http'
 
 @Component({
   selector: 'app-root',

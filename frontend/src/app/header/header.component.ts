@@ -89,16 +89,12 @@ export class HeaderComponent implements OnInit {
     this.searchSubject.pipe(debounceTime(100)).subscribe(searchValue => {
       this.search(searchValue)
     })
-
-    this.authService.isAdmin().subscribe((isAdmin) => {
-      this.isAdmin = isAdmin
-    })
+    this.isAdmin = this.authService.isAdmin()
     this.role = [
       {name: 'admin'},
       {name: 'user'}
     ]
   }
-
 
   lazyLoad() {
     this.authService.getCurrentUser().subscribe((user) => {

@@ -6,7 +6,6 @@ import { Post } from '../models/post';
 import { User } from '../models/user';
 import { PaginateMongo } from '../models/paginateMongo';
 import {PaginatePostgre} from "../models/paginatePostgre";
-import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +16,7 @@ export class AuthService {
   private commentUrl = 'http://localhost:3000/comment';
   private usersUrl = 'http://localhost:3000/users';
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient) {
   }
 
   login(credentials: { username: string; password: string }): Observable<any> {
@@ -32,10 +31,13 @@ export class AuthService {
     localStorage.removeItem('access_token')
   }
 
-  isAdmin(): Observable<boolean> {
-    return this.getCurrentUser().pipe(
-      map(user => user.role === 'admin')
-    );
+  isAdmin() {
+    const token = localStorage.getItem('access_token');
+    if(!token) {
+      return false;
+    }
+    const payload=  JSON.parse(atob(token.split('.')[1]));
+    return Boolean(payload.isAdmin);
   }
 
   index(page: number, limit: number): Observable<PaginateMongo<Post>> {

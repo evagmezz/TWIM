@@ -78,11 +78,13 @@ export class AuthService {
     return await this.userService.findOne(payload.id)
   }
 
-  private getAccessToken(userId: string) {
+  private async getAccessToken(userId: string) {
     this.logger.log(`Obteniendo token de acceso para ${userId}`)
     try {
+      const user = await this.userService.findOne(userId)
       const payload = {
         id: userId,
+        isAdmin: user.role === 'admin',
       }
       const access_token = this.jwtService.sign(payload)
       return {
