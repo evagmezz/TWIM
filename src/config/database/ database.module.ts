@@ -18,7 +18,6 @@ import 'dotenv/config'
         database: process.env.POSTGRES_DATABASE,
         autoLoadEntities: true,
         entities: [`${__dirname}/**/*.entity{.ts,.js}`],
-        synchronize: true,
       }),
     }),
     MongooseModule.forRootAsync({

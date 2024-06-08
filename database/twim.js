@@ -1,3 +1,14 @@
+db.createUser({
+  user: 'admin',
+  pwd: 'admin',
+  roles: [
+    {
+      role: 'readWrite',
+      db: 'mongoTwim',
+    },
+  ],
+})
+
 db = db.getSiblingDB('mongoTwim');
 
 db.comments.insertMany([
@@ -372,3 +383,4 @@ db.posts.insertMany([
     userId: "eab57d50-b523-479b-a20e-fa9a14ae201f"
   }
 ]);
+
