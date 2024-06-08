@@ -12,6 +12,7 @@ services:
       - 5432:5432
     volumes:
       - storage-dir-postgres:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - twim-network
   mongo-db:
