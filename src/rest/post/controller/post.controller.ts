@@ -23,7 +23,7 @@ import { FilesInterceptor } from '@nestjs/platform-express'
 import { Roles, RolesAuthGuard } from '../../auth/ guards/roles-auth.guard'
 import { JwtAuthGuard } from '../../auth/ guards/ jwt-auth.guard'
 import { diskStorage } from 'multer'
-import { extname, parse } from 'path'
+import { extname, join, parse } from 'path';
 import { Request } from 'express'
 
 @Controller('post')
@@ -79,7 +79,7 @@ export class PostController {
   @UseInterceptors(
     FilesInterceptor('image', 7, {
       storage: diskStorage({
-        destination: process.env.UPLOADS_FOLDER || './photos',
+        destination: join(process.cwd(), process.env.UPLOADS_FOLDER || './photos'),
         filename: (req, file, cb) => {
           const { name } = parse(file.originalname)
           const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`

@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS public.users (
                                             email VARCHAR(255) UNIQUE NOT NULL,
                                             image VARCHAR(255),
                                             role VARCHAR(255) NOT NULL,
-                                            created_at TIMESTAMP NOT NULL,
-                                            updated_at TIMESTAMP NOT NULL
+                                            created_at TIMESTAMP DEFAULT now() NOT NULL,
+                                            updated_at TIMESTAMP DEFAULT now() NOT NULL
 );
 
 

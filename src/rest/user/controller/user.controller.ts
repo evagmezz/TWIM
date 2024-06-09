@@ -22,7 +22,7 @@ import { Paginate, PaginateQuery } from 'nestjs-paginate'
 import { JwtAuthGuard } from '../../auth/ guards/ jwt-auth.guard'
 import { Roles, RolesAuthGuard } from '../../auth/ guards/roles-auth.guard'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { extname, parse } from 'path'
+import { extname, join, parse } from 'path';
 import { diskStorage } from 'multer'
 import { Request } from 'express'
 
@@ -72,7 +72,7 @@ export class UserController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: process.env.UPLOADS_FOLDER || './photos',
+        destination: join(process.cwd(), process.env.UPLOADS_FOLDER || './photos'),
         filename: (req, file, cb) => {
           const { name } = parse(file.originalname)
           const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`
@@ -134,7 +134,7 @@ export class UserController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: process.env.UPLOADS_FOLDER || './photos',
+        destination: join(process.cwd(), process.env.UPLOADS_FOLDER || './photos'),
         filename: (req, file, cb) => {
           const { name } = parse(file.originalname)
           const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`
@@ -178,7 +178,7 @@ export class UserController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: process.env.UPLOADS_FOLDER || './photos',
+        destination: join(process.cwd(), process.env.UPLOADS_FOLDER || './photos'),
         filename: (req, file, cb) => {
           const { name } = parse(file.originalname)
           const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`

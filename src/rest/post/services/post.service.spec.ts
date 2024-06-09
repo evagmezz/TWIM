@@ -191,16 +191,6 @@ describe('PostService', () => {
             jest.spyOn(service, 'getUserByUserId').mockResolvedValue(responseUserDto)
             expect(await service.findOne('1')).toStrictEqual(responsePostDto)
         })
-        it('should throw an error', async () => {
-            jest.spyOn(service, 'findOne').mockImplementation(async () => {
-                throw new Error('Post not found')
-            })
-            try {
-                await service.findOne('1')
-            } catch (e) {
-                expect(e.message).toBe('Post not found')
-            }
-        })
     })
     describe('create', () => {
         it('should create a post', async () => {
@@ -303,19 +293,6 @@ describe('PostService', () => {
             jest.spyOn(service, 'getUserByUserId').mockResolvedValue(responseUserDto)
             expect(await service.update('1', updatePostDto)).toStrictEqual(responsePostDto)
         })
-        it('should throw an error', async () => {
-            jest.spyOn(service, 'update').mockImplementation(async () => {
-                throw new Error('Post not found')
-            })
-            try {
-                await service.update('1', {
-                    title: 'Test title',
-                    location: 'Test location',
-                })
-            } catch (e) {
-                expect(e.message).toBe('Post not found')
-            }
-        })
     })
 
     describe('remove', () => {
@@ -323,16 +300,6 @@ describe('PostService', () => {
             jest.spyOn(service, 'remove').mockImplementation(async () => {
                 return
             })
-        })
-        it('should thow a NotFoundException', () => {
-            jest.spyOn(service, 'remove').mockImplementation(async () => {
-                throw new Error('Post not found')
-            })
-            try {
-                service.remove('1')
-            } catch (e) {
-                expect(e.message).toBe('Post not found')
-            }
         })
     })
 

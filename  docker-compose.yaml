@@ -11,7 +11,6 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - storage-dir-postgres:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - twim-network
@@ -28,7 +27,6 @@ services:
       - 27017:27017
     volumes:
       - ./database/twim.js:/docker-entrypoint-initdb.d/twim.js:ro
-      - storage-dir-mongo:/data/db
     networks:
       - twim-network
   twim:
@@ -37,20 +35,16 @@ services:
         dockerfile: Dockerfile
       container_name: twim
       restart: always
-      env_file: .env
+      env_file: .env.prod
       ports:
         - ${PORT}:3000
       volumes:
-        - storage-dir:/app/photos
+        - ./photos:/app/photos
       networks:
         - twim-network
       depends_on:
         - postgres-db
         - mongo-db
-
-volumes:
-  storage-dir-postgres:
-  storage-dir-mongo:
 networks:
   twim-network:
     driver: bridge

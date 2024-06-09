@@ -6,6 +6,11 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 async function bootstrap() {
+  if(process.env.NODE_ENV === 'dev'){
+    console.log('Development mode')
+  } else {
+    console.log('Production mode')
+  }
   const app = await NestFactory.create(AppModule)
   app.enableCors()
   app.useGlobalPipes(new ValidationPipe())

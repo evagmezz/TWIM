@@ -14,7 +14,7 @@ import { UserSignUpDto } from '../dto/ user-sign.up.dto'
 import { AuthService } from '../services/ auth.service'
 import { Request } from 'express'
 import { diskStorage } from 'multer'
-import { extname, parse } from 'path'
+import { extname, join, parse } from 'path';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +24,7 @@ export class AuthController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: process.env.UPLOADS_FOLDER || './photos',
+        destination: join(process.cwd(), process.env.UPLOADS_FOLDER || './photos'),
         filename: (req, file, cb) => {
           const { name } = parse(file.originalname)
           const fileName = `${Date.now()}_${name.replace(/\s/g, '')}`

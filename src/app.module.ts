@@ -9,7 +9,11 @@ import { CacheModule } from '@nestjs/cache-manager'
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot(
+      process.env.NODE_ENV === 'dev'
+        ? { envFilePath: '.env.dev' || '.env' }
+        : { envFilePath: '.env.prod' },
+    ),
     UserModule,
     DatabaseModule,
     PostModule,

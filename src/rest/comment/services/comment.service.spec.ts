@@ -158,16 +158,6 @@ describe('CommentService', () => {
             jest.spyOn(mapper, 'toEntity').mockImplementation(() => comment)
             expect(await service.findOne('1')).toStrictEqual(responseCommentDto)
         })
-        it('should throw an error', async () => {
-            jest.spyOn(service, 'findOne').mockImplementation(async () => {
-                throw new Error('Comment not found')
-            })
-            try {
-                await service.findOne('1')
-            } catch (e) {
-                expect(e.message).toBe('Comment not found')
-            }
-        })
     })
     describe('create', () => {
         it('should return a comment', async () => {
@@ -210,16 +200,6 @@ describe('CommentService', () => {
             jest.spyOn(service, 'remove').mockImplementation(async () => {
                 return
             })
-        })
-        it('should thow a NotFoundException', () => {
-            jest.spyOn(service, 'remove').mockImplementation(async () => {
-                throw new Error('Comment not found')
-            })
-            try {
-                service.remove('1')
-            } catch (e) {
-                expect(e.message).toBe('Comment not found')
-            }
         })
     })
 })
